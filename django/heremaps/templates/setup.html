@@ -1,0 +1,24 @@
+{% extends "splunkdj:base_with_app_bar.html" %}
+
+{% load splunkmvc %}
+
+{% block title %}{{app_name}} Setup Page{% endblock title %}
+    {% block content %}
+    <div style="padding: 2%">
+        <form class="heremaps-setup-form" method="post" action="">
+            {% csrf_token %}
+            <h1>Welcome to the HERE maps App</h1>
+            <p>
+                To use this app you need to get an app_id and app_code from <a href="http://developer.here.com">http://developer.here.com</a>.<br/>
+                Once you have them, please fill them in below.
+            </p>
+            
+            {{ form.as_p }}
+            
+            <input class="btn btn-primary" type="submit" value="Save" />
+            {% if configured %}
+                <a class="btn" href="{% url 'heremaps:home' %}">Cancel</a>
+            {% endif %}
+        </form>
+    </div>
+    {% endblock content %}

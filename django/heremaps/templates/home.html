@@ -1,0 +1,25 @@
+{% extends "splunkdj:base_with_app_bar.html" %}
+
+{% load splunkmvc %}
+
+{% block title %}Home Page{% endblock title %}
+
+{% block css %}
+    <style>        
+        .main-area {
+            margin: 0px auto;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding: 10px;
+            width: 300px;
+        }    
+    </style>
+{% endblock css %}
+
+{% block content %}
+    <div>
+        <div class="main-area">
+            <p>Welcome to the HERE maps app</p>
+        </div>
+    </div>
+{% endblock content%}
