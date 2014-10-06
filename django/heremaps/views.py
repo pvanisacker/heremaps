@@ -13,8 +13,8 @@ def get_app_id(request):
         if conf.name == "setup":
             for stanza in conf.iter():
                 if stanza.name == "heremaps":
-                    app_id=stanza.content["app_code"]
-                    app_code=stanza.content["app_id"]
+                    app_id=stanza.content["app_id"]
+                    app_code=stanza.content["app_code"]
     return {'app_id':app_id,'app_code':app_code}
 
 @render_to('heremaps:home.html')
