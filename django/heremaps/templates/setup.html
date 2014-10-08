@@ -3,7 +3,7 @@
 {% load splunkmvc %}
 
 {% block title %}{{app_name}} Setup Page{% endblock title %}
-    {% block content %}
+{% block content %}
     <div style="padding: 2%">
         <form class="heremaps-setup-form" method="post" action="">
             {% csrf_token %}
@@ -21,4 +21,4 @@
             {% endif %}
         </form>
     </div>
-    {% endblock content %}
+{% endblock content %}
