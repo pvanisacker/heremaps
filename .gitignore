@@ -1,4 +1,8 @@
 .project
 .pydevproject
 .settings
-local/setup.conf
+local/*.conf
+.idea
+*.pyo
+*.pyc
+metadata/*

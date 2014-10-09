@@ -2,6 +2,8 @@
 
 {% load splunkmvc %}
 
+{% load heremap %}
+
 {% block title %}Home Page{% endblock title %}
 
 {% block css %}
@@ -11,15 +13,27 @@
             margin-top: 30px;
             margin-bottom: 30px;
             padding: 10px;
-            width: 300px;
+            width: 100%;
+            text-align:center;
         }    
     </style>
 {% endblock css %}
 
 {% block content %}
+    {% include "heremap-res.html" %}
     <div>
         <div class="main-area">
             <p>Welcome to the HERE maps app</p>
+            <div>If you don't see a map below, make sure to configure your HERE app_id & app_code in the setup screen.</div>
         </div>
+        <div style="width:100%">
+				{% heremarkermap
+					id="heremarkermap-1"
+					managerid=""
+					center="0,0"
+					zoom="2"
+					height="450px"
+				%}
+			</div>
     </div>
 {% endblock content%}

@@ -3,7 +3,7 @@
     <a href="/dj/redirector/heremaps/home">Home</a>
     <a href="/dj/redirector/heremaps/setup">Setup</a>
     <collection label="Marker maps">
-        <a href="/dj/redirector/heremaps/heremarkermap1">Marker Map 1</a>
-        <a href="/dj/redirector/heremaps/heremarkermap2">Marker Map 2</a>
+        <a href="/dj/redirector/heremaps/heremarkermap_django">Marker Map Django</a>
+        <a href="/dj/redirector/heremaps/heremarkermap_js">Marker Map JS</a>
     </collection>
 </nav>

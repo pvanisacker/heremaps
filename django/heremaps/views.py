@@ -6,6 +6,7 @@ from .forms import SetupForm
 from django.core.urlresolvers import reverse
 
 def get_app_id(request):
+    print("get_app_id")
     service = request.service
     app_id="none"
     app_code="none"
@@ -22,39 +23,6 @@ def get_app_id(request):
 @config_required
 def home(request):
     return {}
-
-@render_to()
-@login_required
-@config_required
-def render_page(request,tmpl):
-    return {
-            "TEMPLATE": "heremaps:%s.html" % tmpl,
-            "map_app_id":app_id["app_id"],
-            "map_app_code":app_id["app_code"]
-            }
-"""
-@render_to('heremaps:heremarkermap1.html')
-@login_required
-@config_required
-def heremarkermap1(request):
-    app_id=get_app_id(request)
-    return {
-        #"TEMPLATE": "heremaps:%s.html" % tmpl,
-        "map_app_id":app_id["app_id"],
-        "map_app_code":app_id["app_code"]
-    }
-    
-@render_to('heremaps:heremarkermap2.html')
-@login_required
-@config_required
-def heremarkermap2(request):
-    app_id=get_app_id(request)
-    return {
-        #"TEMPLATE": "heremaps:%s.html" % tmpl,
-        "map_app_id":app_id["app_id"],
-        "map_app_code":app_id["app_code"]
-    }
-"""
 
 @render_to('heremaps:setup.html')
 @login_required

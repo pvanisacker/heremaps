@@ -26,7 +26,7 @@ define(function(require, exports, module) {
 		initialize: function(){
 			
 			this.configure();
-			console.debug(this.options)
+
 			this.$el.html(
 					'<div class="heremapwrapper" style="height:'+this.options.height+'">'+
 					'<div id="'+this.id+'-msg"></div>'+
@@ -34,13 +34,8 @@ define(function(require, exports, module) {
 					'</div>')
 					
 			this.message = this.$('#'+this.id+'-msg');
-			
-			if(this.options.app_id.trim()=="" || this.options.app_code.trim()==""){
-				console.error("No app_id & app_code provided")
-				this._errorMessage();
-			}else{
-				this.createMap();
-			}
+
+			this._get_app_id();
 			
 			this._viz = null;
 			this._data = null;
@@ -107,18 +102,27 @@ define(function(require, exports, module) {
 				console.error(err.stack)
 			}
 		},
-		/*
+
 		_get_app_id: function(){
-			var service = mvc.createService({app:'heremaps',owner:'admin'});
-			console.log(service)
-			var files = service.configurations();
-			files.item("setup", function(err, propsFile) {
-				propsFile.fetch(function(err, props) {
-					console.log(props.properties()); 
-				});
-			});
+		    var map=this;
+			mvc.createService().get("/servicesNS/nobody/heremaps/configs/conf-setup/heremaps",{},function(err,response) {
+                if(err){
+                    console.error("Error fetching app_id");
+                    return;
+                }
+			    content=response.data.entry[0].content;
+
+			    if(content.app_id.trim()=="" || content.app_code.trim()==""){
+				    console.error("No app_id & app_code found, make sure to set on in the heremaps setup screen");
+				    map._errorMessage();
+			    }else{
+			        map.options.app_id=content.app_id.trim();
+			        map.options.app_code=content.app_code.trim();
+				    map.createMap();
+			    }
+		    });
 		},
-		*/
+
 		_clearMessage: function(){
 			if(this.map){
 				this.message.hide();
