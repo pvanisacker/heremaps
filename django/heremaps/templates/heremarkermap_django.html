@@ -7,41 +7,41 @@
 {% block title %}Marker Map Django{% endblock title %}
 
 {% block content %}
-	{% include "heremap-res.html" %}
-	<div style="margin:2%">
-		<div style="margin-bottom:10px">
-			{% searchbar id="example-searchbar" managerid="mysearch-1" 
-				value="$searchquery$"|token_safe 
-				timerange_earliest_time="$earlyval$"|token_safe
-				timerange_latest_time="$lateval$"|token_safe
-				default="|inputlookup earthquake.csv| rename mag as value" %}
-			{% searchcontrols id="example-searchcontrols" managerid="mysearch-1" %}
-		</div>
-		<div>
-			<div style="float:left;width:49%">
-				{% table id="example-table" managerid="mysearch-1" pageSize="10" %}
-			</div>
-			<div style="float:right;width:2%"></div>
-			<div style="float:right;width:49%">
-				{% heremarkermap
-					id="heremarkermap-1"
-					managerid="mysearch-1"
-					center="0,0"
-					zoom="2"
-					height="450px"
-				%}
-			</div>
-			<div style="clear: both; margin-top:10px;"></div>
-		</div>
-	</div>
+    {% include "heremap-res.html" %}
+    <div style="margin:2%">
+        <div style="margin-bottom:10px">
+            {% searchbar id="example-searchbar" managerid="mysearch-1" 
+                value="$searchquery$"|token_safe 
+                timerange_earliest_time="$earlyval$"|token_safe
+                timerange_latest_time="$lateval$"|token_safe
+                default="|inputlookup earthquake.csv| rename mag as value" %}
+            {% searchcontrols id="example-searchcontrols" managerid="mysearch-1" %}
+        </div>
+        <div>
+            <div style="float:left;width:49%">
+                {% table id="example-table" managerid="mysearch-1" pageSize="10" %}
+            </div>
+            <div style="float:right;width:2%"></div>
+            <div style="float:right;width:49%">
+                {% heremarkermap
+                    id="heremarkermap-1"
+                    managerid="mysearch-1"
+                    center="0,0"
+                    zoom="2"
+                    height="450px"
+                %}
+            </div>
+            <div style="clear: both; margin-top:10px;"></div>
+        </div>
+    </div>
 {% endblock content %}
 
 {% block managers %}
-	{% searchmanager id="mysearch-1"
-		search="$searchquery$"|token_safe
-		earliest_time="$earlyval$"|token_safe
-		latest_time="$lateval$"|token_safe
-		preview=True 
-		required_field_list="*" status_buckets=300
-	%}
+    {% searchmanager id="mysearch-1"
+        search="$searchquery$"|token_safe
+        earliest_time="$earlyval$"|token_safe
+        latest_time="$lateval$"|token_safe
+        preview=True 
+        required_field_list="*" status_buckets=300
+    %}
 {% endblock managers %}
