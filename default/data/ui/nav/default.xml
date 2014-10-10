@@ -5,9 +5,11 @@
     <collection label="Marker maps">
         <a href="/dj/redirector/heremaps/heremarkermap_django">Marker Map Django</a>
         <a href="/dj/redirector/heremaps/heremarkermap_js">Marker Map JS</a>
+        <a href="/dj/redirector/heremaps/heremarkermap_js_custom">Marker Map JS custom</a>
     </collection>
     <collection label="Cluster maps">
         <a href="/dj/redirector/heremaps/hereclustermap_django">Cluster Map Django</a>
         <a href="/dj/redirector/heremaps/hereclustermap_js">Cluster Map JS</a>
+        <a href="/dj/redirector/heremaps/hereclustermap_js_custom">Cluster Map JS custom</a>
     </collection>
 </nav>

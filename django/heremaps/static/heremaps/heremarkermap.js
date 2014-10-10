@@ -21,6 +21,7 @@ define(function(require, exports, module) {
             height: "400px",
             app_id:"",
             app_code:"",
+            marker:undefined
         },
         
         initialize: function(){
@@ -57,9 +58,13 @@ define(function(require, exports, module) {
             if(this.map){
                 this.clearView();
                 for(var i=0;i<data.length;i++){
+                    if(this.options.marker){
+                        var marker=this.options.marker(data[i]);
+                    }else{
+                        var marker=new H.map.Marker({lat:data[i]["lat"],lng:data[i]["lng"]});
+                    }
                     // marker=new H.map.Marker({lat:data[i]["lat"],lng:data[i]["lng"]});
-                    var markerIcon = new H.map.Icon(this._getSvgMarker(data[i]),{anchor:{x:12,y:12}});
-                    var marker = new H.map.Marker({lat:data[i]["lat"],lng:data[i]["lng"]},{icon: markerIcon});
+
                     viz.map.addObject(marker);
                 }
             }

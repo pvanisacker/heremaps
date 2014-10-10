@@ -21,6 +21,9 @@ define(function(require, exports, module) {
             height: "400px",
             app_id:"",
             app_code:"",
+            min_weight: 1,
+            eps: 32,
+            theme: undefined
         },
         
         initialize: function(){
@@ -57,20 +60,25 @@ define(function(require, exports, module) {
             if(this.map){
                 this.clearView();
 
-                var dataPoints = [
-                    new H.clustering.DataPoint(52, 1),
-                    new H.clustering.DataPoint(52.1, 1)
-                ];
+                var noiseSvg = '<svg xmlns="http://www.w3.org/2000/svg" height="20px" width="20px"><circle cx="5px" cy="5px" r="5px" fill="green" /></svg>';
+                var noiseIcon = new H.map.Icon(noiseSvg, {size: { w: 20, h: 20 }, anchor: { x: 10, y: 10}});
 
+                // Create an SVG template for the cluster icon:
+                var clusterSvgTemplate =  '<svg xmlns="http://www.w3.org/2000/svg" height="50px" width="50px"><circle cx="25px" cy="25px" r="{radius}" fill="red" /></svg>';
+
+                var dataPoints = [];
                 for(var i=0;i<data.length;i++){
-                    dataPoints.push(new H.clustering.DataPoint(data[i]["lat"],data[i]["lng"]));
+                    dataPoints.push(new H.clustering.DataPoint(data[i]["lat"],data[i]["lng"],1,data[i]));
                 }
-                var clusteringProvider = new H.clustering.Provider(dataPoints, {
-                    clusteringOptions: {
-                        minWeight: 1,
-                        eps: 32
-                    }
-                });
+
+                var options={clusteringOptions: {
+                        minWeight: this.min_weight,
+                        eps: this.eps
+                    }}
+                if(this.options.theme){
+                    options["theme"]=this.options.theme
+                }
+                var clusteringProvider = new H.clustering.Provider(dataPoints, options);
 
                 //clustering should be used with ObjectLayer
                 var clusteringLayer = new H.map.layer.ObjectLayer(clusteringProvider);

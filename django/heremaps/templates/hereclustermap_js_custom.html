@@ -1,0 +1,231 @@
+{% load splunkmvc %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Marker Map Javascript</title>
+    {% include "heremap-res.html" %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/dashboard.css">
+</head>
+
+<body>
+    <div class="header">
+        <div id="myheader"></div>
+    </div>
+
+    <div class="dashboard-body container-fluid main-section-body" data-role="main">
+
+        <div class="dashboard-header clearfix">
+            <h2>A javascript dashboard showing heremaps</h2>
+        </div>
+
+        <div style="margin:2%">
+            <div style="margin-bottom:10px">
+                <div id="search-bar"></div>
+                <div id="search-control"></div>
+            </div>
+            <div>
+                <div style="float:left;width:49%" >
+                    <div>Display earthquake count per cluster</div>
+                    <div id="search-map-1"></div>
+                </div>
+                <div style="float:right;width:2%"></div>
+                <div style="float:right;width:49%">
+                    <div>Display max earthquake magnitude per cluster</div>
+                    <div id="search-map-2"></div>
+                </div>
+                <div style="clear: both; margin-top:10px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myfooter"></div>
+
+
+    {% component_loader %}
+
+    <script>
+        var deps = [
+            "splunkjs/ready!",
+            "splunkjs/mvc/headerview",
+            "splunkjs/mvc/footerview",
+            "splunkjs/mvc/searchbarview",
+            "splunkjs/mvc/searchcontrolsview",
+            "splunkjs/mvc/tableview",
+            "splunkjs/mvc/searchmanager",
+            "heremaps/hereclustermap"
+        ];
+        require(deps, function(mvc) {
+            // Load individual components
+            var HeaderView = require("splunkjs/mvc/headerview");
+            var FooterView = require("splunkjs/mvc/footerview");
+            var SearchBarView = require("splunkjs/mvc/searchbarview");
+            var SearchControlsView = require("splunkjs/mvc/searchcontrolsview");
+            var TableView = require("splunkjs/mvc/tableview");
+            var HereClusterMap = require("heremaps/hereclustermap");
+            var SearchManager = require("splunkjs/mvc/searchmanager");
+
+            // Create a header
+            new HeaderView({
+                id: "myheader",
+                el: $("#myheader"),
+            }).render()
+
+            // Create a footer
+            new FooterView({
+                id: "myfooter",
+                el: $("#myfooter"),
+            }).render()
+
+            // Create a search manager
+            var mysearch = new SearchManager({
+                id: "search1",
+                preview: true,
+                cache: true,
+                status_buckets: 300,
+                search: "|inputlookup earthquake.csv| rename mag as value | eval text=if(lat<0,\"south\",\"north\")"
+            });
+
+            // Create a search bar
+            var mysearchbar = new SearchBarView ({
+                id: "searchbar1",
+                managerid: "search1",
+                el: $("#search-bar")
+            }).render();
+
+            // Create a search control
+            var mysearchcontrol = new SearchControlsView ({
+                id: "searchcontrol1",
+                managerid: "search1",
+                el: $("#search-control")
+            }).render();
+
+            var noiseSvgTemplate1 = '<svg width="50" height="50" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><path stroke="#757575" fill="#ff0000" stroke-width="0" stroke-dasharray="5,5" stroke-linejoin="null" stroke-linecap="null" d="m1.55609,24.42334c0.04241,-4.25789 -0.02728,-8.52174 0.34894,-12.77228c9.2417,1.39827 18.37432,3.68619 27.46025,5.74362c0.48788,-2.08797 0.25822,-3.81969 0.68201,-5.75017c5.83709,4.0621 11.62188,8.18211 17.16934,12.49834c-5.32226,4.89604 -11.42699,9.14779 -17.42051,13.50165c-0.19394,-2.0276 -0.38818,-4.05513 -0.58211,-6.08256c-8.83324,1.96144 -18.17467,3.9895 -27.06518,5.78263c-0.60465,-4.13779 -0.58678,-8.64389 -0.59273,-12.92123l0,0z" id="svg_22"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="30" x="25" stroke-width="0" font-size="6pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>';
+            var clusterSvgTemplate1 =
+                '<svg xmlns="http://www.w3.org/2000/svg" height="80px" width="80px">'+
+                '<path stroke="#757575" fill="#ff0000" stroke-width="0" stroke-dasharray="5,5" stroke-linejoin="null" stroke-linecap="null" d="m65.12682,1.13061c-3.11876,0.70349 -5.52671,5.33995 -5.30354,9.13764c0.36867,4.32331 4.58485,1.61263 5.82886,0.3903c-0.74371,3.61906 -6.68251,4.36291 -6.34902,-0.039c-4.52346,4.11244 -7.91219,10.55893 -13.51512,12.64254c-5.05595,1.44568 -10.35528,0.96813 -15.45363,0.12287c-3.09947,-0.35777 -6.05813,-2.28701 -9.18254,-1.88311c-3.34668,1.13093 -6.03159,4.14584 -9.37027,5.33443c-3.52018,1.89915 -2.17566,7.14253 -2.48073,10.85712c0.09415,5.52989 -0.73091,11.38838 -3.85968,15.60649c-1.81905,3.32238 -1.9849,7.69433 -3.44615,11.16165c4.85634,-0.06229 1.92886,-8.06031 4.60085,-11.31109c3.728,-2.12628 3.61985,-7.967 4.13995,-12.26774c0.37921,-1.7382 0.1905,-7.89876 1.69173,-7.06784c1.84551,5.10884 2.89646,10.81863 2.47881,16.41459c-2.44274,2.82291 -6.32601,4.83354 -5.76437,10.03685c0.18523,4.71281 -2.14237,8.10606 -3.96005,11.80504c1.16763,2.17062 0.25719,6.51711 3.60853,5.24437c2.24227,0.53186 3.35102,-0.74856 1.13912,-2.65273c-3.34332,-3.95694 1.31286,-9.18556 3.12031,-12.64961c1.86794,-3.86759 5.66549,-4.05235 8.4429,-6.34236c3.8363,-2.8211 6.64136,-7.17784 9.18515,-11.58458c2.22773,2.91695 -3.51704,5.58814 -4.36397,8.56684c-1.84765,2.44079 -5.15291,6.88301 -0.76665,8.39365c3.39071,1.4291 6.58502,4.34315 6.48298,8.91301c0.05638,3.10069 6.23285,5.90952 4.96866,0.8734c-2.13736,-4.70135 -7.24502,-6.54766 -8.60444,-11.87506c-0.93857,-4.08884 2.96881,-6.06952 4.84062,-2.75323c3.31418,-0.44678 6.79488,-3.16185 10.43103,-3.57894c3.74844,-1.71876 4.61924,4.5756 7.6218,6.22483c2.50286,3.04834 4.80083,6.90803 4.48465,11.48771c0.30486,3.87629 2.43546,7.92606 6.11555,7.52721c4.29479,-0.88486 -1.30408,-6.51988 -3.27112,-7.81514c-2.85014,-4.18748 -2.37916,-10.14075 -4.15311,-14.96262c-1.27876,-1.42365 0.05798,-8.3312 0.10403,-3.38951c-0.23022,5.66296 6.32271,2.41304 5.87446,-1.91837c1.11498,-3.45043 -2.96168,-1.32081 -2.42251,-4.80013c-0.44248,-4.32995 -0.19011,-9.68402 -3.23977,-12.6512c-1.75718,-2.12857 -1.22272,-2.33615 0.69075,-0.65257c3.73092,2.38018 3.00611,7.80778 3.26778,12.08562c1.08033,5.60626 5.44709,-1.65121 5.31918,-4.69153c0.74822,-6.60175 3.30331,-13.37449 8.28793,-16.59032c-1.33963,-0.80839 -7.91142,2.12109 -7.36011,-1.56451c2.70957,2.83508 6.43874,-0.25216 9.64156,0.58349c4.24918,0.21488 5.30446,-7.17802 0.64723,-7.53952c-3.01227,-2.19835 -5.606,-6.08392 -9.49914,-5.78163c-5.64391,2.33017 -2.15739,-4.1291 -0.64851,-7.04734l0.00002,0l-0.00002,0zm5.52389,2.9923c-0.42486,1.82527 -3.22486,5.55043 0.14564,4.04313c0.48375,-1.23135 0.28455,-2.82535 -0.14564,-4.04313zm-0.89465,8.29771c1.51075,3.09222 -3.01797,0.32433 0,0zm6.23647,3.19729c-0.52419,1.31803 1.40976,1.56442 -0.08325,1.56345c-0.78974,1.29154 -1.13309,-1.66892 0.08325,-1.56345z" id="svg_1"/>'+
+                '<text xml:space="preserve" text-anchor="middle" id="svg_2" y="45" x="40" font-size="10pt" font-weight="bold" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text>'+
+                '</svg>';
+
+            var theme1={
+                getClusterPresentation: function(cluster) {
+                    var count=0
+                    cluster.forEachDataPoint(function(dataPoint){
+                        count+=1
+                    });
+                    var svgString = clusterSvgTemplate1.replace('${TEXT}',count);
+                    var clusterIcon = new H.map.Icon(svgString, {
+                        size: { w: 50, h: 50},
+                        anchor: { x: 25, y: 25}
+                    });
+
+                    // Create a marker for clusters:
+                    var clusterMarker = new H.map.Marker(
+                        cluster.getPosition(),
+                        {icon: clusterIcon, min: cluster.getMinZoom(), max: cluster.getMaxZoom()}
+                    );
+
+                    // Bind cluster data to the marker:
+                    clusterMarker.setData(cluster);
+
+                    return clusterMarker;
+                },
+                getNoisePresentation: function(noisePoint) {
+                    // Prepare SVG with correct content
+                    var svgString = noiseSvgTemplate1.replace('${TEXT}',noisePoint.getData()["text"]+": "+noisePoint.getData()["value"]);
+                    var noiseIcon = new H.map.Icon(svgString, {size: { w: 50, h: 50 },anchor: { x: 50, y: 25}});
+
+                    // Create a marker for noise points:
+                    var noiseMarker = new H.map.Marker(
+                        noisePoint.getPosition(),
+                        {icon: noiseIcon,min: noisePoint.getMinZoom()}
+                    );
+
+                    // Bind noise point data to the marker:
+                    noiseMarker.setData(noisePoint);
+                    return noiseMarker;
+                }
+            }
+
+            // Create the first cluster map
+            var myclustermap1 = new HereClusterMap({
+                id: "clustermap1",
+                managerid: "search1",
+                el: $("#search-map-1"),
+                height: "400px",
+                theme: theme1,
+            }).render()
+
+
+
+            var noiseSvgTemplate2 = '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="9" cy="10" cx="10" stroke-width="0" fill="${FILL}"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="15" x="10" stroke-width="0" font-size="8pt" font-weight="bold" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>';
+            var clusterSvgTemplate2 =
+                '<svg xmlns="http://www.w3.org/2000/svg" height="50px" width="50px">'+
+                '<circle cx="25px" cy="25px" r="${RADIUS}" fill="${FILL}" stroke-dasharray="5,5" stroke-width="6" stroke="#757575"/>'+
+                '<text xml:space="preserve" text-anchor="middle" id="svg_2" y="30" x="25" font-size="10pt" font-weight="bold" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text>'+
+                '</svg>';
+
+            var theme2={
+                getClusterPresentation: function(cluster) {
+                    var max=0
+                    cluster.forEachDataPoint(function(dataPoint){
+                        value=parseFloat(dataPoint.getData()["value"]);
+                        if(max<value){
+                            max=value;
+                        }
+                    });
+                    var fill = ( max < 5 ? "orange" : "red")
+                    var svgString = clusterSvgTemplate2.replace('${RADIUS}', max*3 );
+                    var svgString = svgString.replace('${TEXT}',max);
+                    var svgString = svgString.replace('${FILL}',fill);
+                    var clusterIcon = new H.map.Icon(svgString, {
+                        size: { w: 50, h: 50},
+                        anchor: { x: 25, y: 25}
+                    });
+
+                    // Create a marker for clusters:
+                    var clusterMarker = new H.map.Marker(
+                        cluster.getPosition(),
+                        {icon: clusterIcon, min: cluster.getMinZoom(), max: cluster.getMaxZoom()}
+                    );
+
+                    // Bind cluster data to the marker:
+                    clusterMarker.setData(cluster);
+
+                    return clusterMarker;
+                },
+                getNoisePresentation: function(noisePoint) {
+                    // Prepare SVG with correct content
+                    var fill = ( parseFloat(noisePoint.getData()[value]) < 5 ? "orange" : "red")
+                    var svgString = noiseSvgTemplate2.replace('${TEXT}',noisePoint.getData()["value"]);
+                    var svgString = svgString.replace('${FILL}',fill);
+                    var noiseIcon = new H.map.Icon(svgString, {size: { w: 20, h: 20 },anchor: { x: 10, y: 10}});
+
+                    // Create a marker for noise points:
+                    var noiseMarker = new H.map.Marker(
+                        noisePoint.getPosition(),
+                        {icon: noiseIcon,min: noisePoint.getMinZoom()}
+                    );
+
+                    // Bind noise point data to the marker:
+                    noiseMarker.setData(noisePoint);
+                    return noiseMarker;
+                }
+            }
+
+            // Create the second cluster map
+            var myclustermap2 = new HereClusterMap({
+                id: "clustermap2",
+                managerid: "search1",
+                el: $("#search-map-2"),
+                height: "400px",
+                theme: theme2
+            }).render()
+        });
+
+
+    </script>
+</body>
+</html>
