@@ -2,6 +2,10 @@
     <view name="default" default="true"/>
     <a href="/dj/redirector/heremaps/home">Home</a>
     <a href="/dj/redirector/heremaps/setup">Setup</a>
+    <collection label="Geocode">
+        <a href="/dj/redirector/heremaps/geocode">Geocode</a>
+        <a href="/dj/redirector/heremaps/reversegeocode">Reverse Geocode</a>
+    </collection>
     <collection label="Marker maps">
         <a href="/dj/redirector/heremaps/heremarkermap_django">Marker Map Django</a>
         <a href="/dj/redirector/heremaps/heremarkermap_js">Marker Map JS</a>

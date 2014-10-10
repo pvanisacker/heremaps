@@ -1,0 +1,105 @@
+{% load splunkmvc %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Geocode</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/dashboard.css">
+</head>
+
+<body>
+    <div class="header">
+        <div id="myheader"></div>
+    </div>
+
+    <div class="dashboard-body container-fluid main-section-body" data-role="main">
+
+        <div class="dashboard-header clearfix">
+            <h2>Geocode</h2>
+        </div>
+
+        <div style="margin:2%">
+            <div style="margin-bottom:10px">
+                <div id="search-bar"></div>
+                <div id="search-control"></div>
+            </div>
+            <div>
+                <div id="search-table"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myfooter"></div>
+
+
+    {% component_loader %}
+
+    <script>
+        var deps = [
+            "splunkjs/ready!",
+            "splunkjs/mvc/headerview",
+            "splunkjs/mvc/footerview",
+            "splunkjs/mvc/searchbarview",
+            "splunkjs/mvc/searchcontrolsview",
+            "splunkjs/mvc/tableview",
+            "splunkjs/mvc/searchmanager",
+        ];
+        require(deps, function(mvc) {
+            // Load individual components
+            var HeaderView = require("splunkjs/mvc/headerview");
+            var FooterView = require("splunkjs/mvc/footerview");
+            var SearchBarView = require("splunkjs/mvc/searchbarview");
+            var SearchControlsView = require("splunkjs/mvc/searchcontrolsview");
+            var TableView = require("splunkjs/mvc/tableview");
+            var SearchManager = require("splunkjs/mvc/searchmanager");
+
+            // Create a header
+            new HeaderView({
+                id: "myheader",
+                el: $("#myheader"),
+            }).render()
+
+            // Create a footer
+            new FooterView({
+                id: "myfooter",
+                el: $("#myfooter"),
+            }).render()
+
+            // Create a search manager
+            var mysearch = new SearchManager({
+                id: "search1",
+                preview: true,
+                status_buckets: 300,
+                search: mvc.tokenSafe("$searchquery$"),
+                required_field_list: "*",
+            });
+
+            // Create a search bar
+            var mysearchbar = new SearchBarView ({
+                id: "searchbar1",
+                managerid: "search1",
+                el: $("#search-bar"),
+                value: mvc.tokenSafe("$searchquery$"),
+                default: "|inputlookup earthquake.csv"
+            }).render();
+
+            // Create a search control
+            var mysearchcontrol = new SearchControlsView ({
+                id: "searchcontrol1",
+                managerid: "search1",
+                el: $("#search-control")
+            }).render();
+
+            // Create a table
+            var mytable = new TableView ({
+                id: "table1",
+                managerid: "search1",
+                el: $("#search-table")
+            }).render();
+
+        });
+    </script>
+</body>
+</html>

@@ -6,3 +6,4 @@ local/*.conf
 *.pyo
 *.pyc
 metadata/*
+heremaps.log

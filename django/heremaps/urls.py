@@ -9,5 +9,7 @@ urlpatterns = patterns('',
     url(r'^hereclustermap_django/$', render('heremaps:hereclustermap_django.html'), name='hereclustermap_django'),
     url(r'^hereclustermap_js/$', render('heremaps:hereclustermap_js.html'), name='hereclustermap_js'),
     url(r'^hereclustermap_js_custom/$', render('heremaps:hereclustermap_js_custom.html'), name='hereclustermap_js_custom'),
+    url(r'^geocode/$', render('geocode.html'), name='geocode'),
+    url(r'^reversegeocode/$', render('reversegeocode.html'), name='reversegeocode'),
     url(r'^setup/$', 'heremaps.views.setup', name='setup')
 )
