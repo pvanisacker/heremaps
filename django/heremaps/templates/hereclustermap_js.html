@@ -79,14 +79,17 @@
                 preview: true,
                 cache: true,
                 status_buckets: 300,
-                search: "|inputlookup earthquake.csv| rename mag as value"
+                search: mvc.tokenSafe("$searchquery$"),
+                required_field_list: "*",
             });
 
             // Create a search bar
             var mysearchbar = new SearchBarView ({
                 id: "searchbar1",
                 managerid: "search1",
-                el: $("#search-bar")
+                el: $("#search-bar"),
+                value: mvc.tokenSafe("$searchquery$"),
+                default: "|inputlookup earthquake.csv| rename mag as value"
             }).render();
 
             // Create a search control
