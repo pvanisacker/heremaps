@@ -30,6 +30,11 @@ define(function(require, exports, module) {
             }
             this._clearMessage();
         },
+        clearView: function(){
+            if(this.map){
+                this.map.removeObjects(this.map.getObjects());
+            }
+        }
     });
 
     return HereMarkerMap;

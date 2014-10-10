@@ -15,6 +15,8 @@ define(function(require, exports, module) {
             eps: 32,
             theme: undefined
         },
+
+        clusteringLayer:undefined,
         
         updateView: function(viz, data) {
             if(this.map){
@@ -41,11 +43,16 @@ define(function(require, exports, module) {
                 var clusteringProvider = new H.clustering.Provider(dataPoints, options);
 
                 //clustering should be used with ObjectLayer
-                var clusteringLayer = new H.map.layer.ObjectLayer(clusteringProvider);
-                this.map.addLayer(clusteringLayer);
+                this.clusteringLayer = new H.map.layer.ObjectLayer(clusteringProvider);
+                this.map.addLayer(this.clusteringLayer);
             }
             this._clearMessage();
         },
+        clearView: function(){
+            if(this.map && this.clusteringLayer){
+                this.map.removeLayer(this.clusteringLayer);
+            }
+        }
     });
 
     return HereClusterMap;

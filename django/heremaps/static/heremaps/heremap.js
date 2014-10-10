@@ -68,14 +68,13 @@ define(function(require, exports, module) {
                 // Obtain the default map types from the platform object:
                 var defaultLayers = platform.createDefaultLayers();
                 // Instantiate (and display) a map object:
-                var center={lat:0,lng:0};
-                console.error(this.options);
+                var options={zoom:this.options.zoom}
                 try{
-                    center={lat:this.options.center.split(",")[0],lng:this.options.center.split(",")[1]}
+                    options.center={lat:this.options.center.split(",")[0],lng:this.options.center.split(",")[1]}
                 }catch(err){
                     console.error("Could not parse center lat,lng combination")
                 }
-                this.map = new H.Map(document.getElementById(this.id+'-map'),defaultLayers.terrain.map,{zoom:this.options.zoom,center:center});
+                this.map = new H.Map(document.getElementById(this.id+'-map'),defaultLayers.terrain.map,options);
 
                 var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
                 var ui=H.ui.UI.createDefault(this.map,defaultLayers)
@@ -125,9 +124,7 @@ define(function(require, exports, module) {
         },
 
         clearView: function(){
-            if(this.map){
-                this.map.removeObjects(this.map.getObjects());
-            }
+            throw new Error("Not implemented error.");
         },
 
         _setOptions: function(){
