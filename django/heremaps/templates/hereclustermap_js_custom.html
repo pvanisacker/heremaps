@@ -33,7 +33,7 @@
                 </div>
                 <div style="float:right;width:2%"></div>
                 <div style="float:right;width:49%">
-                    <div>Display max earthquake magnitude per cluster</div>
+                    <div>Display max earthquake magnitude per cluster and center map on Alaska</div>
                     <div id="search-map-2"></div>
                 </div>
                 <div style="clear: both; margin-top:10px;"></div>
@@ -221,6 +221,8 @@
                 managerid: "search1",
                 el: $("#search-map-2"),
                 height: "400px",
+                zoom: "4",
+                center: "60,-160",
                 theme: theme2
             }).render()
         });
