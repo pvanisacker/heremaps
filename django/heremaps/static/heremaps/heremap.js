@@ -54,8 +54,12 @@ define(function(require, exports, module) {
         },
 
         displayMessage: function(info){
-            Messages.render(info, this.message);
-            this.message.show();
+            if(info=="no-results"){
+                this.clearView();
+            }else{
+                Messages.render(info, this.message);
+                this.message.show();
+            }
             return this;
         },
 
