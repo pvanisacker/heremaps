@@ -16,4 +16,8 @@
         <a href="/dj/redirector/heremaps/hereclustermap_js">Cluster Map JS</a>
         <a href="/dj/redirector/heremaps/hereclustermap_js_custom">Cluster Map JS custom</a>
     </collection>
+    <collection label="Shape maps">
+        <a href="/dj/redirector/heremaps/hereshapemap_django">Cluster Map Django</a>
+        <a href="/dj/redirector/heremaps/hereshapemap_js">Cluster Map JS</a>
+    </collection>
 </nav>

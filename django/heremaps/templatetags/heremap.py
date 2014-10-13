@@ -14,3 +14,6 @@ def heremarkermap(context, id, *args, **kwargs):
 def hereclustermap(context, id, *args, **kwargs):
     return component_context(context,"hereclustermap",id,"view","heremaps/hereclustermap",kwargs)
 
+@register.inclusion_tag('splunkdj:components/component.html', takes_context=True)
+def hereshapemap(context, id, *args, **kwargs):
+    return component_context(context,"hereshapemap",id,"view","heremaps/hereshapemap",kwargs)

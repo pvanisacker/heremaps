@@ -22,7 +22,6 @@ define(function(require, exports, module) {
         },
 
         initialize: function(){
-
             this.configure();
 
             this.$el.html(
@@ -87,6 +86,10 @@ define(function(require, exports, module) {
                 var aerialMapTileService = platform.getMapTileService({type: 'aerial'});
                 var terrainMap = aerialMapTileService.createTileLayer('maptile','terrain.day',256,'png8');
                 this.map.setBaseLayer(terrainMap);
+
+                if(this.postCreateMap){
+                    this.postCreateMap()
+                }
             }catch(err){
                 this._errorMessage();
                 console.error("Error loading map components")
