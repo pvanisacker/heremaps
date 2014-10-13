@@ -50,6 +50,9 @@ See:
 <pre><code>... | reversegeocode | lookup countries country_iso3166_3 as regeo_country</code></pre>
 Or use the `reversegeocode` macro.
 
+The command includes a small cache to avoid calling the HERE api too often.  
+By default it stores 1000000 results for 62 days.
+
 ## Install
 
 For installing the app, just follow the standard splunk app procedures.
