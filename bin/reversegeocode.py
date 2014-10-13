@@ -49,6 +49,22 @@ class ReverseGeocodeCommand(StreamingCommand):
         except Exception as e:
             raise Exception("Could not get app_id and app_code, is the app set up correctly?",e)
 
+    def _parseJSON(self,obj):
+        if isinstance(obj, dict):
+            newobj = {}
+            for key, value in obj.iteritems():
+                key = str(key)
+                newobj[key] = self._parseJSON(value)
+        elif isinstance(obj, list):
+            newobj = []
+            for value in obj:
+                newobj.append(self._parseJSON(value))
+        elif isinstance(obj, unicode):
+            newobj = str(obj)
+        else:
+            newobj = obj
+        return newobj
+
     def reverse_geocode(self,lat,lng):
         url = "http://reverse.geocoder.api.here.com/6.2/reversegeocode.json"+ \
               "?app_id=%s&app_code=%s&prox=%s,%s,10&" % (self.app_id, self.app_code, lat, lng) + \
@@ -57,48 +73,50 @@ class ReverseGeocodeCommand(StreamingCommand):
 
         http = httplib2.Http()
         response, content = http.request(url,'GET')
-        if response["status"]=="200":
+        if response["status"] == "200":
             result = json.loads(content)
+            # Make sure we don't get unicode strings
+            result = self._parseJSON(result)
             try:
                 return result["Response"]["View"][0]["Result"][0]["Location"]["Address"]
             except (KeyError, IndexError):
                 self.logger.debug("Could not find any results for lat=%s and lng=%s",lat,lng)
                 return {}
         else:
-            self.logger.error("Got an unexpected for ulr %s response: %s",url,response)
+            self.logger.error("Got an unexpected for ulr %s response: %s", url, response)
 
     def add_fields(self, record, location):
         record[self.prefix + "_country"] = ""
         if "Country" in location:
-            record[self.prefix + "_country"] = location["Country"].encode('ascii', 'replace')
+            record[self.prefix + "_country"] = location["Country"]
 
         record[self.prefix + "_city"] = ""
         if "City" in location:
-            record[self.prefix + "_city"] = location["City"].encode('ascii', 'replace')
+            record[self.prefix + "_city"] = location["City"]
 
         record[self.prefix + "_postalcode"] = ""
         if "PostalCode" in location:
-            record[self.prefix + "_postalcode"] = location["PostalCode"].encode('ascii', 'replace')
+            record[self.prefix + "_postalcode"] = location["PostalCode"]
 
         record[self.prefix + "_region"] = ""
         if "Region" in location:
-            record[self.prefix + "_region"] = location["Region"].encode('ascii', 'replace')
+            record[self.prefix + "_region"] = location["Region"]
 
         record[self.prefix + "_district"] = ""
         if "District" in location:
-            record[self.prefix + "_district"] = location["District"].encode('ascii', 'replace')
+            record[self.prefix + "_district"] = location["District"]
 
         record[self.prefix + "_label"] = ""
         if "Label" in location:
-            record[self.prefix + "_label"] = location["Label"].encode('ascii', 'replace')
+            record[self.prefix + "_label"] = location["Label"]
 
         record[self.prefix + "_state"] = ""
         if "State" in location:
-            record[self.prefix + "_state"] = location["State"].encode('ascii', 'replace')
+            record[self.prefix + "_state"] = location["State"]
 
         record[self.prefix + "_county"] = ""
         if "County" in location:
-            record[self.prefix + "_county"] = location["County"].encode('ascii', 'replace')
+            record[self.prefix + "_county"] = location["County"]
 
     def stream(self, records):
         if self.app_id is "" or self.app_code is "":
@@ -111,7 +129,6 @@ class ReverseGeocodeCommand(StreamingCommand):
 
             cache_key = "%s,%s" % (lat, lng)
             location = self.cache.get(cache_key)
-            self.logger.info("Key: %s  Location: %s",cache_key,location)
             if location is None:
                 location = self.reverse_geocode(lat, lng)
                 self.cache.set(cache_key,location)
