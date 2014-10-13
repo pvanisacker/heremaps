@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     url(r'^hereclustermap_js_custom/$', render('heremaps:hereclustermap_js_custom.html'), name='hereclustermap_js_custom'),
     url(r'^hereshapemap_django/$', render('heremaps:hereshapemap_django.html'), name='hereshapemap_django'),
     url(r'^hereshapemap_js/$', render('heremaps:hereshapemap_js.html'), name='hereshapemap_js'),
-    url(r'^geocode/$', render('geocode.html'), name='geocode'),
+    url(r'^hereshapemap_js_custom/$', render('heremaps:hereshapemap_js_custom.html'), name='hereshapemap_js_custom'),
     url(r'^reversegeocode/$', render('reversegeocode.html'), name='reversegeocode'),
     url(r'^setup/$', 'heremaps.views.setup', name='setup')
 )
