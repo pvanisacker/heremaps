@@ -1,8 +1,8 @@
-heremaps
-========
+# heremaps
 
-intro
------
+
+## Intro
+
 
 A Splunk app for map visualizations using HERE maps
 
@@ -24,10 +24,10 @@ And the app is an early state of development so there will be tons of bugs.
 
 Enjoy!
 
-components
-----------
+## Components
 
-h3. Visualizations
+
+### Visualizations
 
 The app contains 3 different map visualizations.
    * Marker map: displaying markers for lat/lng combinations
@@ -35,7 +35,7 @@ The app contains 3 different map visualizations.
    * Shape map: colors shapes depending on the values
 See the examples on how to use them and customize them.
 
-h3. Reverse geocoding command
+### Reverse geocoding command
 
 This command uses the HERE REST api. So you need internet connectivity to get it working.  
 It requires a lat and lng field and will add new fields containing the information for this lat/lng.  
@@ -56,8 +56,7 @@ See:
 <pre><code>... | reversegeocode | lookup countries country_iso3166_3 as regeo_country</code></pre>
 Or use the `reversegeocode` macro.
 
-install
--------
+## Install
 
 For installing the app, just follow the standard splunk app procedures.
 
@@ -76,6 +75,5 @@ app_code=my_app_code
 Without these settings lots of the functionality of the app will not work.
 
 
-versions
---------
+## Versions
    * 0.1: First version, includes marker map, cluster map and shape map
