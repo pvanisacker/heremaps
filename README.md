@@ -4,16 +4,10 @@
 ## Intro
 
 
-A Splunk app for map visualizations using HERE maps
-
-This app requires that you have HERE api credentials. See http://developer.here.com for requesting them.
-
-You can set these credentials using the setup dashboard.
-
-Or you can configure them in heremaps/local/setup.conf
-
-
+A Splunk app for map visualizations using HERE maps  
 It includes 3 different visualizations types, one reverse geocoding custom command and a couple of csv lookups.
+
+See a couple of screenshots in:
 
 For questions about the app, please raise them on http://answers.splunk.com
 
