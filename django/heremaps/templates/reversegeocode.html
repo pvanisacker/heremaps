@@ -84,25 +84,13 @@
                 required_field_list: "*",
             });
 
-            new PostProcessManager({
-                id: "postproc1",
-                managerid: "search1",
-                search: "fields regeo_countryname,count,avg | sort -count"
-            });
-
-            new PostProcessManager({
-                id: "postproc2",
-                managerid: "search1",
-                search: "rename regeo_countrylatitude as lat, regeo_countrylongitude as lng, count as value"
-            });
-
             // Create a search bar
             var mysearchbar = new SearchBarView ({
                 id: "searchbar1",
                 managerid: "search1",
                 el: $("#search-bar"),
                 value: mvc.tokenSafe("$searchquery$"),
-                default: "|inputlookup earthquake.csv | `reversegeocode` | stats count,avg(mag) as avg by regeo_countryname,regeo_countrylatitude,regeo_countrylongitude"
+                default: "|inputlookup earthquake.csv | `reversegeocode` | stats count,avg(mag) as avg by regeo_country_name,regeo_country_latitude,regeo_country_longitude | rename regeo_country_latitude as lat,regeo_country_longitude as lng, count as value"
             }).render();
 
             // Create a search control
@@ -123,14 +111,14 @@
             // Create a table
             var mytable = new TableView ({
                 id: "table1",
-                managerid: "postproc1",
+                managerid: "search1",
                 el: $("#search-table")
             }).render();
 
             // Create the marker map
             var mymarkermap = new HereMarkerMap({
                 id: "markermap1",
-                managerid: "postproc2",
+                managerid: "search1",
                 el: $("#search-map"),
                 height: "400px",
                 marker: markerf

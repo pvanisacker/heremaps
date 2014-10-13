@@ -2,7 +2,8 @@
     <view name="default" default="true"/>
     <a href="/dj/redirector/heremaps/home">Home</a>
     <a href="/dj/redirector/heremaps/setup">Setup</a>
-    <collection label="Geocode">
+    <a href="/dj/redirector/heremaps/search">Search</a>
+    <collection label="Reverse Geocode">
         <a href="/dj/redirector/heremaps/reversegeocode">Reverse Geocode</a>
     </collection>
     <collection label="Marker maps">
