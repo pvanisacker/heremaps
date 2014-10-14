@@ -44,8 +44,8 @@ class ReverseGeocodeCommand(StreamingCommand):
             response = self.service.get("/servicesNS/nobody/heremaps/configs/conf-setup/heremaps")
             xml = response.body.read()
             root = et.fromstring(xml)
-            self.app_id = root.findall(".//{http://dev.splunk.com/ns/rest}key[@name='app_id']")[0].text
-            self.app_code = root.findall(".//{http://dev.splunk.com/ns/rest}key[@name='app_code']")[0].text
+            self.app_id = root.findall(".//{http://dev.splunk.com/ns/rest}key[@name='app_id']")[0].text.strip()
+            self.app_code = root.findall(".//{http://dev.splunk.com/ns/rest}key[@name='app_code']")[0].text.strip()
         except Exception as e:
             raise Exception("Could not get app_id and app_code, is the app set up correctly?",e)
 
