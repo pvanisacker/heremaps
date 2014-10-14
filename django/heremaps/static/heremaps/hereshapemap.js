@@ -10,14 +10,25 @@ define(function(require, exports, module) {
     var HereShapeMap = HereMap.extend({
         className: "hereshapemap",
 
-        kmlFile: "world.kml",
         reader: undefined,
         shapes: {},
         maxValue:0.0,
         options:{
-            colorRange:{"0.0":"rgba(255,255,255,0.50)","0.2":"rgba(0,255,255,0.50)","0.4":"rgba(0,255,0,0.50)","0.6":"rgba(255,255,0,0.60)","0.7":"rgba(255,0,0,0.85)","0.8":"rgba(128,0,0,0.85)"},
+            kmlFile:"world2.kml",
+            colorRange:{
+                "0.0"   :"rgba(0,255,64,0.6)",
+                "0.1"   :"rgba(0,255,0,0.6)",
+                "0.2"   :"rgba(64,255,0,0.6)",
+                "0.3"   :"rgba(128,255,0,0.6)",
+                "0.4"   :"rgba(192,255,0,0.6)",
+                "0.5"   :"rgba(255,255,0,0.6)",
+                "0.6"   :"rgba(255,192,0,0.6)",
+                "0.7"   :"rgba(255,128,0,0.6)",
+                "0.8"   :"rgba(255,64,0,0.6)",
+                "0.9"   :"rgba(255,0,0,0.6)"
+            },
             defaultStyle: {
-                        strokeColor: 'rgba(191,191,191,0.5)',
+                        strokeColor: 'rgba(191,191,191,0.8)',
                         fillColor: 'rgba(255, 255, 255, 0)',
                         lineWidth: 1.5,
                         lineCap: 'square',
@@ -37,11 +48,10 @@ define(function(require, exports, module) {
                             if(this.maxValue<result["value"]) this.maxValue=value
                         }
                     }else{
-                        console.error("Could not find result "+result["key"]+" in shape list");
+                        console.warn("Could not find result "+result["key"]+" in shape list");
                     }
                 }
             }
-
             this.colorShapes();
         },
         clearView: function(){
@@ -50,7 +60,7 @@ define(function(require, exports, module) {
             }
         },
         postCreateMap: function(){
-            this.reader = new H.data.kml.Reader('../../../static/data/'+this.kmlFile);
+            this.reader = new H.data.kml.Reader('../../../static/data/'+this.options.kmlFile);
             var that=this
             this.reader.addEventListener('statechange', function(evt) {
                 if(evt.state == H.data.AbstractReader.State.READY){

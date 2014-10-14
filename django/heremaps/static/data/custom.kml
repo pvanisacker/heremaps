@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <Placemark>
+    <name>area1</name>
+    <description>area1</description>
+    <MultiGeometry>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>3,50 3,55 -2,55 -2,50</coordinates></LinearRing></outerBoundaryIs></Polygon>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-5,50 -5,55 -7,55 -9,53 -8,52 -7,50</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </MultiGeometry>
+  </Placemark>
+  <Placemark>
+    <name>area2</name>
+    <description>area2</description>
+    <MultiGeometry>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-120,40 -100,50 -120,60 -140,50</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </MultiGeometry>
+  </Placemark>
+  <Placemark>
+    <name>area3</name>
+    <description>area3</description>
+    <MultiGeometry>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-55,-20 -65,-30 -55,-30</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </MultiGeometry>
+  </Placemark>
+  <Placemark>
+    <name>area4</name>
+    <description>area4</description>
+    <MultiGeometry>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>1,4 6,10 6,4</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </MultiGeometry>
+  </Placemark>
+</Document></kml>

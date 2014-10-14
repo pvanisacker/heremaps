@@ -27,7 +27,11 @@ The app contains 3 different map visualizations.
    * Marker map: displaying markers for lat/lng combinations
    * Cluster map: clusters markers
    * Shape map: colors shapes depending on the values
+     These maps use a KML file to highlight certain areas. The KML files need a specific structure. See the custom.kml file for an example.  
 See the examples on how to use them and customize them.
+
+The KML files are compiled from http://www.naturalearthdata.com/.  
+Example lookup files were taken from wikipedia.
 
 ### Reverse geocoding command
 
@@ -55,12 +59,9 @@ By default it stores 1000000 results for 62 days.
 
 ## Install
 
-For installing the app, just follow the standard splunk app procedures.
-
-Once it is installed, you also have to get api credentials for using the HERE api.
-
-Request them on http://developer.here.com.
-
+For installing the app, just follow the standard splunk app procedures.  
+Once it is installed, you also have to get free api credentials for using the HERE api.  
+Request them on http://developer.here.com.  
 Once you have them either use setup screen to configure the app_id and app_code.
 
 Or by configuring it manually in the local/setup.conf:
@@ -69,8 +70,8 @@ app_id=my_app_id
 app_code=my_app_code
 </code></pre>
 
-Without these settings lots of the functionality of the app will not work.
-
+Without these settings the app will not work.
 
 ## Versions
-   * 0.1: First version, includes marker map, cluster map and shape map
+   * 0.1: First version, includes marker map, cluster map and shape map.
+   * 0.2: Add more shapemaps, fix bug with reverse geocoding command.

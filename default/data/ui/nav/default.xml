@@ -17,8 +17,16 @@
         <a href="/dj/redirector/heremaps/hereclustermap_js_custom">Cluster Map JS custom</a>
     </collection>
     <collection label="Shape maps">
-        <a href="/dj/redirector/heremaps/hereshapemap_django">Cluster Map Django</a>
-        <a href="/dj/redirector/heremaps/hereshapemap_js">Cluster Map JS</a>
-        <a href="/dj/redirector/heremaps/hereshapemap_js_custom">Cluster Map JS custom</a>
+        <a href="/dj/redirector/heremaps/hereshapemap_django">Shape Map Django</a>
+        <a href="/dj/redirector/heremaps/hereshapemap_js">Shape Map JS</a>
+        <a href="/dj/redirector/heremaps/hereshapemap_js_custom">Shape Map JS custom</a>
+        <a href="/dj/redirector/heremaps/hereshapemap_js_custom2">Shape Map JS custom 2</a>
+        <collection label="Other countries">
+            <a href="/dj/redirector/heremaps/hereshapemap_js_us">US</a>
+            <a href="/dj/redirector/heremaps/hereshapemap_js_in">India</a>
+            <a href="/dj/redirector/heremaps/hereshapemap_js_fr">France</a>
+            <a href="/dj/redirector/heremaps/hereshapemap_js_de">Germany</a>
+            <a href="/dj/redirector/heremaps/hereshapemap_js_uk">UK</a>
+        </collection>
     </collection>
 </nav>

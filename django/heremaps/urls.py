@@ -12,6 +12,12 @@ urlpatterns = patterns('',
     url(r'^hereshapemap_django/$', render('heremaps:hereshapemap_django.html'), name='hereshapemap_django'),
     url(r'^hereshapemap_js/$', render('heremaps:hereshapemap_js.html'), name='hereshapemap_js'),
     url(r'^hereshapemap_js_custom/$', render('heremaps:hereshapemap_js_custom.html'), name='hereshapemap_js_custom'),
+    url(r'^hereshapemap_js_custom2/$', render('heremaps:hereshapemap_js_custom2.html'), name='hereshapemap_js_custom2'),
+    url(r'^hereshapemap_js_de/$', render('heremaps:hereshapemap_js_de.html'), name='hereshapemap_js_de'),
+    url(r'^hereshapemap_js_fr/$', render('heremaps:hereshapemap_js_fr.html'), name='hereshapemap_js_fr'),
+    url(r'^hereshapemap_js_in/$', render('heremaps:hereshapemap_js_in.html'), name='hereshapemap_js_in'),
+    url(r'^hereshapemap_js_uk/$', render('heremaps:hereshapemap_js_uk.html'), name='hereshapemap_js_uk'),
+    url(r'^hereshapemap_js_us/$', render('heremaps:hereshapemap_js_us.html'), name='hereshapemap_js_us'),
     url(r'^reversegeocode/$', render('reversegeocode.html'), name='reversegeocode'),
     url(r'^setup/$', 'heremaps.views.setup', name='setup')
 )
