@@ -53,6 +53,7 @@ define(function(require, exports, module) {
                 }
             }
             this.colorShapes();
+            this._clearMessage();
         },
         clearView: function(){
             for(var shape in this.shapes){
