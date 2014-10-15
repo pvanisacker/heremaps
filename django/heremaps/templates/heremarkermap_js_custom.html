@@ -16,11 +16,6 @@
     </div>
 
     <div class="dashboard-body container-fluid main-section-body" data-role="main">
-
-        <div class="dashboard-header clearfix">
-            <h2>A javascript dashboard showing heremaps</h2>
-        </div>
-
         <div style="margin:2%">
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
@@ -105,7 +100,7 @@
                 el: $("#search-table")
             }).render();
 
-            var svgMarkup='<svg width="26" height="26" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="12" cy="13" cx="13" stroke-width="2" stroke="#333333" fill="#f5f5f5"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="18.5" x="13" stroke-width="0" font-size="10pt" font-weight="bold" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>'
+            var svgMarkup='<svg width="26" height="26" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="12" cy="13" cx="13" stroke-width="2" stroke="#333333" fill="#f5f5f5"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="18.5" x="13" stroke-width="0" font-size="10pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>'
             var markerf= function(data){
                 var value=("value" in data) ? data["value"] : "";
                 var svg=svgMarkup.replace('${TEXT}',value);
@@ -119,7 +114,9 @@
                 managerid: "search1",
                 el: $("#search-map"),
                 height: "400px",
-                marker: markerf
+                marker: markerf,
+                bubbleContentProvider: function(data){return "<div style='text-align:center;font-size:13pt;'>"+data["lat"]+"/"+data["lng"]+": "+data["value"]+"</div>";},
+                // bubbleContentProvider: undefined,
             }).render()
         });
     </script>

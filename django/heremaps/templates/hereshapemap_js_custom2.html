@@ -16,11 +16,6 @@
     </div>
 
     <div class="dashboard-body container-fluid main-section-body" data-role="main">
-
-        <div class="dashboard-header clearfix">
-            <h2>A javascript dashboard showing heremaps</h2>
-        </div>
-
         <div style="margin:2%">
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
@@ -114,7 +109,8 @@
                 el: $("#search-map"),
                 height: "400px",
                 zoom: "2",
-                kmlFile: "custom.kml"
+                kmlFile: "custom.kml",
+                bubbleContentProvider: function(placemark,data){return "<div style='text-align:center; transform: rotate(7deg);'>"+placemark["name"]+": "+data["result"]["something"]+"</div>";},
             }).render()
         });
     </script>

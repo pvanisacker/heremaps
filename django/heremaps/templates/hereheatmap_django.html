@@ -4,10 +4,10 @@
 
 {% load heremap %}
 
-{% block title %}Cluster Map Django{% endblock title %}
+{% block title %}Heat Map Django{% endblock title %}
 
 {% block content %}
-    {% include "heremap-res.html" %}
+    {% include "heremap-res-heatmap.html" %}
     <div style="margin:2%">
         <div style="margin-bottom:10px">
             {% searchbar id="example-searchbar" managerid="mysearch-1" 
@@ -23,8 +23,9 @@
             </div>
             <div style="float:right;width:2%"></div>
             <div style="float:right;width:49%">
-                {% hereclustermap
-                    id="heremarkermap-1"
+                <div>A density based heat map</div>
+                {% hereheatmap
+                    id="hereheatmap-1"
                     managerid="mysearch-1"
                     center="0,0"
                     zoom="2"

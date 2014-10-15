@@ -17,3 +17,7 @@ def hereclustermap(context, id, *args, **kwargs):
 @register.inclusion_tag('splunkdj:components/component.html', takes_context=True)
 def hereshapemap(context, id, *args, **kwargs):
     return component_context(context,"hereshapemap",id,"view","heremaps/hereshapemap",kwargs)
+
+@register.inclusion_tag('splunkdj:components/component.html', takes_context=True)
+def hereheatmap(context, id, *args, **kwargs):
+    return component_context(context,"hereheatmap",id,"view","heremaps/hereheatmap",kwargs)

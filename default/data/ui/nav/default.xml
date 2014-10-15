@@ -29,4 +29,9 @@
             <a href="/dj/redirector/heremaps/hereshapemap_js_uk">UK</a>
         </collection>
     </collection>
+    <collection label="Heat maps">
+        <a href="/dj/redirector/heremaps/hereheatmap_django">Heat Map Django</a>
+        <a href="/dj/redirector/heremaps/hereheatmap_js">Heat Map JS</a>
+        <a href="/dj/redirector/heremaps/hereheatmap_js_custom">Heat Map JS custom</a>
+    </collection>
 </nav>

@@ -9,8 +9,8 @@ define(function(require, exports, module) {
     Messages.messages['map-error']={icon: "warning-sign",level: "error",message: _("Map loading failed").t()};
 
     // Define the custom view class
-    var HereMap = SimpleSplunkView.extend({
-        className: "heremap",
+    var HereHeatMap = SimpleSplunkView.extend({
+        className: "hereheatmap",
         outputMode: 'json',
 
         default_options: {
@@ -19,6 +19,13 @@ define(function(require, exports, module) {
             height: "400px",
             app_id:"",
             app_code:"",
+        },
+
+        options: {
+            colors: undefined,
+            opacity: 1,
+            type: "density",
+            coarseness: "2"
         },
 
         initialize: function(){
@@ -44,6 +51,27 @@ define(function(require, exports, module) {
             }
         },
 
+        updateView: function(viz, data){
+            this.clearView();
+            heat_data=[];
+            for(res in data){
+                if("lat" in data[res] && "lng" in data[res]){
+                    var lat=parseFloat(data[res]["lat"])
+                    var lng=parseFloat(data[res]["lng"])
+                    var value=parseFloat(data[res]["value"])
+                    heat_data.push({"latitude":lat,"longitude":lng,"value":value});
+                }
+            }
+            this.heatmapProvider=this.getHeatMapProvider();
+            this.heatmapProvider.addData(heat_data);
+            this.map.overlays.add(this.heatmapProvider);
+            this._clearMessage();
+        },
+
+        clearView: function(){
+            this.map.overlays.remove(this.heatmapProvider)
+        },
+
         createView: function(){
             return this;
         },
@@ -60,28 +88,17 @@ define(function(require, exports, module) {
 
         createMap: function(){
             try {
-                var platform = new H.service.Platform({
-                    app_id: this.options.app_id,
-                    app_code: this.options.app_code
+                nokia.Settings.set("app_id", this.options.app_id);
+                nokia.Settings.set("app_code", this.options.app_code);
+
+                this.map = new nokia.maps.map.Display(document.getElementById(this.id+'-map'), {
+                    // Zoom level for the map
+                    zoomLevel: 2,
+                    // Map center coordinates
+                    center: [0,0],
+                    components:[new nokia.maps.map.component.Behavior()]
                 });
-                // Obtain the default map types from the platform object:
-                var defaultLayers = platform.createDefaultLayers();
-                // Instantiate (and display) a map object:
-                var options={zoom:this.options.zoom}
-                try{
-                    options.center={lat:this.options.center.split(",")[0],lng:this.options.center.split(",")[1]}
-                }catch(err){
-                    console.error("Could not parse center lat,lng combination")
-                }
-                this.map = new H.Map(document.getElementById(this.id+'-map'),defaultLayers.terrain.map,options);
-
-                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
-                this.ui=H.ui.UI.createDefault(this.map,defaultLayers)
-                this.ui.removeControl('mapsettings');
-
-                var aerialMapTileService = platform.getMapTileService({type: 'aerial'});
-                var terrainMap = aerialMapTileService.createTileLayer('maptile','terrain.day',256,'png8');
-                this.map.setBaseLayer(terrainMap);
+                this.map.set("baseMapType", nokia.maps.map.Display.TERRAIN);
 
                 if(this.postCreateMap){
                     this.postCreateMap()
@@ -126,10 +143,6 @@ define(function(require, exports, module) {
             this.message.show();
         },
 
-        clearView: function(){
-            throw new Error("Not implemented error.");
-        },
-
         _setOptions: function(){
             if(!this.options.center || this.options.center.trim()==""){
                 this.options.center=this.default_options.center;
@@ -140,7 +153,23 @@ define(function(require, exports, module) {
             if(!this.options.height || this.options.height.trim()==""){
                 this.options.height=this.default_options.height;
             }
+        },
+
+        getHeatMapProvider: function(){
+            // Creating Heatmap overlay
+            var options={
+                max:20,
+                opacity: this.options.opacity,
+                type: this.options.type,
+                coarseness: this.options.coarseness
+            };
+            if(this.options.colors){
+                options["colors"]=this.options.colors;
+            }
+            console.debug(options);
+            var heatmapProvider = new nokia.maps.heatmap.Overlay(options);
+            return heatmapProvider;
         }
     });
-    return HereMap;
+    return HereHeatMap;
 });

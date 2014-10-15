@@ -2,12 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Marker Map Javascript</title>
-    {% include "heremap-res.html" %}
+    <title>Heat Map Javascript</title>
     <meta charset="utf-8">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/dashboard.css">
+    {% include "heremap-res-heatmap.html" %}
 </head>
 
 <body>
@@ -24,14 +25,16 @@
             <div>
                 <div style="float:left;width:49%" id="search-table"></div>
                 <div style="float:right;width:2%"></div>
-                <div style="float:right;width:49%" id="search-map"></div>
+                <div style="float:right;width:49%;">
+                    <div>A value based heat map</div>
+                    <div id="search-map"></div>
+                </div>
                 <div style="clear: both; margin-top:10px;"></div>
             </div>
         </div>
     </div>
 
     <div id="myfooter"></div>
-
 
     {% component_loader %}
 
@@ -44,7 +47,7 @@
             "splunkjs/mvc/searchcontrolsview",
             "splunkjs/mvc/tableview",
             "splunkjs/mvc/searchmanager",
-            "heremaps/heremarkermap"
+            "heremaps/hereheatmap"
         ];
         require(deps, function(mvc) {
             // Load individual components
@@ -53,7 +56,7 @@
             var SearchBarView = require("splunkjs/mvc/searchbarview");
             var SearchControlsView = require("splunkjs/mvc/searchcontrolsview");
             var TableView = require("splunkjs/mvc/tableview");
-            var HereMarkerMap = require("heremaps/heremarkermap");
+            var HereHeatMap = require("heremaps/hereheatmap");
             var SearchManager = require("splunkjs/mvc/searchmanager");
 
             // Create a header
@@ -101,11 +104,13 @@
             }).render();
 
             // Create the marker map
-            var mymarkermap = new HereMarkerMap({
-                id: "markermap1",
+            var myheatmap = new HereHeatMap({
+                id: "heatmap1",
                 managerid: "search1",
                 el: $("#search-map"),
                 height: "400px",
+                type:"value",
+                opacity: "0.7",
             }).render()
         });
     </script>

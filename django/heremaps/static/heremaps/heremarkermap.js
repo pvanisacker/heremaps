@@ -11,7 +11,22 @@ define(function(require, exports, module) {
         className: "heremarkermap",
 
         options: {
-            marker:undefined
+            marker:undefined,
+            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data["value"]+"</div>";}
+        },
+        group:new H.map.Group(),
+
+        postCreateMap: function(){
+            // Add a listener to the group to show the dialog box.
+            var that=this;
+            if(this.options.bubbleContentProvider){
+                this.group.addEventListener('tap', function (evt) {
+                    var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                       content: that.options.bubbleContentProvider(evt.target.getData())
+                    });
+                    that.ui.addBubble(bubble);
+                }, false);
+            }
         },
 
         updateView: function(viz, data) {
@@ -23,16 +38,18 @@ define(function(require, exports, module) {
                     }else{
                         var marker=new H.map.Marker({lat:data[i]["lat"],lng:data[i]["lng"]});
                     }
-                    // marker=new H.map.Marker({lat:data[i]["lat"],lng:data[i]["lng"]});
-
-                    viz.map.addObject(marker);
+                    marker.setData(data[i]);
+                    // Add marker to group
+                    this.group.addObject(marker);
                 }
+                this.map.addObject(this.group);
             }
             this._clearMessage();
         },
+
         clearView: function(){
-            if(this.map){
-                this.map.removeObjects(this.map.getObjects());
+            if(this.map && this.group){
+                this.group.removeAll();
             }
         }
     });

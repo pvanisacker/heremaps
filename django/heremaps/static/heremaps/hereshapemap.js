@@ -33,7 +33,8 @@ define(function(require, exports, module) {
                         lineWidth: 1.5,
                         lineCap: 'square',
                         lineJoin: 'bevel'
-                    },
+            },
+            bubbleContentProvider: function(placemark,data){return "<div style='text-align:center;'>"+placemark["name"]+": "+data["value"]+"</div>";},
         },
 
 
@@ -44,8 +45,9 @@ define(function(require, exports, module) {
                     if(result["key"] in this.shapes){
                         value=parseFloat(result["value"])
                         if(value!=NaN){
-                            this.shapes[result["key"]]["value"]=value
-                            if(this.maxValue<result["value"]) this.maxValue=value
+                            this.shapes[result["key"]]["value"]=value;
+                            this.shapes[result["key"]]["result"]=result;
+                            if(this.maxValue<result["value"]) this.maxValue=value;
                         }
                     }else{
                         console.warn("Could not find result "+result["key"]+" in shape list");
@@ -70,7 +72,17 @@ define(function(require, exports, module) {
             });
 
             this.reader.parse();
-            this.map.addLayer(this.reader.getLayer());
+            this.layer=this.reader.getLayer();
+            if(this.options.bubbleContentProvider){
+                var that=this;
+                this.layer.getProvider().addEventListener('tap', function(evt) {
+                    var bubble =  new H.ui.InfoBubble(that.map.screenToGeo(evt.currentPointer.viewportX, evt.currentPointer.viewportY), {
+                        content: that.options.bubbleContentProvider(evt.target.getData(),that.shapes[evt.target.getData()["description"]])
+                    });
+                    that.ui.addBubble(bubble);
+                });
+            }
+            this.map.addLayer(this.layer);
         },
 
         _onDataLoaded: function(){

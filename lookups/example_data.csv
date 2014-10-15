@@ -1,5 +1,5 @@
-key,value
-area1,100
-area2,200
-area3,150
-area4,50
+key,value,something
+area1,100,I am area 1 and I am somewhere
+area2,200,Ooohoo I'm area2
+area3,150,It's me area3
+area4,50,I'm a cat

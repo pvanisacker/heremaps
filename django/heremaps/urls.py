@@ -18,6 +18,9 @@ urlpatterns = patterns('',
     url(r'^hereshapemap_js_in/$', render('heremaps:hereshapemap_js_in.html'), name='hereshapemap_js_in'),
     url(r'^hereshapemap_js_uk/$', render('heremaps:hereshapemap_js_uk.html'), name='hereshapemap_js_uk'),
     url(r'^hereshapemap_js_us/$', render('heremaps:hereshapemap_js_us.html'), name='hereshapemap_js_us'),
+    url(r'^hereheatmap_django/$', render('heremaps:hereheatmap_django.html'), name='hereheatmap_django'),
+    url(r'^hereheatmap_js/$', render('heremaps:hereheatmap_js.html'), name='hereheatmap_js'),
+    url(r'^hereheatmap_js_custom/$', render('heremaps:hereheatmap_js_custom.html'), name='hereheatmap_js_custom'),
     url(r'^reversegeocode/$', render('reversegeocode.html'), name='reversegeocode'),
     url(r'^setup/$', 'heremaps.views.setup', name='setup')
 )

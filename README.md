@@ -25,9 +25,10 @@ Enjoy!
 
 The app contains 3 different map visualizations.
    * Marker map: displaying markers for lat/lng combinations
-   * Cluster map: clusters markers
+   * Cluster map: clusters markers together to get a better overview.
    * Shape map: colors shapes depending on the values
-     These maps use a KML file to highlight certain areas. The KML files need a specific structure. See the custom.kml file for an example.  
+     These maps use a KML file to highlight certain areas. The KML files need a specific structure. See the custom.kml file for an example.
+   * Heat map: shows density or value heatmaps of your data.
 See the examples on how to use them and customize them.
 
 The KML files are compiled from http://www.naturalearthdata.com/.  
@@ -74,4 +75,4 @@ Without these settings the app will not work.
 
 ## Versions
    * 0.1: First version, includes marker map, cluster map and shape map.
-   * 0.2: Add more shapemaps, fix bug with reverse geocoding command.
+   * 0.2: Add more shapemaps. Add heatmaps, fix bug with reverse geocoding command. Make markers clickable.

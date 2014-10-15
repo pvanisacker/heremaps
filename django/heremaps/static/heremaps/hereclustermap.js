@@ -13,11 +13,11 @@ define(function(require, exports, module) {
         options: {
             min_weight: 1,
             eps: 32,
-            theme: undefined
+            theme: undefined,
         },
 
         clusteringLayer:undefined,
-        
+
         updateView: function(viz, data) {
             if(this.map){
                 this.clearView();
@@ -40,10 +40,8 @@ define(function(require, exports, module) {
                 if(this.options.theme){
                     options["theme"]=this.options.theme
                 }
-                var clusteringProvider = new H.clustering.Provider(dataPoints, options);
-
-                //clustering should be used with ObjectLayer
-                this.clusteringLayer = new H.map.layer.ObjectLayer(clusteringProvider);
+                this.clusteringProvider = new H.clustering.Provider(dataPoints, options);
+                this.clusteringLayer = new H.map.layer.ObjectLayer(this.clusteringProvider);
                 this.map.addLayer(this.clusteringLayer);
             }
             this._clearMessage();
