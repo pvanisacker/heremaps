@@ -271,13 +271,11 @@ var theme2={
             size: { w: 50, h: 50},
             anchor: { x: 25, y: 25}
         });
-
         // Create a marker for clusters:
         var clusterMarker = new H.map.Marker(
             cluster.getPosition(),
             {icon: clusterIcon, min: cluster.getMinZoom(), max: cluster.getMaxZoom()}
         );
-
         // Bind cluster data to the marker:
         clusterMarker.setData(cluster);
         return clusterMarker;
@@ -288,20 +286,16 @@ var theme2={
         var svgString = noiseSvgTemplate2.replace('${TEXT}',noisePoint.getData()["value"]);
         var svgString = svgString.replace('${FILL}',fill);
         var noiseIcon = new H.map.Icon(svgString, {size: { w: 20, h: 20 },anchor: { x: 10, y: 10}});
-
         // Create a marker for noise points:
         var noiseMarker = new H.map.Marker(
             noisePoint.getPosition(),
             {icon: noiseIcon,min: noisePoint.getMinZoom()}
         );
-
         // Bind noise point data to the marker:
         noiseMarker.setData(noisePoint);
         return noiseMarker;
     }
 }
-```
-
 // Create the cluster map
 var myclustermap2 = new HereClusterMap({
     id: "clustermap2",
@@ -312,7 +306,7 @@ var myclustermap2 = new HereClusterMap({
     center: "60,-160",
     theme: theme2
 }).render()
-</pre></code>
+```
 
 
 
