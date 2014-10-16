@@ -1,7 +1,8 @@
 # Intro
 
 A Splunk app for map visualizations using HERE maps  
-It includes 4 different visualizations types, one reverse geocoding custom command and a couple of csv lookups containing example data.
+It includes 4 different visualizations types, one reverse geocoding custom command and a couple of csv lookups containing example data.  
+See some screenshots: https://github.com/pvanisacker/heremaps/blob/master/appserver/static
 
 The code is available on github: https://github.com/pvanisacker/heremaps  
 For questions about the app, please raise them on http://answers.splunk.com  
