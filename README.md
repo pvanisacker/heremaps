@@ -428,3 +428,4 @@ var myheatmap1 = new HereHeatMap({
 # Versions
    * 0.1: First version, includes marker map, cluster map and shape map.
    * 0.2: Add more shapemaps. Add heatmaps, fix bug with reverse geocoding command. Make markers clickable.
+   * 0.3: Fix loading of shapemaps, add more documentation, add example HTML dashboards.
