@@ -64,7 +64,7 @@ define(function(require, exports, module) {
         },
         postCreateMap: function(){
             console.log("postCreate")
-            this.reader = new H.data.kml.Reader('../../../static/data/'+this.options.kmlFile);
+            this.reader = new H.data.kml.Reader('/static/app/heremaps/data/'+this.options.kmlFile);
             var that=this
             this.reader.addEventListener('statechange', function(evt) {
                 if(evt.state == H.data.AbstractReader.State.READY){

@@ -9,3 +9,4 @@ metadata/*
 heremaps.log
 bin/reversegeocode.cache
 tmp
+appserver/static/heremaps

@@ -39,7 +39,7 @@ Without these settings the app will not work.
 ## reversegeocode command
 
 This command uses the HERE REST api. So you need internet connectivity to get it working.  
-It requires a lat and lng field and will add new fields containing the information for this lat/lng.  
+It requires a floating point lat and lng field and will add new fields containing the information for this lat/lng.  
 The fields that will be added:
   * regeo_country
   * regeo_state
@@ -50,6 +50,9 @@ The fields that will be added:
   * regeo_city
   * regeo_label
 
+You'll see that not all of these fields are returned.  
+The country value is an ISO3166 3 letter code.  
+
 Example:
 <pre><code>index=_internal | head 1 | eval lat=51 | eval lng=6 | reversegeocode | fields lat,lng,regeo* | table lat,lng,regeo*</code></pre>
 
@@ -57,10 +60,8 @@ Example:
 |-----|-----|------------|---------------|--------------|----------------|-------------------------------------------|------------------|--------------|-------------|
 | 51  | 6   | Gangelt    | DEU           | Heinsberg    |                | Gangelt, Nordrhein-Westfalen, Deutschland | 52538            |              | Nordrhein-Westfalen |
 
-You'll notice that not all of these fields are returned.  
-The country value is an ISO3166 3 letter code.  
 
-By default the command will look for a "lat" and "lng" and prefix the added fields with "regeo_".  
+By default the command will look for a "lat" and "lng" field in the event and prefix the new fields with "regeo_".  
 This behaviour is customizable through the command options:
 
 <pre><code>index=_internal | head 1 | eval latitude=51 | eval longitude=6 | reversegeocode lat=latitude,lng=longitude,prefix=myprefix| fields latitude,longitude,myprefix* | table latitude,longitude,myprefix*</code></pre>
@@ -69,9 +70,9 @@ This behaviour is customizable through the command options:
 |-----|-----|------------|---------------|--------------|----------------|-------------------------------------------|------------------|--------------|-------------|
 | 51  | 6   | Gangelt    | DEU           | Heinsberg    |                | Gangelt, Nordrhein-Westfalen, Deutschland | 52538            |              | Nordrhein-Westfalen |
 
-The command includes a small cache to avoid calling the HERE api too often.  
+Internally command includes a small cache to avoid calling the HERE api too often.  
 By default it stores 1000000 results for 62 days.
-The reverse geocode command will internally round lat/lng to a 5 digit precision to increase the cache hit ratio.
+The reverse geocode command will internally also round lat/lng combinations to a 5 digit precision to increase the cache hit ratio.
 
 ## reversegeocode macro
 
@@ -96,13 +97,70 @@ The app contains 4 different map visualizations.
 Except for the heat map, all of the visualization use v3 of the HERE javascript API.  
 The heatmap visualization still uses v2.5.
 
-The app contains examples on how to include them into Django and Javascript based dashboards.
+The app contains examples on how to include them into Django and Javascript based dashboards when you are using the Splunk web framework.
 
-Below you will find instructions for creating an HTML dashboard. (very similar to the javascript dashboards that are part of the app)
+If you're not using the web framework you can still include these visualizations in HTML dashboards. The visualizations cannot be included in simple or advanced XML dashboards.  
+For creating an HTML dashboard see the instructions below. (It's rather hard for now :-( )
+
+### Common config
+
+You need to create one directory in your app to save your html dashboards: default/data/ui/html.  
+When done your directory structure should look like this:
+
+<pre><code>
+- $SPLUNK_HOME/etc/apps/myspecialapp
+  - default
+    - data
+      - ui
+        - nav
+        - views
+        - html
+    - app.conf
+  - ...
+</code></pre>
+
+When creating an HTML dashboard you also need to make sure to include the needed javascript and CSS resources.
+<pre><code>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-clustering.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-data.js" type="text/javascript" charset="utf-8"></script>
+    <link href="https://js.api.here.com/v3/3.0/mapsjs-ui.css" rel="stylesheet" type="text/css" />
+    <link href="{{SPLUNKWEB_URL_PREFIX}}/static/app/heremaps/heremaps/heremap.css" rel="stylesheet" type="text/css" />
+</pre></code>
+
+Once that's done you can start configuring the visualization.
+
 
 ### Marker map
 
+For using a marker map you need to load the "app/heremaps/heremaps/heremarkermap" dependency.  
+And then you can create a new marker map:
+
+<pre><code>
+var mymarkermap = new HereMarkerMap({
+  id: "markermap1",
+  managerid: "search1",
+  el: $("#markermap-div"),
+  height: "400px",
+}).render()
+</pre></code>
+
 ### Cluster map
+
+For using a marker map you need to load the "app/heremaps/heremaps/hereclustermap" dependency.  
+And then you can create a new marker map:
+
+<pre><code>
+var myclustermap = new HereClusterMap({
+  id: "clustermap1",
+  managerid: "search1",
+  el: $("#markermap-div"),
+  height: "400px",
+}).render()
+</pre></code>
 
 ### Shape map
 
