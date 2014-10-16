@@ -107,9 +107,9 @@ And you will find examples in the default/data/ui/html directory.
 The visualization can render quite some data points/markers. But as these visualizations are rendered on browser side there are limits.  
 To avoid your brower from becoming slow when rendering data, try to aggregate as much data as possible already on server side.  
 If you have a search that returns tons of data, you could use the following:
-<pre><code>
+```
 ... | eval lat=round(lat,4) | eval lng=round(lng,4) | stats count as value by lat,lng 
-</pre></code>
+```
 
 ### Marker map
 
@@ -154,7 +154,7 @@ When done your directory structure should look like this:
 </code></pre>
 
 When creating an HTML dashboard you also need to make sure to include the needed javascript and CSS resources.
-<pre><code>
+```html
     <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript" charset="UTF-8"></script>
@@ -163,7 +163,7 @@ When creating an HTML dashboard you also need to make sure to include the needed
     <script src="https://js.api.here.com/v3/3.0/mapsjs-data.js" type="text/javascript" charset="utf-8"></script>
     <link href="https://js.api.here.com/v3/3.0/mapsjs-ui.css" rel="stylesheet" type="text/css" />
     <link href="{{SPLUNKWEB_URL_PREFIX}}/static/app/heremaps/heremaps/heremap.css" rel="stylesheet" type="text/css" />
-</pre></code>
+```
 
 Once that's done you can start configuring the visualization.
 
@@ -380,14 +380,14 @@ Creating a heat map is slightly different than the other maps as it still using 
 Therefore you don't need to include all the javascript that was mentioned above.  
 But only this:
 
-<pre><code>
+```
 <script src="https://js.api.here.com/se/2.5.4/jsl.js?with=all" type="text/javascript" charset="utf-8"></script>
 <style>
   .mapcontainer img{
     max-width:none;
   }
 </style>
-</pre></code>
+```
 
 <pre><code>
 var myheatmap = new HereHeatMap({
