@@ -39,18 +39,18 @@ define(function(require, exports, module) {
 
 
         updateView: function(viz, data) {
+            console.log("updateView");
             for(var seq in data){
                 var result=data[seq];
                 if("key" in result && "value" in result){
-                    if(result["key"] in this.shapes){
-                        value=parseFloat(result["value"])
-                        if(value!=NaN){
-                            this.shapes[result["key"]]["value"]=value;
-                            this.shapes[result["key"]]["result"]=result;
-                            if(this.maxValue<result["value"]) this.maxValue=value;
-                        }
-                    }else{
-                        console.warn("Could not find result "+result["key"]+" in shape list");
+                    if(!(result["key"] in this.shapes)){
+                        this.shapes[result["key"]]={}
+                    }
+                    value=parseFloat(result["value"])
+                    if(value!=NaN){
+                        this.shapes[result["key"]]["value"]=value;
+                        this.shapes[result["key"]]["result"]=result;
+                        if(this.maxValue<result["value"]) this.maxValue=value;
                     }
                 }
             }
@@ -63,11 +63,12 @@ define(function(require, exports, module) {
             }
         },
         postCreateMap: function(){
+            console.log("postCreate")
             this.reader = new H.data.kml.Reader('../../../static/data/'+this.options.kmlFile);
             var that=this
             this.reader.addEventListener('statechange', function(evt) {
                 if(evt.state == H.data.AbstractReader.State.READY){
-                    that._onDataLoaded();
+                    that._onShapesLoaded();
                 }
             });
 
@@ -85,7 +86,8 @@ define(function(require, exports, module) {
             this.map.addLayer(this.layer);
         },
 
-        _onDataLoaded: function(){
+        _onShapesLoaded: function(){
+            console.log("onShapesLoaded");
             objs=this.reader.getParsedObjects();
             for(var i=0;i<objs.length;i++){
                 obj=objs[i]
@@ -107,8 +109,6 @@ define(function(require, exports, module) {
                     value=this.shapes[key]["value"]
                 }
                 style = this.styleProvider(value);
-                // console.log(key)
-                // console.log(style.fillColor);
                 this.colorShape(key,style);
             }
         },
