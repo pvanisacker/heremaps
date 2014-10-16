@@ -104,8 +104,6 @@ If you're not using the web framework you can still include these visualizations
 For creating an HTML dashboard see the instructions below in the customization part.
 And you will find examples in the default/data/ui/html directory.
 
-### Usage
-
 The visualization can render quite some data points/markers. But as these visualizations are rendered on browser side there are limits.  
 To avoid your brower from becoming slow when rendering data, try to aggregate as much data as possible already on server side.  
 If you have a search that returns tons of data, you could use the following:
@@ -136,9 +134,9 @@ Out of the box the app provides a couple of KML files:
 
 A heat map requires the same search data as a marker map.
 
-### Customization
+# Customization
 
-#### Common config
+## Common config
 
 You need to create one directory in your app to save your html dashboards: default/data/ui/html.  
 When done your directory structure should look like this:
@@ -170,7 +168,7 @@ When creating an HTML dashboard you also need to make sure to include the needed
 Once that's done you can start configuring the visualization.
 
 
-#### Marker map
+## Marker map
 
 For using a marker map you need to load the "app/heremaps/heremaps/heremarkermap" dependency.  
 And then you can create a new marker map:
@@ -229,7 +227,7 @@ var mymarkermap = new HereMarkerMap({
 </pre></code>
 
 
-#### Cluster map
+## Cluster map
 
 For using a cluster map you need to load the "app/heremaps/heremaps/hereclustermap" dependency.  
 And then you can create a new cluster map:
@@ -317,7 +315,7 @@ var myclustermap2 = new HereClusterMap({
 
 
 
-#### Shape map
+## Shape map
 
 For using a cluster map you need to load the "app/heremaps/heremaps/hereshapemap" dependency.  
 And then you can create a new shape map:
@@ -376,7 +374,7 @@ var myshapemap = new HereShapeMap({
 }).render()
 </pre></code>
 
-#### Heat map
+## Heat map
 
 Creating a heat map is slightly different than the other maps as it still using an older version of the HERE javascript API.  
 Therefore you don't need to include all the javascript that was mentioned above.  
