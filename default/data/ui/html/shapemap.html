@@ -26,6 +26,11 @@
     </div>
 
     <div class="dashboard-body container-fluid main-section-body" data-role="main">
+        <div>
+            This dashboard will not work out of the box as your app might not have the rights to use the countries_data.csv lookup<br/>
+            You'll need to share the lookup table file with all apps. <br/>
+            This can be configured by going to Settings, Lookups, Lookup Table files
+        </div>
         <div style="margin:2%">
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
@@ -120,7 +125,7 @@ require.config({
                 el: $("#search-table")
             }).render();
 
-            // Create the marker map
+            // Create the shape map
             var myshapemap = new HereShapeMap({
                 id: "shapemap1",
                 managerid: "search1",
