@@ -245,7 +245,7 @@ Cluster markers can currently not be clicked.
 But you can customize the look of them by creating a theme.  
 See the example below and look at http://developer.here.com/javascript-apis/documentation/v3/maps/topics/clustering.html
 
-<pre><code>
+```html
 var noiseSvgTemplate2 = '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="9" cy="10" cx="10" stroke-width="0" fill="${FILL}"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="15" x="10" stroke-width="0" font-size="8pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>';
 var clusterSvgTemplate2 =
     '<svg xmlns="http://www.w3.org/2000/svg" height="50px" width="50px">'+
@@ -300,6 +300,7 @@ var theme2={
         return noiseMarker;
     }
 }
+```
 
 // Create the cluster map
 var myclustermap2 = new HereClusterMap({
