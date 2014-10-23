@@ -40,7 +40,9 @@ define(function(require, exports, module) {
 
 
         updateView: function(viz, data) {
-            console.log("updateView");
+            // update the map with the new results
+            this.maxValue=-Number.MAX_VALUE
+            this.minValue=Number.MAX_VALUE
             for(var seq in data){
                 var result=data[seq];
                 if("key" in result && "value" in result){
@@ -67,7 +69,6 @@ define(function(require, exports, module) {
         },
         postCreateMap: function(){
             // load the map shapes
-            console.log("postCreate")
             this.reader = new H.data.kml.Reader('/static/app/heremaps/data/'+this.options.kmlFile);
             var that=this
             this.reader.addEventListener('statechange', function(evt) {
@@ -75,9 +76,10 @@ define(function(require, exports, module) {
                     that._onShapesLoaded();
                 }
             });
-
             this.reader.parse();
             this.layer=this.reader.getLayer();
+
+            // Add listener for info bubble on click
             if(this.options.bubbleContentProvider){
                 var that=this;
                 this.layer.getProvider().addEventListener('tap', function(evt) {
@@ -101,6 +103,24 @@ define(function(require, exports, module) {
                         this.shapes[key]={}
                     }
                     this.shapes[key]["obj"]=obj
+                    polies=obj.getObjects();
+                    for(var j=0;j<polies.length;j++){
+                        poly=polies[j];
+                        var that=this;
+                        poly.addEventListener('pointerenter',function(event){
+                            var group=event.target.getParentGroup();
+                            var key=group.getData()["description"];
+                            that.shapes[key]["state"]="enter";
+                            that.colorShape(key);
+                        });
+                        poly.addEventListener('pointerleave',function(event){
+                            var group=event.target.getParentGroup();
+                            var key=group.getData()["description"];
+                            that.shapes[key]["state"]="normal";
+                            that.colorShape(key);
+                        });
+
+                    }
                 }
             }
             this.colorShapes()
@@ -109,19 +129,22 @@ define(function(require, exports, module) {
         colorShapes: function(){
             // iterate over all the shapes and trigger the coloring
             for(var key in this.shapes){
-                var value=0;
-                if("value" in this.shapes[key]){
-                    value=this.shapes[key]["value"]
-                }
-                style = this.styleProvider(value);
-                this.colorShape(key,style);
+                this.colorShape(key);
             }
         },
-
-        colorShape: function(key,style){
+        colorShape: function(key){
+            style = this.styleProvider(key);
+            this.colorShapeStyle(key,style);
+        },
+        colorShapeStyle: function(key,style){
             // color a certain shape with a certain style
             shape_group=this.shapes[key]["obj"]
+            index=0;
             if(shape_group){
+                if("state" in this.shapes[key] && this.shapes[key]["state"]=="enter"){
+                    index=5;
+                }
+                shape_group.setZIndex(index);
                 shape_group.forEach(function(obj,idx,group){
                     if(obj instanceof H.map.Polygon){
                         obj.setStyle(style);
@@ -129,7 +152,7 @@ define(function(require, exports, module) {
                 });
             }
         },
-        styleProvider: function(value){
+        styleProvider: function(key){
             // clone the style
             style={
                 strokeColor: this.options.defaultStyle.strokeColor,
@@ -138,12 +161,19 @@ define(function(require, exports, module) {
                 lineCap: this.options.defaultStyle.lineCap,
                 lineJoin: this.options.defaultStyle.lineJoin
             }
-            if(value){
+            if("value" in this.shapes[key]){
+                value=this.shapes[key]["value"]
                 var percent = (value - this.minValue) / (this.maxValue - this.minValue);
-                for(var key in this.options.colorRange){
-                    if(percent>=parseFloat(key)){
-                        style.fillColor=this.options.colorRange[key];
+                for(var color in this.options.colorRange){
+                    if(percent>=parseFloat(color)){
+                        style.fillColor=this.options.colorRange[color];
                     }
+                }
+            }
+            if(key in this.shapes){
+                if(("state" in this.shapes[key]) && this.shapes[key]["state"]=="enter"){
+                    style.lineWidth=4;
+                    style.strokeColor='rgba(150,150,150,0.8)';
                 }
             }
             return style;
