@@ -12,7 +12,8 @@ define(function(require, exports, module) {
 
         reader: undefined,
         shapes: {},
-        maxValue:0.0,
+        maxValue:-Number.MAX_VALUE,
+        minValue:Number.MAX_VALUE,
         options:{
             kmlFile:"world2.kml",
             colorRange:{
@@ -51,6 +52,7 @@ define(function(require, exports, module) {
                         this.shapes[result["key"]]["value"]=value;
                         this.shapes[result["key"]]["result"]=result;
                         if(this.maxValue<result["value"]) this.maxValue=value;
+                        if(this.minValue>result["value"]) this.minValue=value;
                     }
                 }
             }
@@ -58,11 +60,13 @@ define(function(require, exports, module) {
             this._clearMessage();
         },
         clearView: function(){
+            // set all the shapes to the default style
             for(var shape in this.shapes){
                 this.colorShape(shape,this.options.defaultStyle)
             }
         },
         postCreateMap: function(){
+            // load the map shapes
             console.log("postCreate")
             this.reader = new H.data.kml.Reader('/static/app/heremaps/data/'+this.options.kmlFile);
             var that=this
@@ -87,7 +91,7 @@ define(function(require, exports, module) {
         },
 
         _onShapesLoaded: function(){
-            console.log("onShapesLoaded");
+            // iterate over all the shapes and add them to as "obj" to this.shapes
             objs=this.reader.getParsedObjects();
             for(var i=0;i<objs.length;i++){
                 obj=objs[i]
@@ -103,6 +107,7 @@ define(function(require, exports, module) {
         },
 
         colorShapes: function(){
+            // iterate over all the shapes and trigger the coloring
             for(var key in this.shapes){
                 var value=0;
                 if("value" in this.shapes[key]){
@@ -114,6 +119,7 @@ define(function(require, exports, module) {
         },
 
         colorShape: function(key,style){
+            // color a certain shape with a certain style
             shape_group=this.shapes[key]["obj"]
             if(shape_group){
                 shape_group.forEach(function(obj,idx,group){
@@ -132,8 +138,8 @@ define(function(require, exports, module) {
                 lineCap: this.options.defaultStyle.lineCap,
                 lineJoin: this.options.defaultStyle.lineJoin
             }
-            if(value && value!=0){
-                var percent=value/this.maxValue;
+            if(value){
+                var percent = (value - this.minValue) / (this.maxValue - this.minValue);
                 for(var key in this.options.colorRange){
                     if(percent>=parseFloat(key)){
                         style.fillColor=this.options.colorRange[key];
