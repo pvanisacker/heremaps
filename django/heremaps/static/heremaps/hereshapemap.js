@@ -15,6 +15,7 @@ define(function(require, exports, module) {
         maxValue:-Number.MAX_VALUE,
         minValue:Number.MAX_VALUE,
         options:{
+            shapeType:"kml",
             kmlFile:"world2.kml",
             colorRange:{
                 "0.0"   :"rgba(0,255,64,0.6)",
@@ -69,7 +70,12 @@ define(function(require, exports, module) {
         },
         postCreateMap: function(){
             // load the map shapes
-            this.reader = new H.data.kml.Reader('/static/app/heremaps/data/'+this.options.kmlFile);
+            if(this.options.shapeType==="kml"){
+                this.reader = new H.data.kml.Reader('/static/app/heremaps/data/'+this.options.kmlFile);
+            }
+            if(this.options.shapeType==="geojson"){
+                this.reader = new H.data.geojson.Reader('/static/app/heremaps/data/'+this.options.geoJSONFile);
+            }
             var that=this
             this.reader.addEventListener('statechange', function(evt) {
                 if(evt.state == H.data.AbstractReader.State.READY){
@@ -94,36 +100,59 @@ define(function(require, exports, module) {
 
         _onShapesLoaded: function(){
             // iterate over all the shapes and add them to as "obj" to this.shapes
-            objs=this.reader.getParsedObjects();
+            var objs=[];
+            if(this.options.shapeType==="kml"){
+                objs=this.reader.getParsedObjects();
+            }
+            if(this.options.shapeType==="geojson"){
+                objs=this.reader.getParsedObjects()
+                objs=objs[0].getObjects();
+            }
+
             for(var i=0;i<objs.length;i++){
-                obj=objs[i]
+                var obj=objs[i]
                 if (obj instanceof H.map.Group){
-                    key=obj.getData()["description"]
+                    if(this.options.shapeType==="kml"){
+                        key=obj.getData()["description"];
+                    }
+                    if(this.options.shapeType==="geojson"){
+                        key=obj.getData()["properties"]["id"]
+                    }
                     if (!(key in this.shapes)){
                         this.shapes[key]={}
                     }
                     this.shapes[key]["obj"]=obj
-                    polies=obj.getObjects();
-                    for(var j=0;j<polies.length;j++){
-                        poly=polies[j];
-                        var that=this;
+
+                    var that=this;
+                    obj.forEach(function(poly){
                         poly.addEventListener('pointerenter',function(event){
                             var group=event.target.getParentGroup();
-                            var key=group.getData()["description"];
+                            if(that.options.shapeType==="kml"){
+                                key=group.getData()["description"];
+                            }
+                            if(that.options.shapeType==="geojson"){
+                                key=group.getData()["properties"]["id"]
+                            }
                             that.shapes[key]["state"]="enter";
                             that.colorShape(key);
                         });
                         poly.addEventListener('pointerleave',function(event){
                             var group=event.target.getParentGroup();
-                            var key=group.getData()["description"];
+                            if(that.options.shapeType==="kml"){
+                                key=group.getData()["description"];
+                            }
+                            if(that.options.shapeType==="geojson"){
+                                key=group.getData()["properties"]["id"]
+                            }
                             that.shapes[key]["state"]="normal";
                             that.colorShape(key);
                         });
 
-                    }
+                    });
+
                 }
             }
-            this.colorShapes()
+            this.colorShapes();
         },
 
         colorShapes: function(){
@@ -133,19 +162,20 @@ define(function(require, exports, module) {
             }
         },
         colorShape: function(key){
-            style = this.styleProvider(key);
+            var style = this.styleProvider(key);
             this.colorShapeStyle(key,style);
         },
         colorShapeStyle: function(key,style){
             // color a certain shape with a certain style
-            shape_group=this.shapes[key]["obj"]
-            index=0;
+            var shape_group=this.shapes[key]["obj"]
+
             if(shape_group){
+                var index=0;
                 if("state" in this.shapes[key] && this.shapes[key]["state"]=="enter"){
                     index=5;
                 }
                 shape_group.setZIndex(index);
-                shape_group.forEach(function(obj,idx,group){
+                shape_group.forEach(function(obj){
                     if(obj instanceof H.map.Polygon){
                         obj.setStyle(style);
                     }
@@ -154,7 +184,7 @@ define(function(require, exports, module) {
         },
         styleProvider: function(key){
             // clone the style
-            style={
+            var style={
                 strokeColor: this.options.defaultStyle.strokeColor,
                 fillColor: this.options.defaultStyle.fillColor,
                 lineWidth: this.options.defaultStyle.lineWidth,
