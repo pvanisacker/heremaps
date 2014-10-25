@@ -1,0 +1,155 @@
+{% load splunkmvc %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Shape Map geoJSON Javascript</title>
+    {% include "heremap-res.html" %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/dashboard.css">
+</head>
+
+<body>
+    <div class="header">
+        <div id="myheader"></div>
+    </div>
+
+    <div class="dashboard-body container-fluid main-section-body" data-role="main">
+        <div style="margin:1%">
+            <div style="margin-bottom:10px;">
+                <div style="float:left;width:49%" id="map1"></div>
+                <div style="float:right;width:2%"></div>
+                <div style="float:right;width:49%" id="map2"></div>
+                <div style="clear: both; margin-top:10px;"></div>
+            </div>
+            <div style="margin-bottom:10px;">
+                <div style="float:left;width:49%" id="map3"></div>
+                <div style="float:right;width:2%"></div>
+                <div style="float:right;width:49%" id="map4"></div>
+                <div style="clear: both; margin-top:10px;"></div>
+            </div>
+            <div style="margin-bottom:10px;">
+                <div style="float:left;width:49%" id="map5"></div>
+                <div style="float:right;width:2%"></div>
+                <div style="float:right;width:49%" id="map6"></div>
+                <div style="clear: both; margin-top:10px;"></div>
+            </div>
+            <div style="margin-bottom:10px;">
+                <div style="float:left;width:49%" id="map7"></div>
+                <div style="float:right;width:2%"></div>
+                <div style="float:right;width:49%" id="map8"></div>
+                <div style="clear: both; margin-top:10px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myfooter"></div>
+
+    {% component_loader %}
+
+    <script>
+        var deps = [
+            "splunkjs/ready!",
+            "splunkjs/mvc/headerview",
+            "splunkjs/mvc/footerview",
+            "heremaps/hereshapemap"
+        ];
+        require(deps, function(mvc) {
+            // Load individual components
+            var HeaderView = require("splunkjs/mvc/headerview");
+            var FooterView = require("splunkjs/mvc/footerview");
+            var HereShapeMap = require("heremaps/hereshapemap");
+
+            // Create a header
+            new HeaderView({
+                id: "myheader",
+                el: $("#myheader"),
+            }).render()
+
+            // Create a footer
+            new FooterView({
+                id: "myfooter",
+                el: $("#myfooter"),
+            }).render()
+
+            var map1 = new HereShapeMap({
+                id: "map1",
+                el: $("#map1"),
+                height: "400px",
+                zoom: "7",
+                center: "50.5,5.2",
+                shapeType: "geojson",
+                geoJSONFile: "countries/be.geojson",
+                defaultStyle:{strokeColor: 'rgba(100,100,100,0.9)',fillColor: 'rgba(255, 255, 255, 0)',lineWidth: 2,lineCap: 'square',lineJoin: 'bevel'},
+            }).render()
+
+            var map2 = new HereShapeMap({
+                id: "map2",
+                el: $("#map2"),
+                height: "400px",
+                zoom: "6",
+                center: "40.4,-3.5",
+                shapeType: "geojson",
+                geoJSONFile: "countries/es.geojson",
+                defaultStyle:{strokeColor: 'rgba(100,100,100,0.9)',fillColor: 'rgba(255, 255, 255, 0)',lineWidth: 2,lineCap: 'square',lineJoin: 'bevel'},
+            }).render()
+
+            var map3 = new HereShapeMap({
+                id: "map3",
+                el: $("#map3"),
+                height: "400px",
+                zoom: "2",
+                center: "57.3,132.6",
+                shapeType: "geojson",
+                geoJSONFile: "countries/ru.geojson",
+                defaultStyle:{strokeColor: 'rgba(100,100,100,0.9)',fillColor: 'rgba(255, 255, 255, 0)',lineWidth: 2,lineCap: 'square',lineJoin: 'bevel'},
+            }).render()
+
+            var map4 = new HereShapeMap({
+                id: "map4",
+                el: $("#map4"),
+                height: "400px",
+                zoom: "3",
+                center: "35.7,118.3",
+                shapeType: "geojson",
+                geoJSONFile: "countries/cn.geojson",
+                defaultStyle:{strokeColor: 'rgba(100,100,100,0.9)',fillColor: 'rgba(255, 255, 255, 0)',lineWidth: 2,lineCap: 'square',lineJoin: 'bevel'},
+            }).render()
+
+            var map5 = new HereShapeMap({
+                id: "map5",
+                el: $("#map5"),
+                height: "400px",
+                zoom: "3",
+                center: "57.9,-81.2",
+                shapeType: "geojson",
+                geoJSONFile: "countries/ca.geojson",
+                defaultStyle:{strokeColor: 'rgba(100,100,100,0.9)',fillColor: 'rgba(255, 255, 255, 0)',lineWidth: 2,lineCap: 'square',lineJoin: 'bevel'},
+            }).render()
+
+            var map6 = new HereShapeMap({
+                id: "map6",
+                el: $("#map6"),
+                height: "400px",
+                zoom: "3",
+                center: "-14.7,-38.5",
+                shapeType: "geojson",
+                geoJSONFile: "countries/br.geojson",
+                defaultStyle:{strokeColor: 'rgba(100,100,100,0.9)',fillColor: 'rgba(255, 255, 255, 0)',lineWidth: 2,lineCap: 'square',lineJoin: 'bevel'},
+            }).render()
+
+            var map7 = new HereShapeMap({
+                id: "map7",
+                el: $("#map7"),
+                height: "400px",
+                zoom: "5",
+                center: "41.7,16.5",
+                shapeType: "geojson",
+                geoJSONFile: "countries/it.geojson",
+                defaultStyle:{strokeColor: 'rgba(100,100,100,0.9)',fillColor: 'rgba(255, 255, 255, 0)',lineWidth: 2,lineCap: 'square',lineJoin: 'bevel'},
+            }).render()
+        });
+    </script>
+</body>
+</html>

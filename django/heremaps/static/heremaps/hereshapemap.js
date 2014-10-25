@@ -203,7 +203,6 @@ define(function(require, exports, module) {
             if(key in this.shapes){
                 if(("state" in this.shapes[key]) && this.shapes[key]["state"]=="enter"){
                     style.lineWidth=4;
-                    style.strokeColor='rgba(150,150,150,0.8)';
                 }
             }
             return style;
