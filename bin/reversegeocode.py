@@ -10,7 +10,6 @@ try:
 except ImportError:
     import xml.etree.ElementTree as et
 
-from splunklib.results import ResultsReader
 from splunklib.searchcommands import dispatch, StreamingCommand, Configuration, Option, validators
 from tools.cache import FileCache
 
@@ -128,10 +127,12 @@ class ReverseGeocodeCommand(StreamingCommand):
             lng = str(round(float(record[self.lng]), 5))
 
             cache_key = "%s,%s" % (lat, lng)
-            location = self.cache.get(cache_key)
-            if location is None:
+            try:
+                location = self.cache.get(cache_key)
+            except KeyError as e:
                 location = self.reverse_geocode(lat, lng)
-                self.cache.set(cache_key,location)
+
+            self.cache.set(cache_key,location)
             self.add_fields(record, location)
 
             yield record

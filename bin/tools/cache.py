@@ -32,7 +32,7 @@ class FileCache(object):
     def get(self, key):
         if key in self.objects:
             return self.objects[key]["data"]
-        return None
+        raise KeyError()
 
     def set(self, key, value):
         self.objects[key] = {"data": value, "created_time": datetime.date.today()}
