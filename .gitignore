@@ -10,4 +10,3 @@ heremaps.log
 bin/reversegeocode.cache
 bin/reversegeocodeshape-*.cache
 tmp
-appserver/static/heremaps

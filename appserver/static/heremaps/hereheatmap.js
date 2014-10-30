@@ -166,7 +166,6 @@ define(function(require, exports, module) {
             if(this.options.colors){
                 options["colors"]=this.options.colors;
             }
-            console.debug(options);
             var heatmapProvider = new nokia.maps.heatmap.Overlay(options);
             return heatmapProvider;
         }

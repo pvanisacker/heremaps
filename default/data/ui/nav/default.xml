@@ -1,39 +1,39 @@
 <nav>
-    <view name="default" default="true"/>
-    <a href="/dj/redirector/heremaps/home">Home</a>
-    <a href="/dj/redirector/heremaps/setup">Setup</a>
-    <a href="/dj/redirector/heremaps/search">Search</a>
-    <collection label="Reverse Geocode">
-        <a href="/dj/redirector/heremaps/reversegeocode">Reverse Geocode</a>
+    <view name="search"/>
+    <a href="/manager/heremaps/apps/local/heremaps/setup?action=edit">Setup</a>
+    <a href="/app/heremaps/heremaps">Heremaps</a>
+    <collection label="Reverse geocoder">
+        <a href="/app/heremaps/reversegeocode">Reversegeocode</a>
+        <!--
+        <a href="/app/heremaps/reversegeocodeshape">Reversegeocode shape</a>
+        -->
     </collection>
     <collection label="Marker maps">
-        <a href="/dj/redirector/heremaps/heremarkermap_django">Marker Map Django</a>
-        <a href="/dj/redirector/heremaps/heremarkermap_js">Marker Map JS</a>
-        <a href="/dj/redirector/heremaps/heremarkermap_js_custom">Marker Map JS custom</a>
+        <a href="/app/heremaps/markermap">Marker map</a>
+        <a href="/app/heremaps/markermapcustom">Custom marker map</a>
     </collection>
     <collection label="Cluster maps">
-        <a href="/dj/redirector/heremaps/hereclustermap_django">Cluster Map Django</a>
-        <a href="/dj/redirector/heremaps/hereclustermap_js">Cluster Map JS</a>
-        <a href="/dj/redirector/heremaps/hereclustermap_js_custom">Cluster Map JS custom</a>
+        <a href="/app/heremaps/clustermap">Cluster map</a>
+        <a href="/app/heremaps/clustermapcustom">Custom cluster map</a>
     </collection>
     <collection label="Shape maps">
-        <a href="/dj/redirector/heremaps/hereshapemap_django">Shape Map Django</a>
-        <a href="/dj/redirector/heremaps/hereshapemap_js">Shape Map JS</a>
-        <a href="/dj/redirector/heremaps/hereshapemap_js_custom">Shape Map JS custom</a>
-        <a href="/dj/redirector/heremaps/hereshapemap_js_custom2">Shape Map JS custom 2</a>
-        <a href="/dj/redirector/heremaps/hereshapemap_js_custom3">Shape Map JS custom 3</a>
-        <a href="/dj/redirector/heremaps/hereshapemap_js_custom4">Shape Map JS custom 4</a>
+        <a href="/app/heremaps/shapemap">Shape map</a>
+        <a href="/app/heremaps/shapemapcustom1">Custom shape map 1</a>
+        <a href="/app/heremaps/shapemapcustom2">Custom shape map 2</a>
+        <a href="/app/heremaps/shapemapcustom3">Custom shape map 3</a>
+        <a href="/app/heremaps/shapemapcustom4">Custom shape map 4</a>
         <collection label="Other countries">
-            <a href="/dj/redirector/heremaps/hereshapemap_js_us">US</a>
-            <a href="/dj/redirector/heremaps/hereshapemap_js_in">India</a>
-            <a href="/dj/redirector/heremaps/hereshapemap_js_fr">France</a>
-            <a href="/dj/redirector/heremaps/hereshapemap_js_de">Germany</a>
-            <a href="/dj/redirector/heremaps/hereshapemap_js_uk">UK</a>
+            <a href="/app/heremaps/shapemapcustom_us">Custom shape map US</a>
+            <a href="/app/heremaps/shapemapcustom_in">Custom shape map India</a>
+            <a href="/app/heremaps/shapemapcustom_fr">Custom shape map France</a>
+            <a href="/app/heremaps/shapemapcustom_de">Custom shape map Germany</a>
+            <a href="/app/heremaps/shapemapcustom_uk">Custom shape map UK</a>
         </collection>
     </collection>
+
     <collection label="Heat maps">
-        <a href="/dj/redirector/heremaps/hereheatmap_django">Heat Map Django</a>
-        <a href="/dj/redirector/heremaps/hereheatmap_js">Heat Map JS</a>
-        <a href="/dj/redirector/heremaps/hereheatmap_js_custom">Heat Map JS custom</a>
+        <a href="/app/heremaps/heatmap">Heatmap</a>
+        <a href="/app/heremaps/heatmapcustom">Custom heatmap</a>
     </collection>
+    <view name="dashboards" />
 </nav>

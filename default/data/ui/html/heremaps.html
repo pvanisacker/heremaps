@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Cluster Map HTML dashboard</title>
+    <title>Heremaps</title>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <link rel="shortcut icon" href="{{SPLUNKWEB_URL_PREFIX}}/static/img/favicon.ico" />
@@ -26,20 +26,12 @@
     </div>
 
     <div class="dashboard-body container-fluid main-section-body" data-role="main">
-        <div style="margin:2%">
-            <div style="padding-bottom:10px">
-            This shows a simple cluster map where events are cluster together. When zooming in you can see the individual markers.
-            </div>
-            <div style="margin-bottom:10px">
-                <div id="search-bar"></div>
-                <div id="search-control"></div>
-            </div>
-            <div>
-                <div style="float:left;width:49%" id="search-table"></div>
-                <div style="float:right;width:2%"></div>
-                <div style="float:right;width:49%" id="search-map"></div>
-                <div style="clear: both; margin-top:10px;"></div>
-            </div>
+        <div class="main-area" style="text-align: center">
+            <h1>Welcome to the HERE maps app</h1>
+            <p>If you don't see a map below, make sure to configure your HERE app_id & app_code in the setup screen.<br/>
+            You can get a free app_id &amp; app_code on <a href="https://developer.here.com">https://developer.here.com</a></p>
+        </div>
+        <div style="width:100%" id="heremap">
         </div>
     </div>
 
@@ -63,21 +55,13 @@ require.config({
             "splunkjs/ready!",
             "splunkjs/mvc/headerview",
             "splunkjs/mvc/footerview",
-            "splunkjs/mvc/searchbarview",
-            "splunkjs/mvc/searchcontrolsview",
-            "splunkjs/mvc/tableview",
-            "splunkjs/mvc/searchmanager",
-            "app/heremaps/heremaps/hereclustermap"
+            "app/heremaps/heremaps/heremap"
         ];
         require(deps, function(mvc) {
             // Load individual components
             var HeaderView = require("splunkjs/mvc/headerview");
             var FooterView = require("splunkjs/mvc/footerview");
-            var SearchBarView = require("splunkjs/mvc/searchbarview");
-            var SearchControlsView = require("splunkjs/mvc/searchcontrolsview");
-            var TableView = require("splunkjs/mvc/tableview");
-            var HereClusterMap = require("app/heremaps/heremaps/hereclustermap");
-            var SearchManager = require("splunkjs/mvc/searchmanager");
+            var HereMap = require("app/heremaps/heremaps/heremap");
 
             // Create a header
             new HeaderView({
@@ -91,43 +75,11 @@ require.config({
                 el: $("#myfooter"),
             }).render()
 
-            // Create a search manager
-            var mysearch = new SearchManager({
-                id: "search1",
-                preview: true,
-                status_buckets: 300,
-                search: mvc.tokenSafe("$searchquery$"),
-                required_field_list: "*",
-            });
-
-            // Create a search bar
-            var mysearchbar = new SearchBarView ({
-                id: "searchbar1",
-                managerid: "search1",
-                el: $("#search-bar"),
-                value: mvc.tokenSafe("$searchquery$"),
-                default: "|inputlookup earthquake.csv| rename mag as value"
-            }).render();
-
-            // Create a search control
-            var mysearchcontrol = new SearchControlsView ({
-                id: "searchcontrol1",
-                managerid: "search1",
-                el: $("#search-control")
-            }).render();
-
-            // Create a table
-            var mytable = new TableView ({
-                id: "table1",
-                managerid: "search1",
-                el: $("#search-table")
-            }).render();
-
             // Create the cluster map
-            var myclustermap = new HereClusterMap({
-                id: "clustermap1",
+            var mymap = new HereMap({
+                id: "heremap",
                 managerid: "search1",
-                el: $("#search-map"),
+                el: $("#heremap"),
                 height: "400px",
             }).render()
         });

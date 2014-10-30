@@ -12,6 +12,7 @@ cp -r default tmp/heremaps
 cp -r django tmp/heremaps
 cp -r lookups tmp/heremaps
 rm -rf tmp/heremaps/bin/reversegeocode.cache
+rm -rf tmp/heremaps/bin/reversegeocode-*
 
 # Copy over the needed files to make HTML dashboard creation easier
 cp -r django/heremaps/static/* tmp/heremaps/appserver/static

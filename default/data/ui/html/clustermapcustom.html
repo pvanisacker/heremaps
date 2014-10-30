@@ -1,13 +1,23 @@
-{% load splunkmvc %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Cluster Map Javascript</title>
-    {% include "heremap-res.html" %}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}splunkjs/css/dashboard.css">
+    <title>Cluster Map HTML dashboard</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="shortcut icon" href="{{SPLUNKWEB_URL_PREFIX}}/static/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/build/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/build/pages/dashboard-simple-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{SPLUNKWEB_URL_PREFIX}}/static/app/search/dashboard.css" />
+    <!--[if IE 7]><link rel="stylesheet" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/sprites-ie7.css" /><![endif]-->
+
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-clustering.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-data.js" type="text/javascript" charset="utf-8"></script>
+    <link href="https://js.api.here.com/v3/3.0/mapsjs-ui.css" rel="stylesheet" type="text/css" />
+    <link href="{{SPLUNKWEB_URL_PREFIX}}/static/app/heremaps/heremaps/heremap.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -17,6 +27,11 @@
 
     <div class="dashboard-body container-fluid main-section-body" data-role="main">
         <div style="margin:2%">
+            <div style="padding-bottom:10px">
+            This shows two different visualizations for clustering. </br>
+            On the left events are visualised using an arrow and have a custom text. Cluster are visualised showing the count of earthquakes in a red bull.<br/>
+            On the right events are visualised using a simple circle showing the earthquake magnitude. Cluster are visualized showing a bigger circle and showing the maximum magnitude of the earthquakes.
+            </div>
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
                 <div id="search-control"></div>
@@ -38,19 +53,28 @@
 
     <div id="myfooter"></div>
 
+<script src="{{SPLUNKWEB_URL_PREFIX}}/config?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/js/i18n.js"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/i18ncatalog?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/js/build/simplexml.min/config.js"></script>
+<script type="text/javascript">
+require.config({
+    baseUrl: "{{SPLUNKWEB_URL_PREFIX}}/static/js",
+    waitSeconds: 0, // Disable require.js load timeout
+    paths:
+    {
+        "app": "../app"
+    }
+});
 
-    {% component_loader %}
-
-    <script>
         var deps = [
             "splunkjs/ready!",
             "splunkjs/mvc/headerview",
             "splunkjs/mvc/footerview",
             "splunkjs/mvc/searchbarview",
             "splunkjs/mvc/searchcontrolsview",
-            "splunkjs/mvc/tableview",
             "splunkjs/mvc/searchmanager",
-            "heremaps/hereclustermap"
+            "app/heremaps/heremaps/hereclustermap"
         ];
         require(deps, function(mvc) {
             // Load individual components
@@ -58,8 +82,7 @@
             var FooterView = require("splunkjs/mvc/footerview");
             var SearchBarView = require("splunkjs/mvc/searchbarview");
             var SearchControlsView = require("splunkjs/mvc/searchcontrolsview");
-            var TableView = require("splunkjs/mvc/tableview");
-            var HereClusterMap = require("heremaps/hereclustermap");
+            var HereClusterMap = require("app/heremaps/heremaps/hereclustermap");
             var SearchManager = require("splunkjs/mvc/searchmanager");
 
             // Create a header
@@ -98,6 +121,7 @@
                 managerid: "search1",
                 el: $("#search-control")
             }).render();
+
 
             var noiseSvgTemplate1 = '<svg width="50" height="50" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><path stroke="#757575" fill="#ff0000" stroke-width="0" stroke-dasharray="5,5" stroke-linejoin="null" stroke-linecap="null" d="m1.55609,24.42334c0.04241,-4.25789 -0.02728,-8.52174 0.34894,-12.77228c9.2417,1.39827 18.37432,3.68619 27.46025,5.74362c0.48788,-2.08797 0.25822,-3.81969 0.68201,-5.75017c5.83709,4.0621 11.62188,8.18211 17.16934,12.49834c-5.32226,4.89604 -11.42699,9.14779 -17.42051,13.50165c-0.19394,-2.0276 -0.38818,-4.05513 -0.58211,-6.08256c-8.83324,1.96144 -18.17467,3.9895 -27.06518,5.78263c-0.60465,-4.13779 -0.58678,-8.64389 -0.59273,-12.92123l0,0z" id="svg_22"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="30" x="25" stroke-width="0" font-size="6pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>';
             var clusterSvgTemplate1 =
@@ -223,8 +247,6 @@
                 theme: theme2
             }).render()
         });
-
-
     </script>
 </body>
 </html>

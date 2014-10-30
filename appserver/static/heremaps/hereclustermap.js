@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     // Load requirements
     var _ = require('underscore');
     var mvc = require('splunkjs/mvc');
-    var HereMap = require('heremaps/heremap');
+    var HereMap = require('app/heremaps/heremaps/heremap');
     var Messages = require("splunkjs/mvc/messages");
     var utils = require('splunkjs/mvc/utils');
     

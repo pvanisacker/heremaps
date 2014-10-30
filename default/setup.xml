@@ -1,0 +1,20 @@
+<setup>
+  <block title="Configure the heremaps app">
+    <text>Please provide your app_id &amp; app_code that you can get on https://developer.here.com</text>
+  </block>
+
+  <block title="A text input"
+         endpoint="heremaps/heremapsconfig" entity="heremaps">
+
+      <input field="app_id">
+        <label>app_id</label>
+        <type>text</type>
+      </input>
+      <input field="app_code">
+        <label>app_code</label>
+        <type>text</type>
+      </input>
+
+  </block>
+</setup>
+
