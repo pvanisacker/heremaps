@@ -5,7 +5,7 @@ It includes 4 different visualizations types, one reverse geocoding custom comma
 See some screenshots: https://github.com/pvanisacker/heremaps/blob/master/appserver/static
 
 The code is available on github: https://github.com/pvanisacker/heremaps  
-For questions about the app, please raise them on http://answers.splunk.com  
+For questions about the app, please raise them on https://answers.splunk.com  
 When you spot bugs please file an issue on https://github.com/pvanisacker/heremaps/issues
 
 Note this app is not at all supported by HERE.  
@@ -16,15 +16,15 @@ Enjoy!
 # License
 
 The app itself is distributed under the Creative Commons license.  
-Example data is taken from wikipedia wich also uses a Creative Commons license: http://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License  
+Example data is taken from wikipedia wich also uses a Creative Commons license: https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License  
 And the KML files for shape maps were created from data of http://www.naturalearthdata.com/.
-The app uses HERE api's, for information see: http://developer.here.com
+The app uses HERE api's, for information see: https://developer.here.com
 
 # Installation & Setup
 
 For installing the app, just follow the standard splunk app procedures.  
 Once it is installed, you also have to get free api credentials for using the HERE api.  
-Request them on http://developer.here.com.  
+Request them on https://developer.here.com.  
 Once you have them either use setup screen to configure the app_id and app_code.
 
 Or by configuring it manually in the local/setup.conf:
@@ -93,17 +93,13 @@ The app contains 4 different map visualizations.
    * Marker map: displaying markers for lat/lng combinations
    * Cluster map: clusters markers together to get a better overview.
    * Shape map: colors shapes depending on the values
-     These maps use a KML file to highlight certain areas. The KML files need a specific structure. See the custom.kml file for an example.
+     These maps use a KML or geoJSON files to highlight certain areas. The KML and geoJSON files need a specific structure. See the custom.kml or custom.geojson file for an example.
    * Heat map: shows density or value heatmaps of your data.
    
 Except for the heat map, all of the visualization use v3 of the HERE javascript API.  
 The heatmap visualization still uses v2.5.
 
-The app contains examples on how to include them into Django and Javascript based dashboards when you are using the Splunk web framework.
-
-If you're not using the web framework you can still include these visualizations in HTML dashboards. The visualizations cannot be included in simple or advanced XML dashboards.  
-For creating an HTML dashboard see the instructions below in the customization part.
-And you will find examples in the default/data/ui/html directory.
+The app contains examples on how to include the visualizations in HTML dashboards. If you are using the Splunk web framework you should also be able to include the visualizations as well, although I did not test it.
 
 The visualization can render quite some data points/markers. But as these visualizations are rendered on browser side there are limits.  
 To avoid your brower from becoming slow when rendering data, try to aggregate as much data as possible already on server side.  
@@ -123,11 +119,12 @@ A cluster map requires the same search data as a marker map.
 
 ### Shape map
 
-For rendering a shape map your search needs to return events that contain a "key" and "value" field.  
-The key needs to match with the description of the KML placemark to make sure it gets colored correctly.  
-Out of the box the app provides a couple of KML files:
-   * world2.kml: key is the ISO3166 2 letter code code
-   * world3.kml: key is the ISO3166 3 letter country code
+For rendering a shape map your search needs to return events that contain a "key" and "value" field.
+If you are using KML files the key needs to match with the description of the KML placemark.
+If you are using geoJSON file the key needs to match the id of the properties of the geoJSON Feature.  
+Out of the box the app provides a couple of KML and geoJSON files:
+   * world2.kml or world2.geojson: key is the ISO3166 2 letter code code
+   * world3.kml or world3.geojson: key is the ISO3166 3 letter country code
    * fr.kml: key is the name of the department
    * ...
 
@@ -208,7 +205,7 @@ var mymarkermap = new HereMarkerMap({
 The data passed to the function is the actual event. So you can add any fields of your result to the bubble.
 
 You can customize the vizualization of a marker. See the example below that uses an SVG marker that displays a field from the event.  
-More information about creating a marker can be found on http://developer.here.com/javascript-apis/documentation/v3/maps/topics/markers.html
+More information about creating a marker can be found on https://developer.here.com/javascript-apis/documentation/v3/maps/topics/markers.html
 <pre><code>
 var svgMarkup='<svg width="26" height="26" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="12" cy="13" cx="13" stroke-width="2" stroke="#333333" fill="#f5f5f5"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="18.5" x="13" stroke-width="0" font-size="10pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>'
 var markerfunction= function(data){
@@ -244,7 +241,7 @@ var myclustermap = new HereClusterMap({
 
 Cluster markers can currently not be clicked.  
 But you can customize the look of them by creating a theme.  
-See the example below and look at http://developer.here.com/javascript-apis/documentation/v3/maps/topics/clustering.html
+See the example below and look at https://developer.here.com/javascript-apis/documentation/v3/maps/topics/clustering.html
 
 ```html
 var noiseSvgTemplate2 = '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="9" cy="10" cx="10" stroke-width="0" fill="${FILL}"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="15" x="10" stroke-width="0" font-size="8pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>';
