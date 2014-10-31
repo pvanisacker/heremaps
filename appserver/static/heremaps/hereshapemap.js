@@ -36,7 +36,7 @@ define(function(require, exports, module) {
                         lineCap: 'square',
                         lineJoin: 'bevel'
             },
-            bubbleContentProvider: function(placemark,data){return "<div style='text-align:center;'>"+placemark["name"]+": "+data["value"]+"</div>";},
+            bubbleContentProvider: function(shape,data){return "<div style='text-align:center;'>"+shape["name"]+": "+data["value"]+"</div>";},
         },
 
 
@@ -89,8 +89,17 @@ define(function(require, exports, module) {
             if(this.options.bubbleContentProvider){
                 var that=this;
                 this.layer.getProvider().addEventListener('tap', function(evt) {
+                    var data,shape;
+                    if(that.options.shapeType==="kml"){
+                        data=that.shapes[evt.target.getData()["description"]]
+                        shape=evt.target.getData()
+                    }
+                    if(that.options.shapeType==="geojson"){
+                        data=that.shapes[evt.target.getParentGroup().getData()["properties"]["id"]]
+                        shape=evt.target.getParentGroup().getData()["properties"]
+                    }
                     var bubble =  new H.ui.InfoBubble(that.map.screenToGeo(evt.currentPointer.viewportX, evt.currentPointer.viewportY), {
-                        content: that.options.bubbleContentProvider(evt.target.getData(),that.shapes[evt.target.getData()["description"]])
+                        content: that.options.bubbleContentProvider(shape,data)
                     });
                     that.ui.addBubble(bubble);
                 });
