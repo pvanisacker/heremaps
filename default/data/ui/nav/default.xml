@@ -4,6 +4,7 @@
     <a href="/app/heremaps/heremaps">Heremaps</a>
     <collection label="Reverse geocoder">
         <a href="/app/heremaps/reversegeocode">Reversegeocode</a>
+        <a href="/app/heremaps/reversegeocodemacro">Reversegeocode macro</a>
         <!--
         <a href="/app/heremaps/reversegeocodeshape">Reversegeocode shape</a>
         -->

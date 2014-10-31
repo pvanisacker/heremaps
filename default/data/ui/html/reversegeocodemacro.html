@@ -21,9 +21,7 @@
 
         <div style="margin:2%">
             <div style="padding-bottom:10px">
-                This dashboard demonstrates the <span>reversegeocode</span> command. It uses the HERE REST api's for translating lat/lng fields into human understandable addresses.<br/>
-                It also uses an internal cache to speed up reverse geocoding of the same lat/lng combinations<br/>
-                When none of the regeo_* fields is filled in it means the earthquake happened in the middle of the sea and cannot be reverse-geocoded.
+                This dashboard demonstrates the <span>reversegeocode</span> macro. The macro uses the reversegeocode command and the countries lookup to translate country codes in real country names
             </div>
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
@@ -98,7 +96,7 @@ require.config({
                 managerid: "search1",
                 el: $("#search-bar"),
                 value: mvc.tokenSafe("$searchquery$"),
-                default: "|inputlookup earthquake.csv | reversegeocode | fields lat,lng,regeo_country,regeo_state,regeo_region,regeo_district,regeo_county,regeo_city,regeo_postalcode,regeo_label"
+                default: "|inputlookup earthquake.csv | `reversegeocode` | fields lat,lng,regeo_country,regeo_country_name"
             }).render();
 
             // Create a search control
