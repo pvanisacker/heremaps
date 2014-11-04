@@ -45,7 +45,7 @@ class ReverseGeocodeShapeCommand(StreamingCommand):
         rev.load_map_file(self.filetype, os.path.join(basepath, "appserver", "static", "data", self.filename))
 
         # Load map index file, this speeds up the command a lot
-        # rev.load_index_file(os.path.join(basepath, "bin", "lib", "reversegeocodeshape-" + rev.map_md5 + ".index"))
+        rev.load_index_file(os.path.join(basepath, "bin", "lib", "reversegeocodeshape-" + rev.map_md5 + ".index"))
 
         # Load cached results
         #cache_file = os.path.join(basepath, "bin", "lib", "reversegeocodeshape-" + rev.map_md5 + ".cache")
