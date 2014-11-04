@@ -1,0 +1,2 @@
+This directory contains cached data and index files for the different reverse geocoder commands.
+When the app is upgraded it's good to clean this directory up.

@@ -7,6 +7,8 @@ local/*.conf
 *.pyc
 metadata/*
 heremaps.log
-bin/reversegeocode.cache
-bin/reversegeocodeshape-*.cache
+bin/lib/reversegeocode.cache
+bin/lib/reversegeocodeshape-*.cache
+bin/test-result.html
+bin/coverage
 tmp

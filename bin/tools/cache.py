@@ -1,6 +1,6 @@
 import os.path
 import datetime
-import logging
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -9,25 +9,21 @@ except ImportError:
 
 class FileCache(object):
     """
-    A simple file cache for storing reverse geocoding results.
-    Items expire after a certain time and only x cached entries are kept
+    A simple cache for storing all kinds of results.
+    The cache can be persisted to disk and items expire after a certain time and only x cached entries are kept
     """
 
-    expiry = 31
-    max_count = 100000
-    cache_file = "cache"
-    objects = {}
-
-    def __init__(self, cache_file, max_count, expiry):
-        self.cache_file = cache_file
+    def __init__(self, max_count=100000, expiry=31):
         self.max_count = max_count
         self.expiry = expiry
+        self.objects = {}
 
-    def read_cache(self):
-        # Read cache file
-        if os.path.isfile(self.cache_file):
-            self.objects = pickle.load(open(self.cache_file, "rb"))
+    def read_cache_file(self, filename):
+        if os.path.isfile(filename):
+            self.read_cache_handler(open(filename, "rb"))
 
+    def read_cache_handler(self, handler):
+        self.objects = pickle.load(handler)
 
     def get(self, key):
         if key in self.objects:
@@ -35,26 +31,41 @@ class FileCache(object):
         raise KeyError()
 
     def set(self, key, value):
-        self.objects[key] = {"data": value, "created_time": datetime.date.today()}
+        self.objects[key] = {"data": value, "created_time": self.get_today()}
 
-    def write_cache(self):
+    def write_cache_file(self, filename):
+        self.write_cache_handler(open(filename, "wb"))
+
+    def write_cache_handler(self, handler):
+        self.clean_cache()
+        pickle.dump(self.objects, handler)
+
+    def clean_old(self):
         # remove all the old items
         reduced_objects = {}
-        time_expiry = (datetime.datetime.today() - datetime.timedelta(days=self.expiry)).date()
+        time_expiry = (self.get_today() - datetime.timedelta(days=self.expiry))
         for k, v in self.objects.iteritems():
             if v["created_time"] > time_expiry:
                 reduced_objects[k] = v
         self.objects = reduced_objects
 
+    def clean_count(self):
         # make sure we only have the maximum amount of items
         count = 0
         reduced_objects = {}
-        for k,v in self.objects.iteritems():
-            if count <= self.max_count:
+        for k, v in self.objects.iteritems():
+            if count < self.max_count:
                 reduced_objects[k] = v
+                count += 1
             else:
                 break
         self.objects = reduced_objects
 
-        # write the cache to file
-        pickle.dump(self.objects, open(self.cache_file, "wb"))
+    def clean_cache(self):
+        self.clean_old()
+        self.clean_count()
+
+    def get_today(self):
+        return datetime.datetime.today().date()
+
+
