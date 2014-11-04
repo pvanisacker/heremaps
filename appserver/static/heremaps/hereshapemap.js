@@ -41,6 +41,13 @@ define(function(require, exports, module) {
 
 
         updateView: function(viz, data) {
+            // remove the existing values
+            for(var key in this.shapes){
+                if("value" in this.shapes[key]){
+                    delete this.shapes[key]["value"]
+                }
+            }
+
             // update the map with the new results
             this.maxValue=-Number.MAX_VALUE
             this.minValue=Number.MAX_VALUE
