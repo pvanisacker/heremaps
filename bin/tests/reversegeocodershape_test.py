@@ -8,7 +8,7 @@ from shapely.geometry import MultiPolygon
 from tools.reversegeocodershape import ReverseGeocoderShape
 
 
-class ReverseGeocoderShapeGeoJsonTest(unittest.TestCase):
+class ReverseGeocoderShapeTest(unittest.TestCase):
     def setUp(self):
         self.rev = ReverseGeocoderShape()
         self.rev.shapes["a"] = MultiPolygon([Polygon(((0, 0), (1, 0), (1, 1), (0, 1)))])
@@ -45,3 +45,4 @@ class ReverseGeocoderShapeGeoJsonTest(unittest.TestCase):
 
     def test_reversegeocodeshape_a_list_ok(self):
         self.assertEqual("a",self.rev.reversegeocodeshape(Point(0.5,0.5),["b","a","d"]))
+

@@ -25,8 +25,8 @@ class ReverseGeocoderShape(object):
         self.index = []
         self.indexstep = 5
 
-    def load_map_file(self, map_type, mapfile):
-        self.load_map_handler(map_type, open(mapfile, "r"))
+    def load_map_file(self, map_type, map_file):
+        self.load_map_handler(map_type, open(map_file, "r"))
 
     def load_map_handler(self, map_type, maphandler):
         """ Load map content and transform it into a collection of Shapely polygons
@@ -70,8 +70,7 @@ class ReverseGeocoderShape(object):
     def createindex(self):
         for lat in range(-90, 90, self.indexstep):
             for lng in range(-180, 180, self.indexstep):
-                polygon = Polygon([(lng, lat), (lng + self.indexstep, lat), (lng, lat + self.indexstep),
-                                   (lng + self.indexstep, lat + self.indexstep)])
+                polygon = Polygon(((lng, lat), (lng + self.indexstep, lat), (lng + self.indexstep, lat + self.indexstep), (lng, lat + self.indexstep)))
                 index_data = {"polygon": polygon, "keys": []}
                 for key, shape in self.shapes.iteritems():
                     if shape.intersects(polygon):
