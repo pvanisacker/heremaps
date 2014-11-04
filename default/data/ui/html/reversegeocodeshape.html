@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Reverse Geocode macro</title>
+    <title>Reverse Geocode Shape</title>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <link rel="shortcut icon" href="{{SPLUNKWEB_URL_PREFIX}}/static/img/favicon.ico" />
@@ -21,7 +21,9 @@
 
         <div style="margin:2%">
             <div style="padding-bottom:10px">
-                This dashboard demonstrates the <span>reversegeocode</span> macro. The macro uses the reversegeocode command and the countries lookup to translate country codes in real country names
+                This dashboard demonstrates the <span>reversegeocodeshape</span> command.<br/>
+                It translates lat/lng combinations into keys that can be used for a shapemap.<br/>
+                The command will only work on Linux and requires some more installation steps that can be found in the README file.
             </div>
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
@@ -96,7 +98,7 @@ require.config({
                 managerid: "search1",
                 el: $("#search-bar"),
                 value: mvc.tokenSafe("$searchquery$"),
-                default: "|inputlookup earthquake.csv | `reversegeocode` | fields lat,lng,regeo_country,regeo_country_name"
+                default: "|inputlookup earthquake.csv | reversegeocodeshape"
             }).render();
 
             // Create a search control
