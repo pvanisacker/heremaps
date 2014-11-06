@@ -56,7 +56,6 @@ class ReverseGeocodeShapeCommand(StreamingCommand):
         for record in records:
             lat = round(float(record[self.lat]), 5)
             lng = round(float(record[self.lng]), 5)
-            cache_key=None
             cache_key = "%s,%s" % (lat, lng)
             try:
                 key = self.cache.get(cache_key)
