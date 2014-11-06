@@ -48,29 +48,29 @@ class ReverseGeocodeShapeCommand(StreamingCommand):
         rev.load_index_file(os.path.join(basepath, "bin", "lib", "reversegeocodeshape-" + rev.map_md5 + ".index"))
 
         # Load cached results
-        #cache_file = os.path.join(basepath, "bin", "lib", "reversegeocodeshape-" + rev.map_md5 + ".cache")
+        cache_file = os.path.join(basepath, "bin", "lib", "reversegeocodeshape-" + rev.map_md5 + ".cache")
         self.cache = FileCache(1000000, 62)
-        #self.cache.read_cache_file(cache_file)
+        self.cache.read_cache_file(cache_file)
 
         # iterate over records
         for record in records:
             lat = round(float(record[self.lat]), 5)
             lng = round(float(record[self.lng]), 5)
             cache_key=None
-            #cache_key = "%s,%s" % (lat, lng)
+            cache_key = "%s,%s" % (lat, lng)
             try:
                 key = self.cache.get(cache_key)
             except KeyError as e:
                 key = rev.reversegeocode(lat, lng)
 
-            #self.cache.set(cache_key, key)
+            self.cache.set(cache_key, key)
             record[self.fieldname] = key
             yield record
 
-        #try:
-        #    self.cache.write_cache_file(cache_file)
-        #except:
-        #    self.logger.error("Could not write cache file")
+        try:
+            self.cache.write_cache_file(cache_file)
+        except:
+            self.logger.error("Could not write cache file")
 
 
 dispatch(ReverseGeocodeShapeCommand, sys.argv, sys.stdin, sys.stdout, __name__)
