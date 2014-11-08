@@ -35,6 +35,48 @@ app_code=my_app_code
 
 Without these settings the app will not work.
 
+## reversegeocodeshape command
+
+To use the reversegeocodeshape command additional installation effort is required.  
+For using it you need a seperate python runtime that has some more python packages installed.  
+
+### For Windows
+
+Install python from https://www.python.org/downloads/windows/
+
+Install the python Shapely package for your python version from http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely
+
+Once that is done configure the python path in SPLUNK_HOME/etc/apps/heremaps/bin/reversegeocodeshape.py
+<pre><code>
+import os
+import sys
+import subprocess
+
+python = "/usr/bin/python"
+args = [python,os.path.join(os.environ['SPLUNK_HOME'], 'etc/apps/heremaps/bin/reversegeocodeshape_real.py')]
+args = args+sys.argv[1:]
+subprocess.call(args)
+</code></pre>
+
+### For Linux/OSX
+Make sure you have python and it's development tools installed.  
+Then install the Shapely package.
+<pre><code>
+pip install shapely
+</code></pre>
+
+Once that is done configure the python path in SPLUNK_HOME/etc/apps/heremaps/bin/reversegeocodeshape.py
+<pre><code>
+import os
+import sys
+import subprocess
+
+python = "/usr/bin/python"
+args = [python,os.path.join(os.environ['SPLUNK_HOME'], 'etc/apps/heremaps/bin/reversegeocodeshape_real.py')]
+args = args+sys.argv[1:]
+subprocess.call(args)
+</code></pre>
+
 # Usage
 
 ## reversegeocode command
@@ -107,7 +149,7 @@ The map that is used can be customized by providing some additional arguments.
 | 48.853   | 2.35      | Paris |
 
 And you can also cusomize the input and output fields.
-index=_internal | head 1 | eval latitude=48.853 | eval longitude=2.35 | reversegeocodeshape lat=latitude lng=longitude filetype=geojson filename=countries/fr.geojson fieldname=mycustomkey| table latitude,longitude,mycustomkey
+<pre><code>index=_internal | head 1 | eval latitude=48.853 | eval longitude=2.35 | reversegeocodeshape lat=latitude lng=longitude filetype=geojson filename=countries/fr.geojson fieldname=mycustomkey| table latitude,longitude,mycustomkey</code></pre>
 | latitude      | longitude       | mycustomkey |
 |----------|-----------|-----|
 | 48.853   | 2.35      | Paris |
