@@ -91,13 +91,13 @@ define(function(require, exports, module) {
                 nokia.Settings.set("app_id", this.options.app_id);
                 nokia.Settings.set("app_code", this.options.app_code);
 
-                this.map = new nokia.maps.map.Display(document.getElementById(this.id+'-map'), {
-                    // Zoom level for the map
-                    zoomLevel: 2,
-                    // Map center coordinates
-                    center: [0,0],
-                    components:[new nokia.maps.map.component.Behavior()]
-                });
+                options={
+                    zoomLevel:parseInt(this.options.zoom),
+                    components:[new nokia.maps.map.component.Behavior()],
+                    center:[parseFloat(this.options.center.split(",")[0]),parseFloat(this.options.center.split(",")[1])]
+                }
+                console.log(options)
+                this.map = new nokia.maps.map.Display(document.getElementById(this.id+'-map'), options);
                 this.map.set("baseMapType", nokia.maps.map.Display.TERRAIN);
 
                 if(this.postCreateMap){

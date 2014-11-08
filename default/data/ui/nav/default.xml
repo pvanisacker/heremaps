@@ -35,7 +35,8 @@
 
     <collection label="Heat maps">
         <a href="/app/heremaps/heatmap">Heatmap</a>
-        <a href="/app/heremaps/heatmapcustom">Custom heatmap</a>
+        <a href="/app/heremaps/heatmapcustom1">Custom heatmap 1</a>
+        <a href="/app/heremaps/heatmapcustom2">Custom heatmap 2</a>
     </collection>
     <view name="dashboards" />
 </nav>

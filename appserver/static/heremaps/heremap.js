@@ -69,7 +69,7 @@ define(function(require, exports, module) {
                 // Instantiate (and display) a map object:
                 var options={zoom:this.options.zoom}
                 try{
-                    options.center={lat:this.options.center.split(",")[0],lng:this.options.center.split(",")[1]}
+                    options.center={lat:parseFloat(this.options.center.split(",")[0]),lng:parseFloat(this.options.center.split(",")[1])}
                 }catch(err){
                     console.error("Could not parse center lat,lng combination")
                 }
