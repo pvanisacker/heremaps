@@ -31,7 +31,7 @@
             <div style="padding-bottom:10px">
                 This dashboard demonstrates the <span>reversegeocodeshape</span> command.<br/>
                 It translates lat/lng combinations into keys that can be used for a shapemap.<br/>
-                The command will only work on Linux and requires some more installation steps that can be found in the README file.
+                The command requires some more installation steps that can be found in the README file.
             </div>
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
@@ -111,7 +111,7 @@ require.config({
                 managerid: "search1",
                 el: $("#search-bar"),
                 value: mvc.tokenSafe("$searchquery$"),
-                default: "|inputlookup latlng-data.csv | reversegeocodeshape | stats count as value by key | sort -value"
+                default: "|inputlookup latlng-data.csv | reversegeocodeshape filetype=geojson filename=countries/in.geojson | stats count as value by key | sort -value"
             }).render();
 
             // Create a search control
@@ -135,7 +135,9 @@ require.config({
                 el: $("#search-map"),
                 height: "400px",
                 shapeType: "geojson",
-                geoJSONFile: "world2.geojson",
+                geoJSONFile: "countries/in.geojson",
+                zoom: "3",
+                center: "20,85",
             }).render()
         });
     </script>
