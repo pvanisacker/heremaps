@@ -1,7 +1,7 @@
 # Intro
 
 A Splunk app for map visualizations using HERE maps  
-It includes 4 different visualizations types, one reverse geocoding custom command and a couple of csv lookups containing example data.  
+It includes 4 different visualizations types and two reverse geocoding custom commands and a couple of csv lookups containing example data.  
 See some screenshots: https://github.com/pvanisacker/heremaps/blob/master/appserver/static
 
 The code is available on github: https://github.com/pvanisacker/heremaps  
@@ -86,6 +86,31 @@ Use that lookup throught the `reversegeocode` macro.
 | lat | lng | regeo_city | regeo_country |regeo_coutnry_iso3166_2 | regeo_country_latitude | regeo_contry_longitude | regeo country_name | regeo_county | regeo_district | regeo_label                               | regeo_postalcode | regeo_region | regeo_state |
 |-----|-----|------------|---------------|------------------------|------------------------|------------------------|--------------------|--------------|----------------|-------------------------------------------|------------------|--------------|-------------|
 | 51  | 6   | Gangelt    | DEU           | DE                     | 51.165691              | 10.451526              | Germany            | Heinsberg    |                | Gangelt, Nordrhein-Westfalen, Deutschland | 52538            |              | Nordrhein-Westfalen |
+
+## reversegeocodeshape command
+
+The reversegeocodeshape command is to be used together with a shape map visualization.  
+What the command does is translating the lat/lng combination into key's used for the shape map.  
+You can think of it as a splunk internal reverse geocoder as the command does not use any external web services.  
+Although it does not require external web services it does require some additional installation effort. See the installation part of the readme for help.
+
+By default the command will translate the lat/lng into a 2 letter ISO3166 key from the world2.geojson file.
+<pre><code>index=_internal | head 1 | eval lat=51 | eval lng=6 | reversegeocodeshape | fields lat,lng,key | table lat,lng,key</code></pre>
+| lat      | lng       | key |
+|----------|-----------|-----|
+| 51       | 6         | DE  |
+
+The map that is used can be customized by providing some additional arguments.
+<pre><code>index=_internal | head 1 | eval lat=48.853 | eval lng=2.35 | reversegeocodeshape filetype=geojson filename=countries/fr.geojson | table lat,lng,key</code></pre>
+| lat      | lng       | key |
+|----------|-----------|-----|
+| 48.853   | 2.35      | Paris |
+
+And you can also cusomize the input and output fields.
+index=_internal | head 1 | eval latitude=48.853 | eval longitude=2.35 | reversegeocodeshape lat=latitude lng=longitude filetype=geojson filename=countries/fr.geojson fieldname=mycustomkey| table latitude,longitude,mycustomkey
+| latitude      | longitude       | mycustomkey |
+|----------|-----------|-----|
+| 48.853   | 2.35      | Paris |
 
 ## Visualizations
 
