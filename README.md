@@ -134,7 +134,8 @@ Use that lookup throught the `reversegeocode` macro.
 The reversegeocodeshape command is to be used together with a shape map visualization.  
 What the command does is translating the lat/lng combination into key's used for the shape map.  
 You can think of it as a splunk internal reverse geocoder as the command does not use any external web services.  
-Although it does not require external web services it does require some additional installation effort. See the installation part of the readme for help.
+Although it does not require external web services it does require some additional installation effort. See the installation part of the readme for help.  
+And because it runs locally it can be rather slow and require lots of CPU power.  
 
 By default the command will translate the lat/lng into a 2 letter ISO3166 key from the world2.geojson file.
 <pre><code>index=_internal | head 1 | eval lat=51 | eval lng=6 | reversegeocodeshape | fields lat,lng,key | table lat,lng,key</code></pre>
@@ -487,3 +488,4 @@ var myheatmap1 = new HereHeatMap({
    * 0.1: First version, includes marker map, cluster map and shape map.
    * 0.2: Add more shapemaps. Add heatmaps, fix bug with reverse geocoding command. Make markers clickable.
    * 0.3: Fix loading of shapemaps, add more documentation, add example HTML dashboards.
+   * 0.4: Remove django parts as they were too complicated, add more shape maps, add reversegeocodeshape command, add testcases for custom commands
