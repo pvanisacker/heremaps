@@ -10,8 +10,10 @@ cp -r bin tmp/heremaps
 cp -r appserver tmp/heremaps
 cp -r default tmp/heremaps
 cp -r lookups tmp/heremaps
-rm -rf tmp/heremaps/bin/reversegeocode.cache
-rm -rf tmp/heremaps/bin/reversegeocodeshape-*
+rm -rf tmp/heremaps/bin/coverage
+rm -rf tmp/heremaps/bin/test-result.html
+rm -rf tmp/heremaps/bin/lib/reversegeocode.cache
+rm -rf tmp/heremaps/bin/lib/reversegeocodeshape-*.cache
 find tmp/heremaps/ -name "*.pyc" -delete
 
 cd tmp
