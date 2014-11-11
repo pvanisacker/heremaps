@@ -24,8 +24,10 @@
         <a href="/app/heremaps/shapemapcustom2">Custom shape map 2</a>
         <a href="/app/heremaps/shapemapcustom3">Custom shape map 3</a>
         <a href="/app/heremaps/shapemapcustom4">Custom shape map 4</a>
+        <a href="/app/heremaps/shapemapcustom5">Custom shape map 5</a>
         <collection label="Other countries">
             <a href="/app/heremaps/shapemapcustom_us">Custom shape map US</a>
+            <a href="/app/heremaps/shapemapcustom_us_counties">Custom shape map US counties</a>
             <a href="/app/heremaps/shapemapcustom_in">Custom shape map India</a>
             <a href="/app/heremaps/shapemapcustom_fr">Custom shape map France</a>
             <a href="/app/heremaps/shapemapcustom_de">Custom shape map Germany</a>

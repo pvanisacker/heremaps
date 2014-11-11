@@ -34,6 +34,7 @@ if __name__ == "__main__":
     shapes.append({"file":"countries/ru.geojson","step":4})
     shapes.append({"file":"countries/uk.geojson","step":2})
     shapes.append({"file":"countries/us.geojson","step":3})
+    shapes.append({"file":"countries/us_counties.geojson","step":1})
     shapes.append({"file":"world2.geojson","step":4})
     shapes.append({"file":"world3.geojson","step":4})
 

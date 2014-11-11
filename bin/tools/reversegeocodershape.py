@@ -45,10 +45,10 @@ class ReverseGeocoderShape(object):
 
     def load_map_geojson(self):
         # read the geojson file
-        json_map_data = json.loads(self.map_file_content)
+        self.json_map_data = json.loads(self.map_file_content)
 
         # iterate over all the polygons and store them
-        for feature in json_map_data["features"]:
+        for feature in self.json_map_data["features"]:
             if "properties" in feature and "id" in feature["properties"] and len(feature["properties"]["id"].strip()) > 0:
                 if "geometry" in feature and "type" in feature["geometry"] and feature["geometry"]["type"] == "MultiPolygon":
                     feature_id = feature["properties"]["id"]
@@ -58,6 +58,11 @@ class ReverseGeocoderShape(object):
         raise NotImplementedError()
 
     def load_index_file(self, indexfile):
+        try:
+            if self.json_map_data["crs"]["properties"]["needsindex"]==False:
+                return
+        except KeyError:
+            pass
         if os.path.isfile(indexfile):
             # Index exists, load it
             self.index = pickle.load(open(indexfile, "rb"))
