@@ -40,5 +40,9 @@
         <a href="/app/heremaps/heatmapcustom1">Custom heatmap 1</a>
         <a href="/app/heremaps/heatmapcustom2">Custom heatmap 2</a>
     </collection>
+
+    <collection label="Line maps">
+        <a href="/app/heremaps/linemap">Linemap</a>
+    </collection>
     <view name="dashboards" />
 </nav>
