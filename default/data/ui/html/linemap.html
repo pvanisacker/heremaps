@@ -123,12 +123,19 @@ require.config({
                 el: $("#search-table")
             }).render();
 
+            var markerf= function(coord,data){
+                var svg='<svg width="6" height="6" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="3" cy="3" cx="3" stroke-width="0" stroke="#333333" fill="#333333"/></svg>';
+                var markerIcon = new H.map.Icon(svg,{anchor:{x:3,y:3}});
+                return new H.map.Marker(coord,{icon: markerIcon});
+            };
+
             // Create the line map
             var mylinemap = new HereLineMap({
                 id: "linemap1",
                 managerid: "search1",
                 el: $("#search-map"),
                 height: "400px",
+                marker: markerf
             }).render()
         });
     </script>

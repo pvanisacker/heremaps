@@ -11,7 +11,8 @@ define(function(require, exports, module) {
         className: "heremarkermap",
 
         options: {
-
+            marker:undefined,
+            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data["value"]+"</div>";}
         },
         group:new H.map.Group(),
 
@@ -27,8 +28,14 @@ define(function(require, exports, module) {
                     var coord=event["coords"][i].split(",")
                     var coord={lat: parseFloat(coord[0]), lng: parseFloat(coord[1])}
                     strip.pushPoint(coord)
-                    marker = new H.map.Marker(coord);
-                    group.addObject(marker)
+                    if(this.options.marker){
+                        var data=undefined
+                        if(event["points"].isArray && event["points"][i]!=undefined){
+                            data=event["points"][i]
+                        }
+                        var marker=this.options.marker(coord,data);
+                        group.addObject(marker)
+                    }
                 }
             }
             var polyline = new H.map.Polyline(strip, { style: { lineWidth: 10 }});
