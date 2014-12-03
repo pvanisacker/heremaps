@@ -7,12 +7,12 @@ define(function(require, exports, module) {
     var utils = require('splunkjs/mvc/utils');
     
     // Define the custom view class
-    var HereMarkerMap = HereMap.extend({
-        className: "heremarkermap",
+    var HereLineMap = HereMap.extend({
+        className: "herelinemap",
 
         options: {
             marker:undefined,
-            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data["value"]+"</div>";}
+            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data+"</div>";}
         },
         group:new H.map.Group(),
 
@@ -22,7 +22,9 @@ define(function(require, exports, module) {
 
         getVisualization: function(event){
             var group = new H.map.Group();
+            var markergroup = new H.map.Group();
             var strip = new H.geo.Strip();
+
             if( "coords" in event){
                 for(var i=0;i<event["coords"].length;i++){
                     var coord=event["coords"][i].split(",")
@@ -30,19 +32,31 @@ define(function(require, exports, module) {
                     strip.pushPoint(coord)
                     if(this.options.marker){
                         var data=undefined
-                        if(event["points"].isArray && event["points"][i]!=undefined){
-                            data=event["points"][i]
+                        if(Object.prototype.toString.call( event["points"] ) === '[object Array]'){
+                            if(event["points"][i]!=undefined){
+                                data=event["points"][i]
+                            }
+                        } else{
+                            data=event["points"]
                         }
                         var marker=this.options.marker(coord,data);
-                        group.addObject(marker)
+                        marker.setData(data);
+                        markergroup.addObject(marker)
                     }
                 }
             }
+
+            var that=this;
+            markergroup.addEventListener('tap', function (evt) {
+                var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                    content: that.options.bubbleContentProvider(evt.target.getData())
+                });
+                that.ui.addBubble(bubble);
+            }, false);
+
+            group.addObject(markergroup);
             var polyline = new H.map.Polyline(strip, { style: { lineWidth: 10 }});
-
-
             group.addObject(polyline)
-
             return group;
         },
 
@@ -65,5 +79,5 @@ define(function(require, exports, module) {
         }
     });
 
-    return HereMarkerMap;
+    return HereLineMap;
 });

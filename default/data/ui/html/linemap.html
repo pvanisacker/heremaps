@@ -106,7 +106,7 @@ require.config({
                 managerid: "search1",
                 el: $("#search-bar"),
                 value: mvc.tokenSafe("$searchquery$"),
-                default: "|inputlookup line-data.csv | eval coords=split(coords,\";\") | eval points=split(points,\";\") | eval values=split(values,\";\")"
+                default: "|inputlookup line-data.csv | head 100 | eval coords=split(coords,\";\") | eval points=split(points,\";\") | eval values=split(values,\";\")"
             }).render();
 
             // Create a search control
@@ -124,8 +124,23 @@ require.config({
             }).render();
 
             var markerf= function(coord,data){
-                var svg='<svg width="6" height="6" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="3" cy="3" cx="3" stroke-width="0" stroke="#333333" fill="#333333"/></svg>';
-                var markerIcon = new H.map.Icon(svg,{anchor:{x:3,y:3}});
+                var color="333333";
+                var size=6;
+                if(!isNaN(parseInt(data, 10))){
+                    if(data>10){
+                        data=9;
+                    }
+                    color=(new Array(7)).join(data);
+                    size=data;
+                }
+                halfsize=size/2;
+                var svg='<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="${HALFSIZE}" cy="${HALFSIZE}" cx="${HALFSIZE}" stroke-width="1" stroke="#000000" fill="#${COLOR}"/></svg>';
+
+                svg=svg.replace(/\$\{COLOR\}/g,color)
+                svg=svg.replace(/\$\{SIZE\}/g,size)
+                svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize)
+
+                var markerIcon = new H.map.Icon(svg,{anchor:{x:halfsize,y:halfsize}});
                 return new H.map.Marker(coord,{icon: markerIcon});
             };
 
