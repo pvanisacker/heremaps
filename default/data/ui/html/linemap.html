@@ -123,7 +123,7 @@ require.config({
                 el: $("#search-table")
             }).render();
 
-            var markerf= function(coord,data){
+            var markerpoint= function(coord,data){
                 var color="333333";
                 var size=6;
                 if(!isNaN(parseInt(data, 10))){
@@ -144,13 +144,29 @@ require.config({
                 return new H.map.Marker(coord,{icon: markerIcon});
             };
 
+            var markerline=function(coord1,coord2,data){
+                var svg='<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="10" cy="10" cx="10" stroke-width="1" stroke="#000000" fill="#EEEEEE"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="12.5" x="10" font-size="7pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>';
+
+                svg=svg.replace(/\$\{TEXT\}/g,data)
+
+                var markerIcon = new H.map.Icon(svg,{anchor:{x:10,y:10}});
+                centercoord={lat:(coord1.lat+coord2.lat)/2 , lng:(coord1.lng+coord2.lng)/2}
+                return new H.map.Marker(centercoord,{icon: markerIcon});
+            }
+            var styleline=function(coord1,coord2,data){
+
+                return {lineWidth:5}
+            }
+
             // Create the line map
             var mylinemap = new HereLineMap({
                 id: "linemap1",
                 managerid: "search1",
                 el: $("#search-map"),
                 height: "400px",
-                marker: markerf
+                pointmarker: markerpoint,
+                linemarker: markerline,
+                lineStyleProvider: styleline
             }).render()
         });
     </script>

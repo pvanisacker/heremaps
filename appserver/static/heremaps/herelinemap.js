@@ -11,8 +11,11 @@ define(function(require, exports, module) {
         className: "herelinemap",
 
         options: {
-            marker:undefined,
-            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data+"</div>";}
+            linemarker:undefined,
+            pointmarker:undefined,
+            lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data+"</div>";},
+            pointBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data+"</div>";},
+            lineStyleProvider: function(coord1,coord2,data){return {lineWidth:5}}
         },
         group:new H.map.Group(),
 
@@ -22,15 +25,44 @@ define(function(require, exports, module) {
 
         getVisualization: function(event){
             var group = new H.map.Group();
-            var markergroup = new H.map.Group();
-            var strip = new H.geo.Strip();
+            var pointmarkergroup = new H.map.Group();
+            var linemarkergroup = new H.map.Group();
+            var linegroup = new H.map.Group();
 
             if( "coords" in event){
                 for(var i=0;i<event["coords"].length;i++){
                     var coord=event["coords"][i].split(",")
                     var coord={lat: parseFloat(coord[0]), lng: parseFloat(coord[1])}
-                    strip.pushPoint(coord)
-                    if(this.options.marker){
+
+                    var nextcoord=undefined
+                    var linedata=undefined
+                    try{
+                        // get the next coord
+                        nextcoord=event["coords"][i+1].split(",")
+                        nextcoord={lat:parseFloat(nextcoord[0]), lng:parseFloat(nextcoord[1])}
+
+                        // get the data for that line
+                        if(Object.prototype.toString.call(event["values"]) === "[object Array]"){
+                            if(event["values"][i]!=undefined){
+                                linedata=event["values"][i]
+                            }
+                        }else{
+                            linedata=event["values"]
+                        }
+
+                        // create a new line
+                        var strip=new H.geo.Strip()
+                        strip.pushPoint(coord)
+                        strip.pushPoint(nextcoord)
+                        var line=new H.map.Polyline(strip,this.options.lineStyleProvider(coord,nextcoord,linedata));
+                        linegroup.addObject(line)
+                    }catch(err){
+                        console.log(err);
+                        console.log(err.stack);
+                    }
+
+                    // Create the marker for a point
+                    if(this.options.pointmarker){
                         var data=undefined
                         if(Object.prototype.toString.call( event["points"] ) === '[object Array]'){
                             if(event["points"][i]!=undefined){
@@ -39,24 +71,41 @@ define(function(require, exports, module) {
                         } else{
                             data=event["points"]
                         }
-                        var marker=this.options.marker(coord,data);
+                        var marker=this.options.pointmarker(coord,data);
                         marker.setData(data);
-                        markergroup.addObject(marker)
+                        pointmarkergroup.addObject(marker)
+                    }
+
+                    // Create the marker for a line
+                    if(this.options.linemarker && nextcoord!=undefined){
+                        var marker=this.options.linemarker(coord,nextcoord,linedata)
+                        marker.setData(linedata);
+                        linemarkergroup.addObject(marker)
                     }
                 }
             }
 
             var that=this;
-            markergroup.addEventListener('tap', function (evt) {
-                var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
-                    content: that.options.bubbleContentProvider(evt.target.getData())
-                });
-                that.ui.addBubble(bubble);
-            }, false);
+            if(this.options.pointBubbleContentProvider){
+                pointmarkergroup.addEventListener('tap', function (evt) {
+                    var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                        content: that.options.pointBubbleContentProvider(evt.target.getData())
+                    });
+                    that.ui.addBubble(bubble);
+                }, false);
+            }
+            if(this.options.lineBubbleContentProvider){
+                linemarkergroup.addEventListener('tap', function (evt) {
+                    var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                        content: that.options.lineBubbleContentProvider(evt.target.getData())
+                    });
+                    that.ui.addBubble(bubble);
+                }, false);
+            }
 
-            group.addObject(markergroup);
-            var polyline = new H.map.Polyline(strip, { style: { lineWidth: 10 }});
-            group.addObject(polyline)
+            group.addObject(pointmarkergroup);
+            group.addObject(linemarkergroup);
+            group.addObject(linegroup);
             return group;
         },
 
