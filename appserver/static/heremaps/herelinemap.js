@@ -11,11 +11,94 @@ define(function(require, exports, module) {
         className: "herelinemap",
 
         options: {
-            linemarker:undefined,
-            pointmarker:undefined,
-            lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data+"</div>";},
-            pointBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data+"</div>";},
-            lineStyleProvider: function(coord1,coord2,data){return {lineWidth:5}}
+            pointmarker:function(coord,event,index,data){
+                var color="#555555"
+                var colorRange={
+                    "0"   :"rgb(0,255,64)",
+                    "10"   :"rgb(0,255,0)",
+                    "20"   :"rgb(64,255,0)",
+                    "30"   :"rgb(128,255,0)",
+                    "40"   :"rgb(192,255,0)",
+                    "50"   :"rgb(255,255,0)",
+                    "60"   :"rgb(255,192,0)",
+                    "70"   :"rgb(255,128,0)",
+                    "80"   :"rgb(255,64,0)",
+                    "90"   :"rgb(255,0,0)"
+                }
+                var size=8
+                var halfsize=size/2;
+                var svg='<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="${HALFSIZE}" cy="${HALFSIZE}" cx="${HALFSIZE}" stroke-width="0" stroke="#000000" fill="${COLOR}"/></svg>';
+
+                for(var colorTreshold in colorRange){
+                    if(data>=parseFloat(colorTreshold)){
+                        color=colorRange[colorTreshold]
+                    }
+                }
+
+                svg=svg.replace(/\$\{COLOR\}/g,color)
+                svg=svg.replace(/\$\{SIZE\}/g,size)
+                svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize)
+
+                var markerIcon = new H.map.Icon(svg,{anchor:{x:halfsize,y:halfsize}});
+                return new H.map.Marker(coord,{icon: markerIcon});
+            },
+            linemarker:function(coord1,coord2,event,index,data){
+                var color="#555555"
+                var colorRange={
+                    "0"   :"rgb(0,255,64)",
+                    "10"   :"rgb(0,255,0)",
+                    "20"   :"rgb(64,255,0)",
+                    "30"   :"rgb(128,255,0)",
+                    "40"   :"rgb(192,255,0)",
+                    "50"   :"rgb(255,255,0)",
+                    "60"   :"rgb(255,192,0)",
+                    "70"   :"rgb(255,128,0)",
+                    "80"   :"rgb(255,64,0)",
+                    "90"   :"rgb(255,0,0)"
+                }
+                var size=25
+                var halfsize=size/2;
+                var svg='<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><text xml:space="preserve" text-anchor="middle" id="svg_2" y="${HALFSIZE}" x="${HALFSIZE}" font-size="7pt" font-family="Roboto" stroke="${COLOR}" fill="${COLOR}">${TEXT}</text></svg>';
+
+                for(var colorTreshold in colorRange){
+                    if(data>=parseFloat(colorTreshold)){
+                        color=colorRange[colorTreshold]
+                    }
+                }
+
+                svg=svg.replace(/\$\{COLOR\}/g,color)
+                svg=svg.replace(/\$\{SIZE\}/g,size)
+                svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize)
+                svg=svg.replace(/\$\{TEXT\}/g,data)
+
+                var markerIcon = new H.map.Icon(svg,{anchor:{x:halfsize,y:halfsize}});
+                centercoord={lat:(coord1.lat+coord2.lat)/2 , lng:(coord1.lng+coord2.lng)/2}
+                return new H.map.Marker(centercoord,{icon: markerIcon});
+            },
+            lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data["data"]+"</div>";},
+            pointBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data["data"]+"</div>";},
+            lineStyleProvider: function(coord1,coord2,event,index,data){
+                var color="#555555"
+                var colorRange={
+                    "0"   :"rgb(0,255,64)",
+                    "10"   :"rgb(0,255,0)",
+                    "20"   :"rgb(64,255,0)",
+                    "30"   :"rgb(128,255,0)",
+                    "40"   :"rgb(192,255,0)",
+                    "50"   :"rgb(255,255,0)",
+                    "60"   :"rgb(255,192,0)",
+                    "70"   :"rgb(255,128,0)",
+                    "80"   :"rgb(255,64,0)",
+                    "90"   :"rgb(255,0,0)"
+                }
+                for(var colorTreshold in colorRange){
+                    if(data>=parseFloat(colorTreshold)){
+                        color=colorRange[colorTreshold]
+                    }
+                }
+
+                return {lineWidth:5,strokeColor:color,fillColor:color}
+            }
         },
         group:new H.map.Group(),
 
@@ -54,11 +137,11 @@ define(function(require, exports, module) {
                         var strip=new H.geo.Strip()
                         strip.pushPoint(coord)
                         strip.pushPoint(nextcoord)
-                        var line=new H.map.Polyline(strip,this.options.lineStyleProvider(coord,nextcoord,linedata));
+                        var line=new H.map.Polyline(strip);
+                        line.setStyle(this.options.lineStyleProvider(coord,nextcoord,event,i,linedata));
                         linegroup.addObject(line)
                     }catch(err){
-                        console.log(err);
-                        console.log(err.stack);
+
                     }
 
                     // Create the marker for a point
@@ -71,16 +154,21 @@ define(function(require, exports, module) {
                         } else{
                             data=event["points"]
                         }
-                        var marker=this.options.pointmarker(coord,data);
-                        marker.setData(data);
-                        pointmarkergroup.addObject(marker)
+
+                        var marker=this.options.pointmarker(coord,event,i,data);
+                        if(marker){
+                            marker.setData({event:event,index:i,data:data});
+                            pointmarkergroup.addObject(marker)
+                        }
                     }
 
                     // Create the marker for a line
                     if(this.options.linemarker && nextcoord!=undefined){
-                        var marker=this.options.linemarker(coord,nextcoord,linedata)
-                        marker.setData(linedata);
-                        linemarkergroup.addObject(marker)
+                        var marker=this.options.linemarker(coord,nextcoord,event,i,linedata)
+                        if(marker){
+                            marker.setData({event:event,index:i,data:linedata});
+                            linemarkergroup.addObject(marker)
+                        }
                     }
                 }
             }

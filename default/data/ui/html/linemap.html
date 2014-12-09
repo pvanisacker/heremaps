@@ -123,29 +123,8 @@ require.config({
                 el: $("#search-table")
             }).render();
 
-            var markerpoint= function(coord,data){
-                var color="333333";
-                var size=6;
-                if(!isNaN(parseInt(data, 10))){
-                    if(data>10){
-                        data=9;
-                    }
-                    color=(new Array(7)).join(data);
-                    size=data;
-                }
-                halfsize=size/2;
-                var svg='<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="${HALFSIZE}" cy="${HALFSIZE}" cx="${HALFSIZE}" stroke-width="1" stroke="#000000" fill="#${COLOR}"/></svg>';
-
-                svg=svg.replace(/\$\{COLOR\}/g,color)
-                svg=svg.replace(/\$\{SIZE\}/g,size)
-                svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize)
-
-                var markerIcon = new H.map.Icon(svg,{anchor:{x:halfsize,y:halfsize}});
-                return new H.map.Marker(coord,{icon: markerIcon});
-            };
-
-            var markerline=function(coord1,coord2,data){
-                var svg='<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="10" cy="10" cx="10" stroke-width="1" stroke="#000000" fill="#EEEEEE"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="12.5" x="10" font-size="7pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>';
+            var markerline=function(coord1,coord2,event,index,data){
+                var svg='<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><text xml:space="preserve" text-anchor="middle" id="svg_2" y="12.5" x="10" font-size="7pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>';
 
                 svg=svg.replace(/\$\{TEXT\}/g,data)
 
@@ -153,9 +132,30 @@ require.config({
                 centercoord={lat:(coord1.lat+coord2.lat)/2 , lng:(coord1.lng+coord2.lng)/2}
                 return new H.map.Marker(centercoord,{icon: markerIcon});
             }
-            var styleline=function(coord1,coord2,data){
-
-                return {lineWidth:5}
+            var styleline=function(coord1,coord2,event,index,data){
+                color="#444444"
+                width=2
+                if(data<=20){
+                    color="rgb(192,255,0)"
+                    width=2
+                }else if(data<=40){
+                    color="rgb(255,255,0)"
+                    width=3
+                }else if(data<=60){
+                    color="rgb(255,192,0)"
+                    width=4
+                }else if(data<=80){
+                    color="rgb(255,128,0)"
+                    width=5
+                }else if(data<=100){
+                    color="rgb(255,64,0)"
+                    width=6
+                }else if(data<=150){
+                    color="rgb(255,0,0)"
+                    width=7
+                }
+                style={lineWidth:width,strokeColor:color,fillColor:color}
+                return style
             }
 
             // Create the line map
@@ -163,10 +163,7 @@ require.config({
                 id: "linemap1",
                 managerid: "search1",
                 el: $("#search-map"),
-                height: "400px",
-                pointmarker: markerpoint,
-                linemarker: markerline,
-                lineStyleProvider: styleline
+                height: "400px"
             }).render()
         });
     </script>

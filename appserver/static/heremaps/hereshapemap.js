@@ -61,8 +61,8 @@ define(function(require, exports, module) {
                     if(value!=NaN){
                         this.shapes[result["key"]]["value"]=value;
                         this.shapes[result["key"]]["result"]=result;
-                        if(this.maxValue<result["value"]) this.maxValue=value;
-                        if(this.minValue>result["value"]) this.minValue=value;
+                        if(this.maxValue<value) this.maxValue=value;
+                        if(this.minValue>value) this.minValue=value;
                     }
                 }
             }
