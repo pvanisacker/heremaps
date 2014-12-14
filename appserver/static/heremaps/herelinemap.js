@@ -29,7 +29,7 @@ define(function(require, exports, module) {
                 "0.9"   :"rgb(255,0,0)"
             },
             pointMarker:undefined,
-            lineMarkerSvg:'<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><text xml:space="preserve" text-anchor="middle" id="svg_2" y="${HALFSIZE}" x="${HALFSIZE}" font-size="7pt" font-family="Roboto" stroke="${COLOR}" fill="${COLOR}">${TEXT}</text></svg>',
+            lineMarkerSvg:'<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><text xml:space="preserve" text-anchor="middle" id="svg_2" y="${HALFSIZE}" x="${HALFSIZE}" font-size="7pt" font-family="Roboto" stroke="#000000" stroke-width="1" fill="${COLOR}">${TEXT}</text></svg>',
             lineMarkerDefaultColor:"#333333",
             lineMarkerColorRange:{
                 "0.0"   :"rgb(0,255,64)",
@@ -75,7 +75,7 @@ define(function(require, exports, module) {
                     "90"   :"rgb(255,0,0)"
                 }
                 for(var colorTreshold in colorRange){
-                    if(data>=parseFloat(colorTreshold)){
+                    if(data>=Number(colorTreshold)){
                         color=colorRange[colorTreshold]
                     }
                 }
@@ -91,9 +91,9 @@ define(function(require, exports, module) {
             var color=this.options.pointMarkerDefaultColor
 
             try{
-                var percent = (parseFloat(data) - this.minPointValue) / (this.maxPointValue - this.minPointValue);
+                var percent = (Number(data) - this.minPointValue) / (this.maxPointValue - this.minPointValue);
                 for(var item in this.options.pointMarkerColorRange){
-                    if(percent>=parseFloat(item)){
+                    if(percent>=Number(item)){
                         color=this.options.pointMarkerColorRange[item];
                     }
                 }
@@ -111,14 +111,14 @@ define(function(require, exports, module) {
         },
 
         defaultLineMarker: function(coord1,coord2,event,index,data){
-            var size=25;
+            var size=40;
             var halfsize=size/2;
             var color=this.options.lineMarkerDefaultColor
 
             try{
-                var percent = (parseFloat(data) - this.minLineValue) / (this.maxLineValue - this.minLineValue);
+                var percent = (Number(data) - this.minLineValue) / (this.maxLineValue - this.minLineValue);
                 for(var item in this.options.lineMarkerColorRange){
-                    if(percent>=parseFloat(item)){
+                    if(percent>=Number(item)){
                         color=this.options.lineMarkerColorRange[item];
                     }
                 }
@@ -138,14 +138,18 @@ define(function(require, exports, module) {
 
         defaultLineStyle: function(coord1,coord2,event,index,data){
             var color=this.options.lineStyleDefaultColor
-
+            console.log(data)
             try{
-                var percent = (parseFloat(data) - this.minLineValue) / (this.maxLineValue - this.minLineValue);
+                var percent = (Number(data) - this.minLineValue) / (this.maxLineValue - this.minLineValue);
+                console.log(percent)
+                console.log(this.minLineValue+" "+this.maxLineValue)
                 for(var item in this.options.lineStyleColorRange){
-                    if(percent>=parseFloat(item)){
+                    if(percent>=Number(item)){
                         color=this.options.lineStyleColorRange[item];
+                        console.log("setting color:"+color);
                     }
                 }
+
             }catch(err){
                 console.error(err)
             }
@@ -176,6 +180,7 @@ define(function(require, exports, module) {
 
                     // render the line
                     if(value && nextcoord){
+                        console.log(value)
                         var strip=new H.geo.Strip()
                         strip.pushPoint(coord)
                         strip.pushPoint(nextcoord)
@@ -248,7 +253,7 @@ define(function(require, exports, module) {
                 for(var i=0;i<event["coords"].length;i++){
                     // get the coordinate
                     var coord=event["coords"][i].split(",")
-                    var coord={lat: parseFloat(coord[0]), lng: parseFloat(coord[1])}
+                    var coord={lat: Number(coord[0]), lng: Number(coord[1])}
                     parsed["coords"].push(coord)
 
                     // get the point
@@ -264,7 +269,7 @@ define(function(require, exports, module) {
 
                         // check the min/max value for a point
                         try{
-                            point=parseFloat(point)
+                            point=Number(point)
                             if(this.maxPointValue<point) this.maxPointValue=point;
                             if(this.minPointValue>point) this.minPointValue=point;
                         }catch(err){
@@ -283,7 +288,7 @@ define(function(require, exports, module) {
 
                         // check the min/max value for a line value
                         try{
-                            value=parseFloat(value)
+                            value=Number(value)
                             if(this.maxLineValue<value) this.maxLineValue=value;
                             if(this.minLineValue>value) this.minLineValue=value;
                         }catch(err){

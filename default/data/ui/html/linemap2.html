@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Line Map HTML dashboard</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="shortcut icon" href="{{SPLUNKWEB_URL_PREFIX}}/static/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/build/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/build/pages/dashboard-simple-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{SPLUNKWEB_URL_PREFIX}}/static/app/search/dashboard.css" />
+    <!--[if IE 7]><link rel="stylesheet" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/sprites-ie7.css" /><![endif]-->
+
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-clustering.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-data.js" type="text/javascript" charset="utf-8"></script>
+    <link href="https://js.api.here.com/v3/3.0/mapsjs-ui.css" rel="stylesheet" type="text/css" />
+    <link href="{{SPLUNKWEB_URL_PREFIX}}/static/app/heremaps/heremaps/heremap.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="header">
+        <div id="myheader"></div>
+    </div>
+
+    <div class="dashboard-body container-fluid main-section-body" data-role="main">
+        <div style="margin:2%">
+            <div style="padding-bottom:10px">
+            This shows a simple line map, it renders lat/lng points and connects them by lines.<br/>
+            In this case the data was created by measuring the traceroute latency of several ip's.
+            </div>
+            <div style="margin-bottom:10px">
+                <div id="search-bar"></div>
+                <div id="search-control"></div>
+            </div>
+            <div>
+                <div style="float:left;width:49%" id="search-table"></div>
+                <div style="float:right;width:2%"></div>
+                <div style="float:right;width:49%" id="search-map"></div>
+                <div style="clear: both; margin-top:10px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myfooter"></div>
+
+<script src="{{SPLUNKWEB_URL_PREFIX}}/config?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/js/i18n.js"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/i18ncatalog?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/js/build/simplexml.min/config.js"></script>
+<script type="text/javascript">
+require.config({
+    baseUrl: "{{SPLUNKWEB_URL_PREFIX}}/static/js",
+    waitSeconds: 0, // Disable require.js load timeout
+    paths:
+    {
+        "app": "../app"
+    }
+});
+
+        var deps = [
+            "splunkjs/ready!",
+            "splunkjs/mvc/headerview",
+            "splunkjs/mvc/footerview",
+            "splunkjs/mvc/searchbarview",
+            "splunkjs/mvc/searchcontrolsview",
+            "splunkjs/mvc/tableview",
+            "splunkjs/mvc/searchmanager",
+            "app/heremaps/heremaps/herelinemap"
+        ];
+        require(deps, function(mvc) {
+            // Load individual components
+            var HeaderView = require("splunkjs/mvc/headerview");
+            var FooterView = require("splunkjs/mvc/footerview");
+            var SearchBarView = require("splunkjs/mvc/searchbarview");
+            var SearchControlsView = require("splunkjs/mvc/searchcontrolsview");
+            var TableView = require("splunkjs/mvc/tableview");
+            var HereLineMap = require("app/heremaps/heremaps/herelinemap");
+            var SearchManager = require("splunkjs/mvc/searchmanager");
+
+            // Create a header
+            new HeaderView({
+                id: "myheader",
+                el: $("#myheader"),
+            }).render()
+
+            // Create a footer
+            new FooterView({
+                id: "myfooter",
+                el: $("#myfooter"),
+            }).render()
+
+            // Create a search manager
+            var mysearch = new SearchManager({
+                id: "search1",
+                preview: true,
+                status_buckets: 300,
+                search: mvc.tokenSafe("$searchquery$"),
+                required_field_list: "*",
+            });
+
+            // Create a search bar
+            var mysearchbar = new SearchBarView ({
+                id: "searchbar1",
+                managerid: "search1",
+                el: $("#search-bar"),
+                value: mvc.tokenSafe("$searchquery$"),
+                default: "|inputlookup line-data2.csv | eval coords=split(coords,\";\") | eval points=split(points,\";\") | eval values=split(values,\";\")"
+            }).render();
+
+            // Create a search control
+            var mysearchcontrol = new SearchControlsView ({
+                id: "searchcontrol1",
+                managerid: "search1",
+                el: $("#search-control")
+            }).render();
+
+            // Create a table
+            var mytable = new TableView ({
+                id: "table1",
+                managerid: "search1",
+                el: $("#search-table")
+            }).render();
+
+            var markerline=function(coord1,coord2,event,index,data){
+                var svg='<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><text xml:space="preserve" text-anchor="middle" id="svg_2" y="12.5" x="10" font-size="7pt" font-family="Roboto" stroke="#000000" fill="#000000">${TEXT}</text></svg>';
+
+                svg=svg.replace(/\$\{TEXT\}/g,data)
+
+                var markerIcon = new H.map.Icon(svg,{anchor:{x:10,y:10}});
+                centercoord={lat:(coord1.lat+coord2.lat)/2 , lng:(coord1.lng+coord2.lng)/2}
+                return new H.map.Marker(centercoord,{icon: markerIcon});
+            }
+            var styleline=function(coord1,coord2,event,index,data){
+                color="#444444"
+                width=2
+                if(data<=20){
+                    color="rgb(192,255,0)"
+                    width=2
+                }else if(data<=40){
+                    color="rgb(255,255,0)"
+                    width=3
+                }else if(data<=60){
+                    color="rgb(255,192,0)"
+                    width=4
+                }else if(data<=80){
+                    color="rgb(255,128,0)"
+                    width=5
+                }else if(data<=100){
+                    color="rgb(255,64,0)"
+                    width=6
+                }else if(data<=150){
+                    color="rgb(255,0,0)"
+                    width=7
+                }
+                style={lineWidth:width,strokeColor:color,fillColor:color}
+                return style
+            }
+
+            // Create the line map
+            var mylinemap = new HereLineMap({
+                id: "linemap1",
+                managerid: "search1",
+                el: $("#search-map"),
+                height: "400px"
+            }).render()
+        });
+    </script>
+</body>
+</html>
