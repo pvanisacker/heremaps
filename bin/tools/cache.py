@@ -1,5 +1,7 @@
-import os.path
 import datetime
+
+import os.path
+
 
 try:
     import cPickle as pickle
@@ -39,6 +41,7 @@ class FileCache(object):
     def write_cache_handler(self, handler):
         self.clean_cache()
         pickle.dump(self.objects, handler)
+        handler.close()
 
     def clean_old(self):
         # remove all the old items
@@ -67,5 +70,3 @@ class FileCache(object):
 
     def get_today(self):
         return datetime.datetime.today().date()
-
-

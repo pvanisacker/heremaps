@@ -18,7 +18,7 @@ define(function(require, exports, module) {
             zoom: 2,
             height: "400px",
             app_id:"",
-            app_code:"",
+            app_code:""
         },
 
         options: {
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
                     '<div class="heremapwrapper" style="height:'+this.options.height+'">'+
                     '<div id="'+this.id+'-msg"></div>'+
                     '<div style="height: '+this.options.height+'; min-height:'+this.options.height+'; min-width:100%;" id="'+this.id+'-map" class="mapcontainer"></div>'+
-                    '</div>')
+                    '</div>');
 
             this.message = this.$('#'+this.id+'-msg');
 
@@ -54,11 +54,11 @@ define(function(require, exports, module) {
         updateView: function(viz, data){
             this.clearView();
             heat_data=[];
-            for(res in data){
+            for(var res in data){
                 if("lat" in data[res] && "lng" in data[res]){
-                    var lat=parseFloat(data[res]["lat"])
-                    var lng=parseFloat(data[res]["lng"])
-                    var value=parseFloat(data[res]["value"])
+                    var lat=parseFloat(data[res].lat);
+                    var lng=parseFloat(data[res].lng);
+                    var value=parseFloat(data[res].value);
                     heat_data.push({"latitude":lat,"longitude":lng,"value":value});
                 }
             }
@@ -69,7 +69,7 @@ define(function(require, exports, module) {
         },
 
         clearView: function(){
-            this.map.overlays.remove(this.heatmapProvider)
+            this.map.overlays.remove(this.heatmapProvider);
         },
 
         createView: function(){
@@ -92,21 +92,21 @@ define(function(require, exports, module) {
                 nokia.Settings.set("app_code", this.options.app_code);
 
                 options={
-                    zoomLevel:parseInt(this.options.zoom),
+                    zoomLevel:parseInt(this.options.zoom,10),
                     components:[new nokia.maps.map.component.Behavior()],
                     center:[parseFloat(this.options.center.split(",")[0]),parseFloat(this.options.center.split(",")[1])]
-                }
-                console.log(options)
+                };
+
                 this.map = new nokia.maps.map.Display(document.getElementById(this.id+'-map'), options);
                 this.map.set("baseMapType", nokia.maps.map.Display.TERRAIN);
 
                 if(this.postCreateMap){
-                    this.postCreateMap()
+                    this.postCreateMap();
                 }
             }catch(err){
                 this._errorMessage();
-                console.error("Error loading map components")
-                console.error(err.stack)
+                console.error("Error loading map components");
+                console.error(err.stack);
             }
         },
 
@@ -119,7 +119,7 @@ define(function(require, exports, module) {
                 }
                 content=response.data.entry[0].content;
 
-                if(content.app_id.trim()=="" || content.app_code.trim()==""){
+                if(content.app_id.trim()==="" || content.app_code.trim()===""){
                     console.error("No app_id & app_code found, make sure to set on in the heremaps setup screen");
                     that._errorMessage();
                 }else{
@@ -144,13 +144,13 @@ define(function(require, exports, module) {
         },
 
         _setOptions: function(){
-            if(!this.options.center || this.options.center.trim()==""){
+            if(!this.options.center || this.options.center.trim()===""){
                 this.options.center=this.default_options.center;
             }
             if(!this.options.zoom){
                 this.options.zoom=this.default_options.zoom;
             }
-            if(!this.options.height || this.options.height.trim()==""){
+            if(!this.options.height || this.options.height.trim()===""){
                 this.options.height=this.default_options.height;
             }
         },
@@ -164,7 +164,7 @@ define(function(require, exports, module) {
                 coarseness: this.options.coarseness
             };
             if(this.options.colors){
-                options["colors"]=this.options.colors;
+                options.colors=this.options.colors;
             }
             var heatmapProvider = new nokia.maps.heatmap.Overlay(options);
             return heatmapProvider;

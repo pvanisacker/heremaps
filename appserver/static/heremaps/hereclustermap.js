@@ -13,7 +13,7 @@ define(function(require, exports, module) {
         options: {
             min_weight: 1,
             eps: 32,
-            theme: undefined,
+            theme: undefined
         },
 
         clusteringLayer:undefined,
@@ -30,15 +30,15 @@ define(function(require, exports, module) {
 
                 var dataPoints = [];
                 for(var i=0;i<data.length;i++){
-                    dataPoints.push(new H.clustering.DataPoint(data[i]["lat"],data[i]["lng"],1,data[i]));
+                    dataPoints.push(new H.clustering.DataPoint(data[i].lat,data[i].lng,1,data[i]));
                 }
 
                 var options={clusteringOptions: {
                         minWeight: this.min_weight,
                         eps: this.eps
-                    }}
+                    }};
                 if(this.options.theme){
-                    options["theme"]=this.options.theme
+                    options.theme=this.options.theme;
                 }
                 this.clusteringProvider = new H.clustering.Provider(dataPoints, options);
                 this.clusteringLayer = new H.map.layer.ObjectLayer(this.clusteringProvider);

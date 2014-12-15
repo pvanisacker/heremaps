@@ -1,13 +1,13 @@
 __author__ = 'pieter'
 
-import csv
 import datetime
+
+import csv
 from shapely.geometry import Point
 from tools.reversegeocodershape import ReverseGeocoderShape
 
 
-
-csv_max_count=100
+csv_max_count = 100
 print("Without index")
 with open("lookups/latlng-data.csv", 'rb') as csvfile:
     rev = ReverseGeocoderShape()
@@ -25,7 +25,7 @@ with open("lookups/latlng-data.csv", 'rb') as csvfile:
             break
 
     stop = datetime.datetime.now()
-    delta = stop-start
+    delta = stop - start
     print("Seconds: %s" % delta.seconds)
 
 print("With index")
@@ -46,5 +46,5 @@ with open("lookups/latlng-data.csv", 'rb') as csvfile:
             break
 
     stop = datetime.datetime.now()
-    delta = stop-start
+    delta = stop - start
     print("Seconds: %s" % delta.seconds)

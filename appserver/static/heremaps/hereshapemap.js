@@ -36,7 +36,7 @@ define(function(require, exports, module) {
                         lineCap: 'square',
                         lineJoin: 'bevel'
             },
-            bubbleContentProvider: function(shape,data){return "<div style='text-align:center;'>"+shape["name"]+": "+data["value"]+"</div>";},
+            bubbleContentProvider: function(shape,data){return "<div style='text-align:center;'>"+shape.name+": "+data.value+"</div>";}
         },
 
 
@@ -44,23 +44,23 @@ define(function(require, exports, module) {
             // remove the existing values
             for(var key in this.shapes){
                 if("value" in this.shapes[key]){
-                    delete this.shapes[key]["value"]
+                    delete this.shapes[key].value;
                 }
             }
 
             // update the map with the new results
-            this.maxValue=-Number.MAX_VALUE
-            this.minValue=Number.MAX_VALUE
+            this.maxValue=-Number.MAX_VALUE;
+            this.minValue=Number.MAX_VALUE;
             for(var seq in data){
                 var result=data[seq];
                 if("key" in result && "value" in result){
-                    if(!(result["key"] in this.shapes)){
-                        this.shapes[result["key"]]={}
+                    if(!(result.key in this.shapes)){
+                        this.shapes[result.key]={};
                     }
-                    value=parseFloat(result["value"])
-                    if(value!=NaN){
-                        this.shapes[result["key"]]["value"]=value;
-                        this.shapes[result["key"]]["result"]=result;
+                    value=parseFloat(result.value);
+                    if(!isNaN(value)){
+                        this.shapes[result.key].value=value;
+                        this.shapes[result.key].result=result;
                         if(this.maxValue<value) this.maxValue=value;
                         if(this.minValue>value) this.minValue=value;
                     }
@@ -72,7 +72,7 @@ define(function(require, exports, module) {
         clearView: function(){
             // set all the shapes to the default style
             for(var shape in this.shapes){
-                this.colorShape(shape,this.options.defaultStyle)
+                this.colorShape(shape,this.options.defaultStyle);
             }
         },
         postCreateMap: function(){
@@ -83,7 +83,7 @@ define(function(require, exports, module) {
             if(this.options.shapeType==="geojson"){
                 this.reader = new H.data.geojson.Reader('/static/app/heremaps/data/'+this.options.geoJSONFile);
             }
-            var that=this
+            var that=this;
             this.reader.addEventListener('statechange', function(evt) {
                 if(evt.state == H.data.AbstractReader.State.READY){
                     that._onShapesLoaded();
@@ -94,16 +94,15 @@ define(function(require, exports, module) {
 
             // Add listener for info bubble on click
             if(this.options.bubbleContentProvider){
-                var that=this;
                 this.layer.getProvider().addEventListener('tap', function(evt) {
                     var data,shape;
                     if(that.options.shapeType==="kml"){
-                        data=that.shapes[evt.target.getData()["description"]]
-                        shape=evt.target.getData()
+                        data=that.shapes[evt.target.getData().description];
+                        shape=evt.target.getData();
                     }
                     if(that.options.shapeType==="geojson"){
-                        data=that.shapes[evt.target.getParentGroup().getData()["properties"]["id"]]
-                        shape=evt.target.getParentGroup().getData()["properties"]
+                        data=that.shapes[evt.target.getParentGroup().getData().properties.id];
+                        shape=evt.target.getParentGroup().getData().properties;
                     }
                     var bubble =  new H.ui.InfoBubble(that.map.screenToGeo(evt.currentPointer.viewportX, evt.currentPointer.viewportY), {
                         content: that.options.bubbleContentProvider(shape,data)
@@ -121,49 +120,51 @@ define(function(require, exports, module) {
                 objs=this.reader.getParsedObjects();
             }
             if(this.options.shapeType==="geojson"){
-                objs=this.reader.getParsedObjects()
+                objs=this.reader.getParsedObjects();
                 objs=objs[0].getObjects();
             }
 
+            var that=this;
+            var enterfunction=function(event){
+                            var group=event.target.getParentGroup();
+                            if(that.options.shapeType==="kml"){
+                                key=group.getData().description;
+                            }
+                            if(that.options.shapeType==="geojson"){
+                                key=group.getData().properties.id;
+                            }
+                            that.shapes[key].state="enter";
+                            that.colorShape(key);
+                        };
+            var leavefunction=function(event){
+                            var group=event.target.getParentGroup();
+                            if(that.options.shapeType==="kml"){
+                                key=group.getData().description;
+                            }
+                            if(that.options.shapeType==="geojson"){
+                                key=group.getData().properties.id;
+                            }
+                            that.shapes[key].state="normal";
+                            that.colorShape(key);
+                        };
+
             for(var i=0;i<objs.length;i++){
-                var obj=objs[i]
+                var obj=objs[i];
                 if (obj instanceof H.map.Group){
                     if(this.options.shapeType==="kml"){
-                        key=obj.getData()["description"];
+                        key=obj.getData().description;
                     }
                     if(this.options.shapeType==="geojson"){
-                        key=obj.getData()["properties"]["id"]
+                        key=obj.getData().properties.id;
                     }
                     if (!(key in this.shapes)){
-                        this.shapes[key]={}
+                        this.shapes[key]={};
                     }
-                    this.shapes[key]["obj"]=obj
+                    this.shapes[key].obj=obj;
 
-                    var that=this;
                     obj.forEach(function(poly){
-                        poly.addEventListener('pointerenter',function(event){
-                            var group=event.target.getParentGroup();
-                            if(that.options.shapeType==="kml"){
-                                key=group.getData()["description"];
-                            }
-                            if(that.options.shapeType==="geojson"){
-                                key=group.getData()["properties"]["id"]
-                            }
-                            that.shapes[key]["state"]="enter";
-                            that.colorShape(key);
-                        });
-                        poly.addEventListener('pointerleave',function(event){
-                            var group=event.target.getParentGroup();
-                            if(that.options.shapeType==="kml"){
-                                key=group.getData()["description"];
-                            }
-                            if(that.options.shapeType==="geojson"){
-                                key=group.getData()["properties"]["id"]
-                            }
-                            that.shapes[key]["state"]="normal";
-                            that.colorShape(key);
-                        });
-
+                        poly.addEventListener('pointerenter',enterfunction);
+                        poly.addEventListener('pointerleave',leavefunction);
                     });
 
                 }
@@ -183,11 +184,11 @@ define(function(require, exports, module) {
         },
         colorShapeStyle: function(key,style){
             // color a certain shape with a certain style
-            var shape_group=this.shapes[key]["obj"]
+            var shape_group=this.shapes[key].obj;
 
             if(shape_group){
                 var index=0;
-                if("state" in this.shapes[key] && this.shapes[key]["state"]=="enter"){
+                if("state" in this.shapes[key] && this.shapes[key].state=="enter"){
                     index=5;
                 }
                 shape_group.setZIndex(index);
@@ -206,9 +207,9 @@ define(function(require, exports, module) {
                 lineWidth: this.options.defaultStyle.lineWidth,
                 lineCap: this.options.defaultStyle.lineCap,
                 lineJoin: this.options.defaultStyle.lineJoin
-            }
+            };
             if("value" in this.shapes[key]){
-                value=this.shapes[key]["value"]
+                value=this.shapes[key].value;
                 var percent = (value - this.minValue) / (this.maxValue - this.minValue);
                 for(var color in this.options.colorRange){
                     if(percent>=parseFloat(color)){
@@ -217,7 +218,7 @@ define(function(require, exports, module) {
                 }
             }
             if(key in this.shapes){
-                if(("state" in this.shapes[key]) && this.shapes[key]["state"]=="enter"){
+                if(("state" in this.shapes[key]) && this.shapes[key].state=="enter"){
                     style.lineWidth=4;
                 }
             }

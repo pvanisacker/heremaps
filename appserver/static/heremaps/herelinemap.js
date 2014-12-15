@@ -58,10 +58,10 @@ define(function(require, exports, module) {
                 "0.9"   :"rgb(255,0,0)"
             },
             lineStyle:undefined,
-            lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data["data"]+"</div>";},
-            pointBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data["data"]+"</div>";},
+            lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
+            pointBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
             lineStyleProvider: function(coord1,coord2,event,index,data){
-                var color="#555555"
+                var color="#555555";
                 var colorRange={
                     "0"   :"rgb(0,255,64)",
                     "10"   :"rgb(0,255,0)",
@@ -73,22 +73,22 @@ define(function(require, exports, module) {
                     "70"   :"rgb(255,128,0)",
                     "80"   :"rgb(255,64,0)",
                     "90"   :"rgb(255,0,0)"
-                }
+                };
                 for(var colorTreshold in colorRange){
                     if(data>=Number(colorTreshold)){
-                        color=colorRange[colorTreshold]
+                        color=colorRange[colorTreshold];
                     }
                 }
 
-                return {lineWidth:5,strokeColor:color,fillColor:color}
+                return {lineWidth:5,strokeColor:color,fillColor:color};
             }
         },
         group:new H.map.Group(),
 
         defaultPointMarker: function(coord,event,index,data){
-            var size=8
+            var size=8;
             var halfsize=size/2;
-            var color=this.options.pointMarkerDefaultColor
+            var color=this.options.pointMarkerDefaultColor;
 
             try{
                 var percent = (Number(data) - this.minPointValue) / (this.maxPointValue - this.minPointValue);
@@ -98,13 +98,13 @@ define(function(require, exports, module) {
                     }
                 }
             }catch(err){
-                console.error(err)
+                console.error(err);
             }
 
-            svg=this.options.pointMarkerSvg.replace(/\$\{COLOR\}/g,color)
-            svg=svg.replace(/\$\{SIZE\}/g,size)
-            svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize)
-            svg=svg.replace(/\$\{TEXT\}/g,data)
+            svg=this.options.pointMarkerSvg.replace(/\$\{COLOR\}/g,color);
+            svg=svg.replace(/\$\{SIZE\}/g,size);
+            svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize);
+            svg=svg.replace(/\$\{TEXT\}/g,data);
 
             var markerIcon = new H.map.Icon(svg,{anchor:{x:halfsize,y:halfsize}});
             return new H.map.Marker(coord,{icon: markerIcon});
@@ -113,7 +113,7 @@ define(function(require, exports, module) {
         defaultLineMarker: function(coord1,coord2,event,index,data){
             var size=40;
             var halfsize=size/2;
-            var color=this.options.lineMarkerDefaultColor
+            var color=this.options.lineMarkerDefaultColor;
 
             try{
                 var percent = (Number(data) - this.minLineValue) / (this.maxLineValue - this.minLineValue);
@@ -123,26 +123,24 @@ define(function(require, exports, module) {
                     }
                 }
             }catch(err){
-                console.error(err)
+                console.error(err);
             }
 
-            svg=this.options.lineMarkerSvg.replace(/\$\{COLOR\}/g,color)
-            svg=svg.replace(/\$\{SIZE\}/g,size)
-            svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize)
-            svg=svg.replace(/\$\{TEXT\}/g,data)
+            svg=this.options.lineMarkerSvg.replace(/\$\{COLOR\}/g,color);
+            svg=svg.replace(/\$\{SIZE\}/g,size);
+            svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize);
+            svg=svg.replace(/\$\{TEXT\}/g,data);
 
             var markerIcon = new H.map.Icon(svg,{anchor:{x:halfsize,y:halfsize}});
-            centercoord={lat:(coord1.lat+coord2.lat)/2 , lng:(coord1.lng+coord2.lng)/2}
+            centercoord={lat:(coord1.lat+coord2.lat)/2 , lng:(coord1.lng+coord2.lng)/2};
             return new H.map.Marker(centercoord,{icon: markerIcon});
         },
 
         defaultLineStyle: function(coord1,coord2,event,index,data){
-            var color=this.options.lineStyleDefaultColor
-            console.log(data)
+            var color=this.options.lineStyleDefaultColor;
+
             try{
                 var percent = (Number(data) - this.minLineValue) / (this.maxLineValue - this.minLineValue);
-                console.log(percent)
-                console.log(this.minLineValue+" "+this.maxLineValue)
                 for(var item in this.options.lineStyleColorRange){
                     if(percent>=Number(item)){
                         color=this.options.lineStyleColorRange[item];
@@ -151,10 +149,10 @@ define(function(require, exports, module) {
                 }
 
             }catch(err){
-                console.error(err)
+                console.error(err);
             }
 
-            return {lineWidth:5,strokeColor:color,fillColor:color}
+            return {lineWidth:5,strokeColor:color,fillColor:color};
         },
 
         updateVisualization: function(){
@@ -164,58 +162,61 @@ define(function(require, exports, module) {
 
             // iterate over all the data and render it
             for(var i=0;i<this.events.length;i++){
-                event=this.events[i]["event"]
-                parsed=this.events[i]["parsed"]
+                event=this.events[i].event;
+                parsed=this.events[i].parsed;
 
-                for(var j=0;j<parsed["coords"].length;j++){
-                    var point=parsed["points"][j]
-                    var coord=parsed["coords"][j]
+                for(var j=0;j<parsed.coords.length;j++){
+                    var point=parsed.points[j];
+                    var coord=parsed.coords[j];
+                    var value,nextcoord;
                     try{
                         // try to get the value & next coordinate
-                        var value=parsed["values"][j]
-                        var nextcoord=parsed["coords"][j+1]
+                        value=parsed.values[j];
+                        nextcoord=parsed.coords[j+1];
                     }catch(err){
 
                     }
 
                     // render the line
                     if(value && nextcoord){
-                        console.log(value)
-                        var strip=new H.geo.Strip()
-                        strip.pushPoint(coord)
-                        strip.pushPoint(nextcoord)
+                        var strip=new H.geo.Strip();
+                        strip.pushPoint(coord);
+                        strip.pushPoint(nextcoord);
                         var line=new H.map.Polyline(strip);
-                        if(this.options.linestyle!=undefined){
-                            var style=this.options.linestyle(coord,nextcoord,event,i,value);
+                        var style;
+                        if(this.options.linestyle!==undefined){
+                            style=this.options.linestyle(coord,nextcoord,event,i,value);
                         }else{
-                            var style=this.defaultLineStyle(coord,nextcoord,event,i,value);
+                            style=this.defaultLineStyle(coord,nextcoord,event,i,value);
                         }
                         line.setStyle(style);
-                        linegroup.addObject(line)
+                        linegroup.addObject(line);
                     }
 
                     // render the point marker
-                    if(this.options.pointmarker!=undefined){
-                        var marker=this.options.pointmarker(coord,event,j,point);
+                    var pointmarker;
+                    if(this.options.pointmarker!==undefined){
+                        pointmarker=this.options.pointmarker(coord,event,j,point);
                     }else{
-                        var marker=this.defaultPointMarker(coord,event,j,point);
+                        pointmarker=this.defaultPointMarker(coord,event,j,point);
                     }
                     if(marker){
-                        marker.setData({event:event,index:j,data:point});
-                        pointmarkergroup.addObject(marker)
+                        pointmarker.setData({event:event,index:j,data:point});
+                        pointmarkergroup.addObject(pointmarker);
                     }
 
 
                     // render the line marker
                     if(value && nextcoord){
-                        if(this.options.linemarker!=undefined){
-                            var marker=this.options.linemarker(coord,nextcoord,event,j,value)
+                        var linemarker;
+                        if(this.options.linemarker!==undefined){
+                            linemarker=this.options.linemarker(coord,nextcoord,event,j,value);
                         }else{
-                            var marker=this.defaultLineMarker(coord,nextcoord,event,j,value)
+                            linemarker=this.defaultLineMarker(coord,nextcoord,event,j,value);
                         }
                         if(marker){
-                            marker.setData({event:event,index:j,data:value})
-                            linemarkergroup.addObject(marker)
+                            linemarker.setData({event:event,index:j,data:value});
+                            linemarkergroup.addObject(linemarker);
                         }
                     }
                 }
@@ -247,52 +248,52 @@ define(function(require, exports, module) {
         },
 
         parseEvent: function(event){
-            parsed={"coords":[],"points":[],"values":[]}
+            parsed={"coords":[],"points":[],"values":[]};
             if( "coords" in event){
                 // create the event data structure if the needed fields exist
-                for(var i=0;i<event["coords"].length;i++){
+                for(var i=0;i<event.coords.length;i++){
                     // get the coordinate
-                    var coord=event["coords"][i].split(",")
-                    var coord={lat: Number(coord[0]), lng: Number(coord[1])}
-                    parsed["coords"].push(coord)
+                    var coord=event.coords[i].split(",");
+                    coord={lat: Number(coord[0]), lng: Number(coord[1])};
+                    parsed.coords.push(coord);
 
                     // get the point
                     if("points" in event){
-                        if(Object.prototype.toString.call( event["points"] ) === '[object Array]'){
-                            if(event["points"][i]!=undefined){
-                                point=event["points"][i]
+                        if(Object.prototype.toString.call( event.points ) === '[object Array]'){
+                            if(event.points[i]!==undefined){
+                                point=event.points[i];
                             }
                         } else{
-                            point=event["points"]
+                            point=event.points;
                         }
-                        parsed["points"].push(point)
+                        parsed.points.push(point);
 
                         // check the min/max value for a point
                         try{
-                            point=Number(point)
+                            point=Number(point);
                             if(this.maxPointValue<point) this.maxPointValue=point;
                             if(this.minPointValue>point) this.minPointValue=point;
                         }catch(err){
-                            console.debug("Point is not a number")
+                            console.debug("Point is not a number");
                         }
                     }
                     if("values" in event){
-                        if(Object.prototype.toString.call( event["values"] ) === '[object Array]'){
-                            if(event["values"][i]!=undefined){
-                                value=event["values"][i]
+                        if(Object.prototype.toString.call( event.values ) === '[object Array]'){
+                            if(event.values[i]!==undefined){
+                                value=event.values[i];
                             }
                         } else{
-                            value=event["values"]
+                            value=event.values;
                         }
-                        parsed["values"].push(value)
+                        parsed.values.push(value);
 
                         // check the min/max value for a line value
                         try{
-                            value=Number(value)
+                            value=Number(value);
                             if(this.maxLineValue<value) this.maxLineValue=value;
                             if(this.minLineValue>value) this.minLineValue=value;
                         }catch(err){
-                            console.debug("Value is not a number")
+                            console.debug("Value is not a number");
                         }
                     }
                 }
@@ -302,18 +303,18 @@ define(function(require, exports, module) {
         },
 
         updateView: function(viz, data) {
-            this.events=[]
+            this.events=[];
             if(this.map){
                 this.clearView();
 
-                this.maxLineValue=-Number.MAX_VALUE
-                this.minLineValue=Number.MAX_VALUE
-                this.maxPointValue=-Number.MAX_VALUE
-                this.minPointValue=Number.MAX_VALUE
+                this.maxLineValue=-Number.MAX_VALUE;
+                this.minLineValue=Number.MAX_VALUE;
+                this.maxPointValue=-Number.MAX_VALUE;
+                this.minPointValue=Number.MAX_VALUE;
 
                 for(var i=0;i<data.length;i++){
-                    event=this.parseEvent(data[i])
-                    this.events.push({"parsed":event,"event":data[i]})
+                    event=this.parseEvent(data[i]);
+                    this.events.push({"parsed":event,"event":data[i]});
                 }
                 this.updateVisualization();
                 this.map.addObject(this.group);

@@ -12,7 +12,7 @@ define(function(require, exports, module) {
 
         options: {
             marker:undefined,
-            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data["value"]+"</div>";}
+            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.value+"</div>";}
         },
         group:new H.map.Group(),
 
@@ -33,14 +33,17 @@ define(function(require, exports, module) {
             if(this.map){
                 this.clearView();
                 for(var i=0;i<data.length;i++){
+                    var marker;
                     if(this.options.marker){
-                        var marker=this.options.marker(data[i]);
+                        marker=this.options.marker(data[i]);
                     }else{
-                        var marker=new H.map.Marker({lat:data[i]["lat"],lng:data[i]["lng"]});
+                        marker=new H.map.Marker({lat:data[i].lat,lng:data[i].lng});
                     }
-                    marker.setData(data[i]);
-                    // Add marker to group
-                    this.group.addObject(marker);
+                    if(marker){
+                        marker.setData(data[i]);
+                        // Add marker to group
+                        this.group.addObject(marker);
+                    }
                 }
                 this.map.addObject(this.group);
             }

@@ -1,8 +1,10 @@
 __author__ = 'pieter'
 
-import os
 import datetime
+
+import os
 from tools.reversegeocodershape import ReverseGeocoderShape
+
 
 """
     This file can be used for creating index files that speed up the reverse geocoding process.
@@ -21,39 +23,39 @@ from tools.reversegeocodershape import ReverseGeocoderShape
     For example for the map of the French departements an index step of 2 is much better.
 """
 if __name__ == "__main__":
-    shapes=[]
-    shapes.append({"file":"countries/be.geojson","step":2})
-    shapes.append({"file":"countries/br.geojson","step":2})
-    shapes.append({"file":"countries/ca.geojson","step":3})
-    shapes.append({"file":"countries/cn.geojson","step":4})
-    shapes.append({"file":"countries/de.geojson","step":2})
-    shapes.append({"file":"countries/es.geojson","step":2})
-    shapes.append({"file":"countries/fr.geojson","step":2})
-    shapes.append({"file":"countries/in.geojson","step":4})
-    shapes.append({"file":"countries/it.geojson","step":2})
-    shapes.append({"file":"countries/ru.geojson","step":4})
-    shapes.append({"file":"countries/uk.geojson","step":2})
-    shapes.append({"file":"countries/us.geojson","step":3})
+    shapes = []
+    shapes.append({"file": "countries/be.geojson", "step": 2})
+    shapes.append({"file": "countries/br.geojson", "step": 2})
+    shapes.append({"file": "countries/ca.geojson", "step": 3})
+    shapes.append({"file": "countries/cn.geojson", "step": 4})
+    shapes.append({"file": "countries/de.geojson", "step": 2})
+    shapes.append({"file": "countries/es.geojson", "step": 2})
+    shapes.append({"file": "countries/fr.geojson", "step": 2})
+    shapes.append({"file": "countries/in.geojson", "step": 4})
+    shapes.append({"file": "countries/it.geojson", "step": 2})
+    shapes.append({"file": "countries/ru.geojson", "step": 4})
+    shapes.append({"file": "countries/uk.geojson", "step": 2})
+    shapes.append({"file": "countries/us.geojson", "step": 3})
 
-    shapes.append({"file":"world2.geojson","step":4})
-    shapes.append({"file":"world3.geojson","step":4})
-    shapes.append({"file":"squaremap_2.geojson","step":4})
-    shapes.append({"file":"squaremap_4.geojson","step":8})
+    shapes.append({"file": "world2.geojson", "step": 4})
+    shapes.append({"file": "world3.geojson", "step": 4})
+    shapes.append({"file": "squaremap_2.geojson", "step": 4})
+    shapes.append({"file": "squaremap_4.geojson", "step": 8})
 
-    shapes.append({"file":"countries/us_counties.geojson","step":1})
+    shapes.append({"file": "countries/us_counties.geojson", "step": 1})
 
     for shape in shapes:
         print("Creating index for %s" % shape["file"])
-        rev=ReverseGeocoderShape()
-        rev.load_map_file("geojson",os.path.join("..","appserver","static","data",shape["file"]))
-        rev.indexstep=shape["step"]
-        indexfile=os.path.join("lib", "reversegeocodeshape-" + rev.map_md5 + ".index")
-        #try:
+        rev = ReverseGeocoderShape()
+        rev.load_map_file("geojson", os.path.join("..", "appserver", "static", "data", shape["file"]))
+        rev.indexstep = shape["step"]
+        indexfile = os.path.join("lib", "reversegeocodeshape-" + rev.map_md5 + ".index")
+        # try:
         #    os.remove(indexfile)
         #except OSError:
         #    pass
         start = datetime.datetime.now()
         rev.load_index_file(indexfile)
         end = datetime.datetime.now()
-        delta= end-start
+        delta = end - start
         print("Index creation took %s seconds" % delta.seconds)

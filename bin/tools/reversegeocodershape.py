@@ -49,7 +49,8 @@ class ReverseGeocoderShape(object):
 
         # iterate over all the polygons and store them
         for feature in self.json_map_data["features"]:
-            if "properties" in feature and "id" in feature["properties"] and len(feature["properties"]["id"].strip()) > 0:
+            if "properties" in feature and "id" in feature["properties"] and len(
+                    feature["properties"]["id"].strip()) > 0:
                 if "geometry" in feature and "type" in feature["geometry"] and feature["geometry"]["type"] == "MultiPolygon":
                     feature_id = feature["properties"]["id"]
                     self.shapes[feature_id] = asShape(feature["geometry"])
@@ -59,7 +60,7 @@ class ReverseGeocoderShape(object):
 
     def load_index_file(self, indexfile):
         try:
-            if self.json_map_data["crs"]["properties"]["needsindex"]==False:
+            if self.json_map_data["crs"]["properties"]["needsindex"] is False:
                 return
         except KeyError:
             pass
@@ -82,7 +83,6 @@ class ReverseGeocoderShape(object):
                         index_data["keys"].append(key)
                 if 0 < len(index_data["keys"]):
                     self.index.append(index_data)
-
 
     def reversegeocodeshape(self, point, keys=None):
         for key, shape in self.shapes.iteritems():
