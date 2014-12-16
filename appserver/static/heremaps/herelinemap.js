@@ -144,7 +144,6 @@ define(function(require, exports, module) {
                 for(var item in this.options.lineStyleColorRange){
                     if(percent>=Number(item)){
                         color=this.options.lineStyleColorRange[item];
-                        console.log("setting color:"+color);
                     }
                 }
 
@@ -200,7 +199,7 @@ define(function(require, exports, module) {
                     }else{
                         pointmarker=this.defaultPointMarker(coord,event,j,point);
                     }
-                    if(marker){
+                    if(pointmarker){
                         pointmarker.setData({event:event,index:j,data:point});
                         pointmarkergroup.addObject(pointmarker);
                     }
@@ -214,7 +213,7 @@ define(function(require, exports, module) {
                         }else{
                             linemarker=this.defaultLineMarker(coord,nextcoord,event,j,value);
                         }
-                        if(marker){
+                        if(linemarker){
                             linemarker.setData({event:event,index:j,data:value});
                             linemarkergroup.addObject(linemarker);
                         }

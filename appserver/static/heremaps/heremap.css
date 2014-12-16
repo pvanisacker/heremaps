@@ -1,4 +1,3 @@
-
 .heremapwrapper{
     border-top: 1px solid #bfbfbf;
     border-bottom: 1px solid #bfbfbf;
@@ -17,7 +16,27 @@
     padding-left: 10px;
 }
 
-
 .heremap .splunk-message-container {
     padding: 1px;
+}
+
+/* Some HERE maps UI customizations */
+.H_ui {
+	font-family: "Roboto","Droid","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.H_ib, .H_btn {
+    background-color: #858585;
+    color: #FFF;
+    fill: #FFF;
+    font-size: 12px;
+    line-height: 16px;
+}
+.H_ib_body {
+    background-color: #858585;
+}
+.H_ib_close .H_icon{
+    fill: #FFF;
+}
+.H_ib_tail {
+    fill: #858585;
 }
