@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     // Define the custom view class
     var HereLineMap = HereMap.extend({
         className: "herelinemap",
+        shapes:[],
         maxLineValue:-Number.MAX_VALUE,
         minLineValue:Number.MAX_VALUE,
         maxPointValue:-Number.MAX_VALUE,
@@ -184,11 +185,23 @@ define(function(require, exports, module) {
                         var line=new H.map.Polyline(strip);
                         var style;
                         if(this.options.linestyle!==undefined){
-                            style=this.options.linestyle(coord,nextcoord,event,i,value);
+                            style=this.options.linestyle(coord,nextcoord,event,j,value);
                         }else{
-                            style=this.defaultLineStyle(coord,nextcoord,event,i,value);
+                            style=this.defaultLineStyle(coord,nextcoord,event,j,value);
                         }
                         line.setStyle(style);
+                        line.setData({event:event,index:j,data:value});
+
+                        var that=this;
+                        line.addEventListener('pointerenter',function(evt){
+                            console.log(that.map.screenToGeo(evt.currentPointer.viewportX,evt.currentPointer.viewportY));
+                            that.map.addObject(new H.map.Marker(that.map.screenToGeo(evt.currentPointer.viewportX,evt.currentPointer.viewportY)));
+                            evt.target.setZIndex(5);
+                        });
+                        line.addEventListener('pointerleave',function(evt){
+                            evt.target.setZIndex(0);
+                        });
+
                         linegroup.addObject(line);
                     }
 
@@ -239,6 +252,8 @@ define(function(require, exports, module) {
                     that.ui.addBubble(bubble);
                 }, false);
             }
+
+
 
             // add all the needed groups to the main group
             this.group.addObject(pointmarkergroup);
@@ -325,6 +340,12 @@ define(function(require, exports, module) {
             if(this.map && this.group){
                 this.group.removeAll();
             }
+        },
+
+        postCreateMap: function(){
+            // Add the getData and setData method to a polyline
+            H.map.Polyline.prototype.getData=function(){ return this.data;};
+            H.map.Polyline.prototype.setData=function(data){ this.data=data;return this;};
         }
     });
 
