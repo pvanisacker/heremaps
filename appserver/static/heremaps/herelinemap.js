@@ -59,8 +59,9 @@ define(function(require, exports, module) {
                 "0.9"   :"rgb(255,0,0)"
             },
             lineStyle:undefined,
+            lineMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
             lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
-            pointBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
+            pointMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
             lineStyleProvider: function(coord1,coord2,event,index,data){
                 var color="#555555";
                 var colorRange={
@@ -85,6 +86,36 @@ define(function(require, exports, module) {
             }
         },
         group:new H.map.Group(),
+
+        /*
+            Once this map starts loading results the following happens.
+            - parse the events into the data structure below. Without creating the map objects
+            - read through the data structure below and create all the map objects and set the objects data.
+
+            This two phased approach allows on the fly changes of visualizations, which is needed for the default highlighting.
+
+            This datastructure will contain all the event data an shapes that are placed on a map.
+            For each event the following will be stored
+            {
+                coords:[{
+                    raw:"raw coord value",
+                    parsed:{lat:"lat",lng:"lng"},
+                }],
+                points:[{
+                    raw:"raw point value",
+                    parsed:"float value",
+                    marker:"the marker object"
+                }],
+                values:[{
+                    raw:"raw value value",
+                    parsed:"float value",
+                    marker:"the marker object",
+                    line:"the polyline object"
+                }],
+                event:"raw event"
+            }
+            And this will all be stored in this.events array.
+        */
 
         defaultPointMarker: function(coord,event,index,data){
             var size=8;
@@ -139,7 +170,6 @@ define(function(require, exports, module) {
 
         defaultLineStyle: function(coord1,coord2,event,index,data){
             var color=this.options.lineStyleDefaultColor;
-
             try{
                 var percent = (Number(data) - this.minLineValue) / (this.maxLineValue - this.minLineValue);
                 for(var item in this.options.lineStyleColorRange){
@@ -147,23 +177,85 @@ define(function(require, exports, module) {
                         color=this.options.lineStyleColorRange[item];
                     }
                 }
-
             }catch(err){
                 console.error(err);
             }
 
             return {lineWidth:5,strokeColor:color,fillColor:color};
         },
+        getLineStyle: function(coord,nextcoord,parsed,index,value){
+            var style;
+            if(this.options.linestyle!==undefined){
+                style=this.options.linestyle(coord,nextcoord,parsed.event,index,value);
+            }else{
+                style=this.defaultLineStyle(coord,nextcoord,parsed.event,index,value);
+            }
+            return style;
+        },
+        createLine: function(coord,nextcoord,parsed,index,value){
+            var strip=new H.geo.Strip();
+            strip.pushPoint(coord);
+            strip.pushPoint(nextcoord);
+            var line=new H.map.Polyline(strip);
+            var style=this.getLineStyle(coord,nextcoord,parsed,index,value);
+            line.setStyle(style);
+            line.setData({event:parsed.event,index:index,data:value});
+            return line
+        },
+        createPointMarker: function(coord,parsed,index,value){
+            var pointmarker;
+            if(this.options.pointmarker!==undefined){
+                pointmarker=this.options.pointmarker(coord,parsed.event,index,value);
+            }else{
+                pointmarker=this.defaultPointMarker(coord,parsed.event,index,value);
+            }
+            if(pointmarker){
+                pointmarker.setData({event:parsed.event,index:index,data:value});
+            }
+            return pointmarker;
+        },
+        createLineMarker: function(coord,nextcoord,parsed,index,value){
+            var linemarker;
+            if(this.options.linemarker!==undefined){
+                linemarker=this.options.linemarker(coord,nextcoord,parsed.event,index,value);
+            }else{
+                linemarker=this.defaultLineMarker(coord,nextcoord,parsed.event,index,value);
+            }
+            if(linemarker){
+                linemarker.setData({event:parsed.event,index:index,data:value});
 
-        updateVisualization: function(){
+            }
+            return linemarker;
+        },
+
+        pointMarkerTapEventListener: function(evt){
+            var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                content: this.options.pointMarkerBubbleContentProvider(evt.target.getData())
+            });
+            this.ui.addBubble(bubble);
+        },
+        lineMarkerTapEventListener: function(evt){
+            var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                content: this.options.lineMarkerBubbleContentProvider(evt.target.getData())
+            });
+            this.ui.addBubble(bubble);
+        },
+        lineTapEventListener: function(evt){
+            var pos=this.map.screenToGeo(evt.currentPointer.viewportX,evt.currentPointer.viewportY);
+            var bubble =  new H.ui.InfoBubble(pos, {
+                content: this.options.lineBubbleContentProvider(evt.target.getData())
+            });
+            this.ui.addBubble(bubble);
+        },
+
+        createMapVisualization: function(){
             var pointmarkergroup = new H.map.Group();
             var linemarkergroup = new H.map.Group();
             var linegroup = new H.map.Group();
 
             // iterate over all the data and render it
             for(var i=0;i<this.events.length;i++){
-                event=this.events[i].event;
-                parsed=this.events[i].parsed;
+                parsed=this.events[i];
 
                 for(var j=0;j<parsed.coords.length;j++){
                     var point=parsed.points[j];
@@ -179,55 +271,38 @@ define(function(require, exports, module) {
 
                     // render the line
                     if(value && nextcoord){
+                        var line=this.createLine(coord,nextcoord,parsed,j,value);
+                        /*
+                        line.setZIndex(1);
                         var strip=new H.geo.Strip();
-                        strip.pushPoint(coord);
-                        strip.pushPoint(nextcoord);
-                        var line=new H.map.Polyline(strip);
-                        var style;
-                        if(this.options.linestyle!==undefined){
-                            style=this.options.linestyle(coord,nextcoord,event,j,value);
-                        }else{
-                            style=this.defaultLineStyle(coord,nextcoord,event,j,value);
-                        }
-                        line.setStyle(style);
-                        line.setData({event:event,index:j,data:value});
-
+            strip.pushPoint(coord);
+            strip.pushPoint(nextcoord);
+            var borderline=new H.map.Polyline(strip);
+            var style=line.getStyle();
+            style.lineWidth=style.lineWidth+1
+            style.strokeColor="#222222";
+            borderline.setStyle(style);
+            borderline.setZIndex(0);
+*/
                         var that=this;
-                        line.addEventListener('pointerenter',function(evt){
-                            console.log(that.map.screenToGeo(evt.currentPointer.viewportX,evt.currentPointer.viewportY));
-                            that.map.addObject(new H.map.Marker(that.map.screenToGeo(evt.currentPointer.viewportX,evt.currentPointer.viewportY)));
-                            evt.target.setZIndex(5);
-                        });
-                        line.addEventListener('pointerleave',function(evt){
-                            evt.target.setZIndex(0);
-                        });
-
+                        if(this.options.lineBubbleContentProvider){
+                            line.addEventListener('tap',function(evt){that.lineTapEventListener(evt)},false);
+                        }
+                        //linegroup.addObject(borderline);
                         linegroup.addObject(line);
+
                     }
 
                     // render the point marker
-                    var pointmarker;
-                    if(this.options.pointmarker!==undefined){
-                        pointmarker=this.options.pointmarker(coord,event,j,point);
-                    }else{
-                        pointmarker=this.defaultPointMarker(coord,event,j,point);
-                    }
+                    var pointmarker=this.createPointMarker(coord,parsed,j,point);
                     if(pointmarker){
-                        pointmarker.setData({event:event,index:j,data:point});
                         pointmarkergroup.addObject(pointmarker);
                     }
 
-
                     // render the line marker
                     if(value && nextcoord){
-                        var linemarker;
-                        if(this.options.linemarker!==undefined){
-                            linemarker=this.options.linemarker(coord,nextcoord,event,j,value);
-                        }else{
-                            linemarker=this.defaultLineMarker(coord,nextcoord,event,j,value);
-                        }
+                        var linemarker=this.createLineMarker(coord,nextcoord,parsed,j,value);
                         if(linemarker){
-                            linemarker.setData({event:event,index:j,data:value});
                             linemarkergroup.addObject(linemarker);
                         }
                     }
@@ -236,24 +311,16 @@ define(function(require, exports, module) {
 
             // add listeners to point & line markers
             var that=this;
-            if(this.options.pointBubbleContentProvider){
+            if(this.options.pointMarkerBubbleContentProvider){
                 pointmarkergroup.addEventListener('tap', function (evt) {
-                    var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
-                        content: that.options.pointBubbleContentProvider(evt.target.getData())
-                    });
-                    that.ui.addBubble(bubble);
+                    that.pointMarkerTapEventListener(evt);
                 }, false);
             }
-            if(this.options.lineBubbleContentProvider){
+            if(this.options.lineMarkerBubbleContentProvider){
                 linemarkergroup.addEventListener('tap', function (evt) {
-                    var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
-                        content: that.options.lineBubbleContentProvider(evt.target.getData())
-                    });
-                    that.ui.addBubble(bubble);
+                    that.lineMarkerTapEventListener(evt);
                 }, false);
             }
-
-
 
             // add all the needed groups to the main group
             this.group.addObject(pointmarkergroup);
@@ -311,8 +378,8 @@ define(function(require, exports, module) {
                         }
                     }
                 }
-
             }
+            parsed.event=event;
             return parsed;
         },
 
@@ -328,9 +395,10 @@ define(function(require, exports, module) {
 
                 for(var i=0;i<data.length;i++){
                     event=this.parseEvent(data[i]);
-                    this.events.push({"parsed":event,"event":data[i]});
+                    this.events.push(event);
                 }
-                this.updateVisualization();
+
+                this.createMapVisualization();
                 this.map.addObject(this.group);
             }
             this._clearMessage();
