@@ -200,7 +200,7 @@ define(function(require, exports, module) {
             var style=this.getLineStyle(coord,nextcoord,parsed,index,value);
             line.setStyle(style);
             line.setData({event:parsed.event,index:index,data:value});
-            return line
+            return line;
         },
         createPointMarker: function(coord,parsed,index,value){
             var pointmarker;
@@ -251,6 +251,7 @@ define(function(require, exports, module) {
             var pointmarkergroup = new H.map.Group();
             var linemarkergroup = new H.map.Group();
             var linegroup = new H.map.Group();
+            var that=this;
 
             // iterate over all the data and render it
             for(var i=0;i<this.events.length;i++){
@@ -277,15 +278,14 @@ define(function(require, exports, module) {
                         var borderline=new H.map.Polyline(line.getStrip());
                         var linestyle=line.getStyle();
                         var style={};
-                        style.lineWidth=linestyle.lineWidth+2
+                        style.lineWidth=linestyle.lineWidth+2;
                         style.strokeColor="#222222";
                         borderline.setStyle(style);
                         borderline.setZIndex(0);
                         linegroup.addObject(borderline);
 
-                        var that=this;
                         if(this.options.lineBubbleContentProvider){
-                            line.addEventListener('tap',function(evt){that.lineTapEventListener(evt)},false);
+                            line.addEventListener('tap',function(evt){that.lineTapEventListener(evt);},false);
                         }
                         linegroup.addObject(line);
 
@@ -308,7 +308,6 @@ define(function(require, exports, module) {
             }
 
             // add listeners to point & line markers
-            var that=this;
             if(this.options.pointMarkerBubbleContentProvider){
                 pointmarkergroup.addEventListener('tap', function (evt) {
                     that.pointMarkerTapEventListener(evt);
