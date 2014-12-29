@@ -23,8 +23,8 @@ args = args+sys.argv[1:]
 subprocess.call(args)
 </code></pre>
 
-After installing try running SPLUNK_HOME/bin/splunk cmd python SPLUNK_HOME/etc/apps/heremaps/bin/reversegeocodeshape.py __GETINFO__  
-It should now throw any exception but show some CSV like content.
+After installing try running ```SPLUNK_HOME/bin/splunk cmd python SPLUNK_HOME/etc/apps/heremaps/bin/reversegeocodeshape.py __GETINFO__```  
+It should not throw any exception but show some CSV like content.
 
 ### For Linux/OSX
 Make sure you have python 2.7 and it's development tools installed.  
@@ -48,5 +48,5 @@ args = args+sys.argv[1:]
 subprocess.call(args)
 </code></pre>
 
-After installing try running SPLUNK_HOME/bin/splunk cmd python SPLUNK_HOME/etc/apps/heremaps/bin/reversegeocodeshape.py __GETINFO__  
-It should now throw any exception but show some CSV like content.
+After installing try running ```SPLUNK_HOME/bin/splunk cmd python SPLUNK_HOME/etc/apps/heremaps/bin/reversegeocodeshape.py __GETINFO__```  
+It should not throw any exception but show some CSV like content.
