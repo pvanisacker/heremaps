@@ -43,8 +43,10 @@
 
     <collection label="Line maps">
         <a href="/app/heremaps/linemap1">Linemap 1</a>
+        <!--
         <a href="/app/heremaps/linemap2">Linemap 2</a>
         <a href="/app/heremaps/linemap3">Linemap 3</a>
+        -->
     </collection>
     <view name="dashboards" />
 </nav>

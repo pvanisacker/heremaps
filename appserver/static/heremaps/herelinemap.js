@@ -181,7 +181,7 @@ define(function(require, exports, module) {
                 console.error(err);
             }
 
-            return {lineWidth:5,strokeColor:color,fillColor:color};
+            return {lineWidth:4,strokeColor:color};
         },
         getLineStyle: function(coord,nextcoord,parsed,index,value){
             var style;
@@ -223,7 +223,6 @@ define(function(require, exports, module) {
             }
             if(linemarker){
                 linemarker.setData({event:parsed.event,index:index,data:value});
-
             }
             return linemarker;
         },
@@ -272,23 +271,22 @@ define(function(require, exports, module) {
                     // render the line
                     if(value && nextcoord){
                         var line=this.createLine(coord,nextcoord,parsed,j,value);
-                        /*
+
+                        // create a backround polyline to create a border for the polyline
                         line.setZIndex(1);
-                        var strip=new H.geo.Strip();
-            strip.pushPoint(coord);
-            strip.pushPoint(nextcoord);
-            var borderline=new H.map.Polyline(strip);
-            var style=line.getStyle();
-            style.lineWidth=style.lineWidth+1
-            style.strokeColor="#222222";
-            borderline.setStyle(style);
-            borderline.setZIndex(0);
-*/
+                        var borderline=new H.map.Polyline(line.getStrip());
+                        var linestyle=line.getStyle();
+                        var style={};
+                        style.lineWidth=linestyle.lineWidth+2
+                        style.strokeColor="#222222";
+                        borderline.setStyle(style);
+                        borderline.setZIndex(0);
+                        linegroup.addObject(borderline);
+
                         var that=this;
                         if(this.options.lineBubbleContentProvider){
                             line.addEventListener('tap',function(evt){that.lineTapEventListener(evt)},false);
                         }
-                        //linegroup.addObject(borderline);
                         linegroup.addObject(line);
 
                     }
