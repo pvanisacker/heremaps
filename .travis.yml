@@ -3,4 +3,6 @@ python:
   - "2.7"
 install:
   - pip install -r requirements.txt
-script: nosetests -s --with-coverage3 --cover3-package=tools bin/ .
+script: 
+  - nosetests -s --with-coverage3 --cover3-package=tools bin/ .
+  - npm test

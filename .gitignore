@@ -6,6 +6,7 @@ local/*.conf
 *.pyo
 *.pyc
 metadata/*
+node_modules/*
 heremaps.log
 bin/lib/reversegeocode.cache
 bin/lib/reversegeocodeshape-*.cache
