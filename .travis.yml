@@ -7,4 +7,4 @@ python:
   - "3.4"
 install:
   - pip install -r requirements.txt
-script: nosetests -s --with-html-output --html-out-file=test-result.html --with-coverage3 --cover3-html --cover3-html-dir=coverage --cover3-package=tools bin/
+script: nosetests -s --with-coverage3 --cover3-package=tools bin/ .

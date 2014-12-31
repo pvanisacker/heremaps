@@ -1,3 +1,4 @@
 Shapely
 mock
 nose
+nose-cover3
