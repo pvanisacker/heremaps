@@ -1,3 +1,5 @@
+![Build Status](https://travis-ci.org/pvanisacker/heremaps.svg?branch=master)
+
 # Intro
 
 A Splunk app for map visualizations using HERE maps  
