@@ -75,14 +75,22 @@ define(function(require, exports, module) {
                     console.error("Could not parse center lat,lng combination");
                 }
                 this.map = new H.Map(document.getElementById(this.id+'-map'),defaultLayers.terrain.map,options);
-
                 var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
+
                 this.ui=H.ui.UI.createDefault(this.map,defaultLayers);
                 this.ui.removeControl('mapsettings');
 
-                var aerialMapTileService = platform.getMapTileService({type: 'aerial'});
-                var terrainMap = aerialMapTileService.createTileLayer('maptile','terrain.day',256,'png8');
-                this.map.setBaseLayer(terrainMap);
+
+                // use custom tiles if needed
+                if(this.options.customTiles){
+                    var provider=new H.map.provider.ImageTileProvider({getURL:this.options.getTileURL});
+                    var layer=new H.map.layer.TileLayer(provider);
+                    this.map.setBaseLayer(layer);
+                }else{
+                    var aerialMapTileService = platform.getMapTileService({type: 'aerial'});
+                    var terrainMap = aerialMapTileService.createTileLayer('maptile','terrain.day',256,'png8');
+                    this.map.setBaseLayer(terrainMap);
+                }
 
                 if(this.postCreateMap){
                     this.postCreateMap();
