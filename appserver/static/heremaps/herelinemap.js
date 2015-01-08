@@ -285,7 +285,7 @@ define(function(require, exports, module) {
                         linegroup.addObject(borderline);
 
                         if(this.options.lineBubbleContentProvider){
-                            line.addEventListener('tap',this.lineTapEventListener(evt),false);
+                            line.addEventListener('tap',function(evt){that.lineTapEventListener(evt);},false);
                         }
                         linegroup.addObject(line);
 

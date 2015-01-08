@@ -63,7 +63,7 @@ define(function(require, exports, module) {
                 var platform = new H.service.Platform({
                     app_id: this.options.app_id,
                     app_code: this.options.app_code,
-                    useHTTPS: true
+                    //useHTTPS: true
                 });
                 // Obtain the default map types from the platform object:
                 var defaultLayers = platform.createDefaultLayers();

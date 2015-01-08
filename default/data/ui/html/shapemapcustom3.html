@@ -83,13 +83,13 @@ require.config({
             new HeaderView({
                 id: "myheader",
                 el: $("#myheader"),
-            }).render()
+            }).render();
 
             // Create a footer
             new FooterView({
                 id: "myfooter",
                 el: $("#myfooter"),
-            }).render()
+            }).render();
 
             // Create a search manager
             var mysearch = new SearchManager({
@@ -131,8 +131,8 @@ require.config({
                 height: "400px",
                 shapeType: "geojson",
                 geoJSONFile: "world2.geojson",
-                bubbleContentProvider: function(placemark,data){return "<div style='text-align:center; transform: rotate(7deg);'>"+placemark["name"]+": "+data["result"]["something"]+"</div>";},
-            }).render()
+                bubbleContentProvider: function(placemark,data){return "<div style='text-align:center; transform: rotate(7deg);'>"+placemark.name+": "+data.result.something+"</div>";},
+            }).render();
         });
     </script>
 </body>
