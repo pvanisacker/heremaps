@@ -3,3 +3,4 @@ mock
 nose
 nose-cover3
 pep8
+nosehtmloutput
