@@ -52,7 +52,7 @@ if __name__ == "__main__":
         indexfile = os.path.join("lib", "reversegeocodeshape-" + rev.map_md5 + ".index")
         # try:
         #    os.remove(indexfile)
-        #except OSError:
+        # except OSError:
         #    pass
         start = datetime.datetime.now()
         rev.load_index_file(indexfile)
