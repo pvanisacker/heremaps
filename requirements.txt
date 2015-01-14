@@ -2,3 +2,4 @@ Shapely
 mock
 nose
 nose-cover3
+pep8
