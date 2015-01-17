@@ -28,16 +28,16 @@
     <div class="dashboard-body container-fluid main-section-body" data-role="main">
         <div style="margin:2%">
             <div style="padding-bottom:10px">
-            This shows a custom choropleth map of the US states.
+            This shows a custom choropleth map using a geoJSON shape. And has a custom info bubble provider that adds a bit more text.
             </div>
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
                 <div id="search-control"></div>
             </div>
             <div>
-                <div style="float:left;width:29%" id="search-table"></div>
+                <div style="float:left;width:49%" id="search-table"></div>
                 <div style="float:right;width:2%"></div>
-                <div style="float:right;width:69%" id="search-map"></div>
+                <div style="float:right;width:49%" id="search-map"></div>
                 <div style="clear: both; margin-top:10px;"></div>
             </div>
         </div>
@@ -106,7 +106,7 @@ require.config({
                 managerid: "search1",
                 el: $("#search-bar"),
                 value: mvc.tokenSafe("$searchquery$"),
-                default: "|inputlookup us_state_population.csv | sort -population| eval key=code | eval value=population"
+                default: "|inputlookup latlng-data.csv | reversegeocodeshape filetype=geojson filename=squaremap_2.geojson | stats count as value by key"
             }).render();
 
             // Create a search control
@@ -128,12 +128,29 @@ require.config({
                 id: "shapemap1",
                 managerid: "search1",
                 el: $("#search-map"),
-                height: "500px",
-                zoom: "4",
-                center: "35,-100",
+                height: "400px",
                 shapeType: "geojson",
-                geoJSONFile: "countries/us-simplified.geojson",
-                customTiles: true,
+                geoJSONFile: "squaremap_2.geojson",
+                defaultStyle: {
+                        strokeColor: 'rgba(255,255,255,0)',
+                        fillColor: 'rgba(255, 255, 255, 0)',
+                        lineWidth: 0,
+                        lineCap: 'square',
+                        lineJoin: 'bevel'
+                        },
+                colorRange:{
+                    "0.0"   :"rgba(0,255,64,1)",
+                    "0.1"   :"rgba(0,255,0,1)",
+                    "0.2"   :"rgba(64,255,0,1)",
+                    "0.3"   :"rgba(128,255,0,1)",
+                    "0.4"   :"rgba(192,255,0,1)",
+                    "0.5"   :"rgba(255,255,0,1)",
+                    "0.6"   :"rgba(255,192,0,1)",
+                    "0.7"   :"rgba(255,128,0,1)",
+                    "0.8"   :"rgba(255,64,0,1)",
+                    "0.9"   :"rgba(255,0,0,1)"
+                },
+                bubbleContentProvider:undefined
             }).render();
         });
     </script>

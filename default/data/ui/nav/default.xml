@@ -25,7 +25,8 @@
         <a href="/app/heremaps/shapemapcustom3">Custom shape map 3</a>
         <a href="/app/heremaps/shapemapcustom4">Custom shape map 4</a>
         <a href="/app/heremaps/shapemapcustom5">Custom shape map 5</a>
-        <a href="/app/heremaps/shapemapcustom6">Custom shape map 6</a>
+        <a href="/app/heremaps/shapemapcustom_square">Custom shape map square</a>
+        <a href="/app/heremaps/shapemapcustom_hexagon">Custom shape map hexagon</a>
         <a href="/app/heremaps/shapemapcustom_continents">shape map continents</a>
         <collection label="Other countries">
             <a href="/app/heremaps/shapemapcustom_us">Custom shape map US</a>
