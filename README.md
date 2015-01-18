@@ -1,4 +1,5 @@
 ![Build Status](https://travis-ci.org/pvanisacker/heremaps.svg?branch=master)
+[![Build Status](https://snap-ci.com/pvanisacker/heremaps/branch/master/build_image)](https://snap-ci.com/pvanisacker/heremaps/branch/master)
 
 # Intro
 
