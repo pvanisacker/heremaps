@@ -15,11 +15,20 @@ module.exports = function (grunt) {
     },
     inlinelint: {
       html: ["default/data/ui/html/**/*.html"]
+    },
+    casper : {
+      options: {
+        test: true,
+      },
+      test : {
+        src: ['test/*_test.js']
+      }
     }
   });
   
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-lint-inline');
+  grunt.loadNpmTasks('grunt-casper');
 
   grunt.registerTask('test', ['jshint','inlinelint']);
   grunt.registerTask('default', ['test']);
