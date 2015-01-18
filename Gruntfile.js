@@ -7,6 +7,7 @@ module.exports = function (grunt) {
       all: [
         "Gruntfile.js",
         "appserver/static/heremaps/**/*.js",
+        "bin/**/*.js"
       ],
       options: {
         jshintrc: ".jshintrc"

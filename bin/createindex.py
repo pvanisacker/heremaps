@@ -36,11 +36,19 @@ if __name__ == "__main__":
     shapes.append({"file": "countries/ru.geojson", "step": 4})
     shapes.append({"file": "countries/uk.geojson", "step": 2})
     shapes.append({"file": "countries/us.geojson", "step": 3})
+    shapes.append({"file": "continents/africa.geojson", "step": 3})
+    shapes.append({"file": "continents/asia.geojson", "step": 3})
+    shapes.append({"file": "continents/europe.geojson", "step": 3})
+    shapes.append({"file": "continents/north-america.geojson", "step": 3})
+    shapes.append({"file": "continents/oceania.geojson", "step": 3})
+    shapes.append({"file": "continents/south-america.geojson", "step": 3})
 
     shapes.append({"file": "world2.geojson", "step": 4})
     shapes.append({"file": "world3.geojson", "step": 4})
     shapes.append({"file": "squaremap_2.geojson", "step": 4})
     shapes.append({"file": "squaremap_4.geojson", "step": 8})
+    shapes.append({"file": "hexagonmap_regeo_3.geojson", "step": 8})
+    shapes.append({"file": "hexagonmap_regeo_2.geojson", "step": 4})
 
     shapes.append({"file": "countries/us_counties.geojson", "step": 1})
 
