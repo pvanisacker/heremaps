@@ -20,6 +20,7 @@ module.exports = function (grunt) {
     casper : {
       options: {
         test: true,
+        includes: "test/tools.js"
       },
       test : {
         src: ['test/*_test.js']

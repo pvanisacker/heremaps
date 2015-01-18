@@ -1,39 +1,16 @@
 var x = require('casper').selectXPath;
+var splunkhome="http://localhost:8000/en-US";
 casper.test.begin('Heremaps load maps', function suite(test){
-	phantom.clearCookies();
-	casper.start("http://localhost:8000/en-US/account/login", function(){
-	});
+  phantom.clearCookies();
+  splunkLogin(casper,test);
 
-        casper.waitFor(
-		function check() {
-			return this.getTitle()=="Login | Splunk";
-	        },
-	        function then() {},
-	        function timeout(){
-			test.fail("Page not loaded");
-		},
-		1000
-	);
+  casper.thenOpen(splunkhome+"/app/heremaps/heremaps");
+  waitForMap(casper,test);
+  casper.then(function(){
+    test.assertTitle("Heremaps");
+  });
 
-	casper.thenClick(x("//a[text()='Continue']"));
-	casper.waitFor(function check(){return this.getCurrentUrl()=="http://localhost:8000/en-US/app/launcher/home";});
-
-	casper.thenOpen("http://localhost:8000/en-US/app/heremaps/heremaps");
-	casper.waitFor(
-		function check(){
-			return this.exists(x("//div[@class='mapcontainer']/div"));
-		},
-		function then(){},
-		function timeout(){
-			test.fail("Map not loaded");
-		},
-		2000
-	);
-	casper.then(function(){
-		test.assertTitle("Heremaps");
-	});
-
-	casper.run(function(){
-		test.done();
-	});
+  casper.run(function(){
+    test.done();
+  });
 });
