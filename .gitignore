@@ -13,3 +13,4 @@ bin/lib/reversegeocodeshape-*.cache
 bin/test-result.html
 bin/coverage
 tmp
+test/*.xml
