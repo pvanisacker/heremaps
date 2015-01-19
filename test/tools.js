@@ -1,13 +1,20 @@
 function splunkLogin(casper,test){
-  var loginUrl=splunkhome+"/account/login";
-  var startUrl=splunkhome+"/app/launcher/home";
+  var loginUrl=splunkurl+"/account/login";
+  var startUrl=splunkurl+"/app/launcher/home";
 
   casper.start(loginUrl, function(){});
 
-  casper.waitFor(function check(){
-    // wait for loginUrl to load
-    return (new RegExp(splunkhome)).test(this.getCurrentUrl());
-  });
+  casper.waitFor(
+    function check(){
+      // wait for loginUrl to load
+      return (new RegExp(splunkurl)).test(this.getCurrentUrl());
+    },
+    function then(){},
+    function timeout(){
+      console.log(this.getCurrentUrl());
+      test.fail("Start page loaded")
+    }
+  );
 
   casper.then(function(){
     if(casper.getCurrentUrl()==loginUrl){
@@ -25,7 +32,7 @@ function splunkLogin(casper,test){
 
       casper.thenClick(x("//a[text()='Continue']"));
       casper.waitFor(
-        function check(){return this.getCurrentUrl()==splunkhome+"/app/launcher/home";},
+        function check(){return this.getCurrentUrl()==splunkurl+"/app/launcher/home";},
         function then(){}
       );
     }else if(casper.getCurrentUrl()==startUrl){
