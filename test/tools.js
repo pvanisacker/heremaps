@@ -12,7 +12,7 @@ function splunkLogin(casper,test){
     function then(){},
     function timeout(){
       console.log(this.getCurrentUrl());
-      test.fail("Start page loaded")
+      test.fail("Start page loaded");
     }
   );
 
