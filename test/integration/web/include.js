@@ -49,8 +49,8 @@ function splunkLogin(casper,test){
 }
 
 function waitForMap(casper,test,timeout){
-  if(timeout==undefined){
-    timeout=2000
+  if(timeout===undefined){
+    timeout=2000;
   }
   casper.waitFor(
     function check(){

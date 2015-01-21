@@ -1,5 +1,12 @@
-  var loginUrl=splunkurl+"/account/login";
-  var startUrl=splunkurl+"/app/launcher/home";
+var loginUrl=splunkurl+"/account/login";
+var startUrl=splunkurl+"/app/launcher/home";
+
+// Don't load CSS it makes phantomjs a lot faster
+casper.options.onResourceRequested = function(C, requestData, request) {
+  if ((/https?:\/\/.+?\.css/gi).test(requestData['url']) || requestData['Content-Type'] == 'text/css') {
+    request.abort();
+  }
+};
 
   casper.start(loginUrl, function(){});
 

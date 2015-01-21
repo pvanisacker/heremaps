@@ -16,6 +16,15 @@ casper.test.begin('Custom shape map 3 loads', function suite(test){
 
 casper.test.begin('Custom shape map 4 loads', function suite(test){
   testMapLoading(heremapshome+"/shapemapcustom4",casper,test);
+  casper.then(function(){
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map1-map']/div"),"Belgian map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map2-map']/div"),"Spain map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map3-map']/div"),"Russian map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map4-map']/div"),"China map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map5-map']/div"),"Canadian map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map6-map']/div"),"Brazilian map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map7-map']/div"),"Italian map loads");
+  });
 });
 
 casper.test.begin('Custom shape map 5 loads', function suite(test){
@@ -48,6 +57,10 @@ casper.test.begin('USA shape map loads', function suite(test){
 
 casper.test.begin('US counties shape map loads', function suite(test){
   testMapLoading(heremapshome+"/shapemapcustom_us_counties",casper,test,5000);
+});
+
+casper.test.begin('Square shape map loads', function suite(test){
+  testMapLoading(heremapshome+"/shapemapcustom_square",casper,test);
 });
 
 casper.test.begin('Hexagon shape map loads', function suite(test){
