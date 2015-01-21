@@ -20,10 +20,14 @@ module.exports = function (grunt) {
     casper : {
       options: {
         test: true,
-        includes: "test/tools.js"
+        includes: "test/integration/web/include.js",
+        post: "test/integration/web/post.js",
+        pre:"test/integration/web/pre.js",
+        parallel : true,
+        concurrency : 4
       },
       test : {
-        src: ['test/*_test.js']
+        src: ['test/integration/web/*_test.js']
       }
     }
   });

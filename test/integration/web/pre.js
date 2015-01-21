@@ -1,4 +1,3 @@
-function splunkLogin(casper,test){
   var loginUrl=splunkurl+"/account/login";
   var startUrl=splunkurl+"/app/launcher/home";
 
@@ -9,10 +8,12 @@ function splunkLogin(casper,test){
       // wait for loginUrl to load
       return (new RegExp(splunkurl)).test(this.getCurrentUrl());
     },
-    function then(){},
+    function then(){
+      casper.test.pass("Start page loaded");
+    },
     function timeout(){
       console.log(this.getCurrentUrl());
-      test.fail("Start page loaded");
+      casper.test.fail("Start page loaded");
     }
   );
 
@@ -25,7 +26,7 @@ function splunkLogin(casper,test){
         },
         function then() {},
         function timeout(){
-          test.fail("Login page loaded");
+          casper.test.fail("Login page loaded");
         },
         1000
       );
@@ -33,36 +34,18 @@ function splunkLogin(casper,test){
       casper.thenClick(x("//a[text()='Continue']"));
       casper.waitFor(
         function check(){return this.getCurrentUrl()==splunkurl+"/app/launcher/home";},
-        function then(){}
+        function then(){
+          casper.test.pass("Logged in");
+        },
+        function timeout(){
+          casper.test.fail("Logged in");
+        }
       );
     }else if(casper.getCurrentUrl()==startUrl){
       // already logged in, nothing left to do
     }
   });
-}
 
-function waitForMap(casper,test){
-  casper.waitFor(
-    function check(){
-      return this.exists(x("//div[@class='mapcontainer']/div"));
-    },
-    function then(){
-      test.pass("Map loaded");
-    },
-    function timeout(){
-      test.fail("Map loaded");
-    },
-    2000
-  );
-}
-
-function testMapLoading(page,casper,test){
-  splunkLogin(casper,test);
-
-  casper.thenOpen(page);
-  waitForMap(casper,test);
-
-  casper.run(function(){
-    test.done();
+casper.run(function(){
+    casper.test.done();
   });
-}
