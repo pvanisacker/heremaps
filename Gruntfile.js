@@ -33,6 +33,7 @@ module.exports = function (grunt) {
       test: {
         options: {
           reporter: 'spec',
+          quiet: false,
           captureFile: 'results.txt', // Optionally capture the reporter output to a file
         },
         src: ['test/integration/search/**/*.js']
