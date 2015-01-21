@@ -33,6 +33,14 @@ casper.test.begin('Custom shape map 5 loads', function suite(test){
 
 casper.test.begin('Continents shape map loads', function suite(test){
   testMapLoading(heremapshome+"/shapemapcustom_continents",casper,test);
+  casper.then(function(){
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map1-map']/div"),"European map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map2-map']/div"),"Asian map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map3-map']/div"),"South American map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map4-map']/div"),"North American map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map5-map']/div"),"Oceania map loads");
+    test.assertExists(x("//div[@class='mapcontainer' and @id='map6-map']/div"),"African map loads");
+  });
 });
 
 casper.test.begin('German shape map loads', function suite(test){
