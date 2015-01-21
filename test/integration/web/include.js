@@ -48,7 +48,10 @@ function splunkLogin(casper,test){
   });
 }
 
-function waitForMap(casper,test){
+function waitForMap(casper,test,timeout){
+  if(timeout==undefined){
+    timeout=2000
+  }
   casper.waitFor(
     function check(){
       return this.exists(x("//div[@class='mapcontainer']/div"));
@@ -60,7 +63,7 @@ function waitForMap(casper,test){
       console.debug(this.getCurrentUrl());
       test.fail("Map loaded");
     },
-    2000
+    timeout
   );
 }
 

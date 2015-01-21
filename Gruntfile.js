@@ -23,8 +23,7 @@ module.exports = function (grunt) {
         includes: "test/integration/web/include.js",
         post: "test/integration/web/post.js",
         pre:"test/integration/web/pre.js",
-        parallel : true,
-        concurrency : 4
+        parallel : false
       },
       test : {
         src: ['test/integration/web/*_test.js']
