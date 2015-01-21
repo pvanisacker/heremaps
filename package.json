@@ -5,8 +5,11 @@
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-lint-inline": "0.4.3",
     "grunt-casper": "0.4.1",
+    "grunt-mocha-test": "0.12.7",
     "casperjs": "1.1.0-beta3",
-    "phantomjs": "1.9.13"
+    "phantomjs": "1.9.13",
+    "mocha": "2.1.0",
+    "splunk-sdk": "1.6.0"
   },
   "scripts":{"test":"grunt test"},
   "repository": {

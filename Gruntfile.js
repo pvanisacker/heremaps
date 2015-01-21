@@ -28,12 +28,22 @@ module.exports = function (grunt) {
       test : {
         src: ['test/integration/web/*_test.js']
       }
+    },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+          captureFile: 'results.txt', // Optionally capture the reporter output to a file
+        },
+        src: ['test/integration/search/**/*.js']
+      }
     }
   });
   
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-lint-inline');
   grunt.loadNpmTasks('grunt-casper');
+  grunt.loadNpmTasks('grunt-mocha-test');
 
   grunt.registerTask('test', ['jshint','inlinelint']);
   grunt.registerTask('default', ['test']);
