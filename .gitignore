@@ -11,6 +11,8 @@ heremaps.log
 bin/lib/reversegeocode.cache
 bin/lib/reversegeocodeshape-*.cache
 bin/test-result.html
+test-result.html
 bin/coverage
 tmp
 test/integration/search/*.html
+coverage
