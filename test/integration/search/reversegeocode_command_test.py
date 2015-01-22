@@ -1,29 +1,15 @@
 __author__ = 'pieter.van.isacker'
 
-import datetime
 import unittest
-import socket
-from splunklib.client import connect
-import splunklib.results as results
-
-socket.setdefaulttimeout(None)
-
-
-def returnFirstResult(service, search):
-    response = service.jobs.oneshot(search)
-    reader = results.ResultsReader(response)
-    for result in reader:
-        if isinstance(result, dict):
-            return result
-
+from .util import *
 
 class ReverseGeocodeCommandTest(unittest.TestCase):
     def setUp(self):
-        self.splunkservice = connect(host="localhost", port=8089, username="admin", password="admin", app="heremaps")
+        self.splunkservice = create_connection()
 
     def test_reverse_geocode_command_default(self):
         search = "search * | head 1 | eval lat=51 | eval lng=3| reversegeocode | fields lat,lng,regeo_*"
-        result = returnFirstResult(self.splunkservice, search)
+        result = return_first_result(self.splunkservice, search)
         self.assertIsNotNone(result)
         self.assertEqual(result["regeo_country"], "BEL")
         self.assertEqual(result["regeo_state"], "Vlaanderen")
@@ -36,7 +22,7 @@ class ReverseGeocodeCommandTest(unittest.TestCase):
 
     def test_reverse_geocode_command_custom_lat_lng(self):
         search = "search * | head 1 | eval latitude=51 | eval longitude=6 | reversegeocode lat=latitude,lng=longitude | fields latitude,longitude,regeo_*"
-        result = returnFirstResult(self.splunkservice, search)
+        result = return_first_result(self.splunkservice, search)
         self.assertIsNotNone(result)
         self.assertEqual(result["regeo_country"], "DEU")
         self.assertEqual(result["regeo_state"], "Nordrhein-Westfalen")
@@ -49,7 +35,7 @@ class ReverseGeocodeCommandTest(unittest.TestCase):
 
     def test_reverse_geocode_command_custom_prefix(self):
         search = "search * | head 1 | eval lat=51 | eval lng=6 | reversegeocode prefix=myprefix | fields lat,lng,myprefix_*"
-        result = returnFirstResult(self.splunkservice, search)
+        result = return_first_result(self.splunkservice, search)
         self.assertIsNotNone(result)
         self.assertEqual(result["myprefix_country"], "DEU")
         self.assertEqual(result["myprefix_state"], "Nordrhein-Westfalen")
