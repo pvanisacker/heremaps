@@ -20,7 +20,7 @@ with open("lookups/latlng-data.csv", 'rb') as csvfile:
         count += 1
         if count == 1:
             continue
-        print(rev.reversegeocodeshape(Point((float(row[0]), float(row[1])))))
+        # print(rev.reversegeocodeshape(Point((float(row[0]), float(row[1])))))
         if count > csv_max_count:
             break
 
@@ -41,7 +41,7 @@ with open("lookups/latlng-data.csv", 'rb') as csvfile:
         count += 1
         if count == 1:
             continue
-        print(rev.reversegeocodeshape(Point((float(row[0]), float(row[1])))))
+        # print(rev.reversegeocodeshape(Point((float(row[0]), float(row[1])))))
         if count > csv_max_count:
             break
 
