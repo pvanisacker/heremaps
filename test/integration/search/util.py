@@ -9,5 +9,6 @@ def return_first_result(service, search):
         if isinstance(result, dict):
             return result
 
+
 def create_connection():
     return connect(host="localhost", port=8089, username="admin", password="admin", app="heremaps")

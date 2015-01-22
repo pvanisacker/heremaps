@@ -3,6 +3,7 @@ __author__ = 'pieter.van.isacker'
 import unittest
 from .util import *
 
+
 class ReverseGeocodeShapeCommandTest(unittest.TestCase):
     def setUp(self):
         self.splunkservice = create_connection()
