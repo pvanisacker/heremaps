@@ -16,3 +16,5 @@ bin/coverage
 tmp
 test/integration/search/*.html
 coverage
+python-int.html
+python-unit.html
