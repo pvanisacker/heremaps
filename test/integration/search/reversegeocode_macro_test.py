@@ -37,4 +37,3 @@ class ReverseGeocodeMacroTest(unittest.TestCase):
         self.assertEqual(result["regeo_label"], 'Kortemark, Vlaanderen, Belgi\xc3\xab')
         self.assertEqual(result["lat"], "51")
         self.assertEqual(result["lng"], "3")
-
