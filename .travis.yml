@@ -4,6 +4,7 @@ python:
 install:
   - pip install -r requirements.txt
 script: 
-  - nosetests -s --with-coverage3 --cover3-package=tools bin/ .
+  - ./check_python.bash
+  - ./test_unit_python.bash
   - npm install
   - npm test
