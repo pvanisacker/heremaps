@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 pep8 --config=pep8 --exclude='*bin/splunklib*' bin/
 code=$?
 pep8 --config=pep8 test/integration/search
