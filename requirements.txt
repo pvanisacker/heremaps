@@ -2,6 +2,7 @@ Shapely
 mock
 nose
 nose-cover3
+nose-timer
 pep8
 nosehtmloutput
 splunk-sdk
