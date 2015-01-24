@@ -25,6 +25,7 @@ from tools.reversegeocodershape import ReverseGeocoderShape
     For example for the map of the French departements an index step of 2 is much better.
 """
 
+
 def create_index(data):
     map_file = os.path.join("..", "appserver", "static", "data", data["file"])
     print("Change the line ending of %s" % data["file"])
@@ -83,6 +84,6 @@ if __name__ == "__main__":
 
     print("Start creating indexes using %s workers" % multiprocessing.cpu_count())
     pool = Pool()
-    results = pool.map(create_index,shapes)
+    results = pool.map(create_index, shapes)
     pool.close()
     pool.join()
