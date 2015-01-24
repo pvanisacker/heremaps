@@ -2,6 +2,7 @@ __author__ = 'pieter'
 
 import datetime
 import os
+import multiprocessing
 from multiprocessing import Pool
 
 from tools.reversegeocodershape import ReverseGeocoderShape
@@ -80,6 +81,7 @@ if __name__ == "__main__":
 
     # shapes.append({"file": "countries/us_counties.geojson", "step": 1})
 
+    print("Start creating indexes using %s workers" % multiprocessing.cpu_count())
     pool = Pool()
     results = pool.map(create_index,shapes)
     pool.close()
