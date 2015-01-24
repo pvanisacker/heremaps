@@ -55,14 +55,16 @@ if __name__ == "__main__":
     for shape in shapes:
         map_file = os.path.join("..", "appserver", "static", "data", shape["file"])
         print("Change the line ending of the file")
-        with open('input.txt') as inp, open('output.txt', 'w') as out:
+        with open(map_file) as inp, open(map_file+"-tmp", 'w') as out:
             txt = inp.read()
             txt = txt.replace('\n', '\r\n')
             out.write(txt)
+        os.remove(map_file)
+        os.rename(map_file+"-tmp", map_file)
 
         print("Creating index for %s" % shape["file"])
         rev = ReverseGeocoderShape()
-        rev.load_map_file("geojson", )
+        rev.load_map_file("geojson", map_file)
         rev.indexstep = shape["step"]
         indexfile = os.path.join("lib", "reversegeocodeshape-" + rev.map_md5 + ".index")
         # try:
