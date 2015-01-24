@@ -42,15 +42,20 @@ class ReverseGeocodeShapeCommand(StreamingCommand):
         basepath = os.path.join(os.environ['SPLUNK_HOME'], "etc", "apps", "heremaps")
 
         rev = ReverseGeocoderShape()
-        rev.load_map_file(self.filetype, os.path.join(basepath, "appserver", "static", "data", self.filename))
+        map_file = os.path.join(basepath, "appserver", "static", "data", self.filename)
+        rev.load_map_file(self.filetype, map_file)
+        self.logger.error("Loaded map file %s" % self.filename)
 
         # Load map index file, this speeds up the command a lot
-        rev.load_index_file(os.path.join(basepath, "bin", "lib", "reversegeocodeshape-" + rev.map_md5 + ".index"))
+        index_file = os.path.join(basepath, "bin", "lib", "reversegeocodeshape-" + rev.map_md5 + ".index")
+        rev.load_index_file(index_file)
+        self.logger.error("Loaded map index %s" % index_file)
 
         # Load cached results
         cache_file = os.path.join(basepath, "bin", "lib", "reversegeocodeshape-" + rev.map_md5 + ".cache")
         self.cache = FileCache(1000000, 62)
         self.cache.read_cache_file(cache_file)
+        self.logger.error("Loaded cached results %s" % cache_file)
 
         # iterate over records
         for record in records:
