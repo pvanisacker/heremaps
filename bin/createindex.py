@@ -1,8 +1,9 @@
 __author__ = 'pieter'
 
 import datetime
-
 import os
+from multiprocessing import Pool
+
 from tools.reversegeocodershape import ReverseGeocoderShape
 
 
@@ -22,12 +23,39 @@ from tools.reversegeocodershape import ReverseGeocoderShape
     But if you have a map with shapes for a specific country you will not to reduce the index step.
     For example for the map of the French departements an index step of 2 is much better.
 """
+
+def create_index(data):
+    map_file = os.path.join("..", "appserver", "static", "data", data["file"])
+    print("Change the line ending of %s" % data["file"])
+    with open(map_file) as inp, open(map_file+"-tmp", 'w') as out:
+        txt = inp.read()
+        txt = txt.replace('\n', '\r\n')
+        out.write(txt)
+    os.remove(map_file)
+    os.rename(map_file+"-tmp", map_file)
+
+    print("Creating index for %s" % data["file"])
+    rev = ReverseGeocoderShape()
+    rev.load_map_file("geojson", map_file)
+    rev.indexstep = data["step"]
+    indexfile = os.path.join("lib", "reversegeocodeshape-" + rev.map_md5 + ".index")
+    # try:
+    #    os.remove(indexfile)
+    # except OSError:
+    #    pass
+    start = datetime.datetime.now()
+    rev.load_index_file(indexfile)
+    end = datetime.datetime.now()
+    delta = end - start
+    print("Index creation for %s took %s seconds for %s" % (data["file"], delta.seconds, indexfile))
+
 if __name__ == "__main__":
     shapes = []
     shapes.append({"file": "countries/be.geojson", "step": 2})
     shapes.append({"file": "countries/br.geojson", "step": 2})
     shapes.append({"file": "countries/ca.geojson", "step": 3})
     shapes.append({"file": "countries/cn.geojson", "step": 4})
+
     shapes.append({"file": "countries/de.geojson", "step": 2})
     shapes.append({"file": "countries/es.geojson", "step": 2})
     shapes.append({"file": "countries/fr.geojson", "step": 2})
@@ -50,29 +78,9 @@ if __name__ == "__main__":
     shapes.append({"file": "hexagonmap_regeo_3.geojson", "step": 8})
     shapes.append({"file": "hexagonmap_regeo_2.geojson", "step": 4})
 
-    shapes.append({"file": "countries/us_counties.geojson", "step": 1})
+    # shapes.append({"file": "countries/us_counties.geojson", "step": 1})
 
-    for shape in shapes:
-        map_file = os.path.join("..", "appserver", "static", "data", shape["file"])
-        print("Change the line ending of the file")
-        with open(map_file) as inp, open(map_file+"-tmp", 'w') as out:
-            txt = inp.read()
-            txt = txt.replace('\n', '\r\n')
-            out.write(txt)
-        os.remove(map_file)
-        os.rename(map_file+"-tmp", map_file)
-
-        print("Creating index for %s" % shape["file"])
-        rev = ReverseGeocoderShape()
-        rev.load_map_file("geojson", map_file)
-        rev.indexstep = shape["step"]
-        indexfile = os.path.join("lib", "reversegeocodeshape-" + rev.map_md5 + ".index")
-        # try:
-        #    os.remove(indexfile)
-        # except OSError:
-        #    pass
-        start = datetime.datetime.now()
-        rev.load_index_file(indexfile)
-        end = datetime.datetime.now()
-        delta = end - start
-        print("Index creation took %s seconds" % delta.seconds)
+    pool = Pool()
+    results = pool.map(create_index,shapes)
+    pool.close()
+    pool.join()
