@@ -6,5 +6,5 @@ install:
 script: 
   - ./check_python.bash
   - ./test_unit_python.bash
-  - npm install
+  - npm install --quiet
   - npm test
