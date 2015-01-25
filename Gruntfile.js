@@ -38,14 +38,31 @@ module.exports = function (grunt) {
         },
         src: ['test/integration/search/**/*.js']
       }
+    },
+    geojsonhint: {
+    /*
+      files: [
+        'appserver/static/data/world2.geojson',
+        'appserver/static/data/world3.geojson'
+      ]
+      */
+      good: [
+                'node_modules/geojsonhint/test/data/good/*.geojson'
+            ]
+            /*,
+            bad: [
+                'node_modules/geojsonhint/test/data/bad/*.geojson'
+            ]
+            */
     }
   });
   
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-lint-inline');
+  grunt.loadNpmTasks('grunt-geojsonhint');
   grunt.loadNpmTasks('grunt-casper');
   grunt.loadNpmTasks('grunt-mocha-test');
 
-  grunt.registerTask('test', ['jshint','inlinelint']);
+  grunt.registerTask('test', ['jshint','inlinelint','geojsonhint']);
   grunt.registerTask('default', ['test']);
 };

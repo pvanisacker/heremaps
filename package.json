@@ -7,7 +7,9 @@
     "grunt-casper": "0.4.1",
     "grunt-mocha-test": "0.12.7",
     "casperjs": "1.1.0-beta3",
-    "phantomjs": "1.9.13"
+    "phantomjs": "1.9.13",
+    "geojsonhint": "0.3.4",
+    "grunt-geojsonhint": "0.0.3"
   },
   "scripts":{"test":"grunt test"},
   "repository": {
