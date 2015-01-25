@@ -1,5 +1,5 @@
 #!/bin/bash
-# Delete cached results
+echo "Deleting cached results"
 rm -rf bin/lib/*.cache
 
 echo "----------------------------------------"
