@@ -2,6 +2,7 @@ __author__ = 'pieter'
 
 import datetime
 import os
+import sys
 import multiprocessing
 from multiprocessing import Pool
 
@@ -28,28 +29,33 @@ from tools.reversegeocodershape import ReverseGeocoderShape
 
 def create_index(data):
     map_file = os.path.join("..", "appserver", "static", "data", data["file"])
+
     print("Change the line ending of %s" % data["file"])
     with open(map_file) as inp, open(map_file+"-tmp", 'w') as out:
         txt = inp.read()
-        txt = txt.replace('\n', '\r\n')
+        txt = txt.replace('\r\n', '\n')
         out.write(txt)
     os.remove(map_file)
     os.rename(map_file+"-tmp", map_file)
 
-    print("Creating index for %s" % data["file"])
     rev = ReverseGeocoderShape()
     rev.load_map_file("geojson", map_file)
     rev.indexstep = data["step"]
     indexfile = os.path.join("lib", "reversegeocodeshape-" + rev.map_md5 + ".index")
+    print("Creating index for file: %s md5sum: %s" % (data["file"], rev.map_md5))
+    sys.stdout.flush()
+
     # try:
     #    os.remove(indexfile)
     # except OSError:
     #    pass
+
     start = datetime.datetime.now()
     rev.load_index_file(indexfile)
     end = datetime.datetime.now()
     delta = end - start
     print("Index creation for %s took %s seconds for %s" % (data["file"], delta.seconds, indexfile))
+    sys.stdout.flush()
 
 if __name__ == "__main__":
     shapes = []
@@ -66,6 +72,7 @@ if __name__ == "__main__":
     shapes.append({"file": "countries/ru.geojson", "step": 4})
     shapes.append({"file": "countries/uk.geojson", "step": 2})
     shapes.append({"file": "countries/us.geojson", "step": 3})
+    shapes.append({"file": "countries/us_simplified.geojson", "step": 3})
     shapes.append({"file": "continents/africa.geojson", "step": 3})
     shapes.append({"file": "continents/asia.geojson", "step": 3})
     shapes.append({"file": "continents/europe.geojson", "step": 3})
@@ -79,11 +86,14 @@ if __name__ == "__main__":
     shapes.append({"file": "squaremap_4.geojson", "step": 8})
     shapes.append({"file": "hexagonmap_regeo_3.geojson", "step": 8})
     shapes.append({"file": "hexagonmap_regeo_2.geojson", "step": 4})
+    shapes.append({"file": "hexagonmap_display_3.geojson", "step": 8})
+    shapes.append({"file": "hexagonmap_display_2.geojson", "step": 4})
 
     # shapes.append({"file": "countries/us_counties.geojson", "step": 1})
-
-    print("Start creating indexes using %s workers" % multiprocessing.cpu_count())
-    pool = Pool()
+    processing_count = multiprocessing.cpu_count()
+    # processing_count=3
+    print("Start creating indexes using %s workers" % processing_count)
+    pool = Pool(processing_count)
     results = pool.map(create_index, shapes)
     pool.close()
     pool.join()

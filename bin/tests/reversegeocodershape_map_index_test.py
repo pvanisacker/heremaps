@@ -88,7 +88,6 @@ class ReverseGeocoderShapeMapTest(unittest.TestCase):
     """
         Start testing for the different continents
     """
-
     def test_map_continent_africa(self):
         map_file = os.path.join(self.basepath, "appserver", "static", "data", "continents/africa.geojson")
         self.rev.load_map_file(self.filetype, map_file)
@@ -218,12 +217,14 @@ class ReverseGeocoderShapeMapTest(unittest.TestCase):
         key = self.rev.reversegeocode(33, -84)
         self.assertEqual(key, "GA")
 
+    """
     def test_map_country_us_counties(self):
         map_file = os.path.join(self.basepath, "appserver", "static", "data", "countries/us_counties.geojson")
         self.rev.load_map_file(self.filetype, map_file)
         self.load_index()
         key = self.rev.reversegeocode(33, -84)
         self.assertEqual(key, "13207")
+    """
 
     def test_map_country_us_simplified(self):
         map_file = os.path.join(self.basepath, "appserver", "static", "data", "countries/us_simplified.geojson")

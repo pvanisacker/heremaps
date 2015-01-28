@@ -16,6 +16,7 @@ class ReverseGeocoderShapeTest(unittest.TestCase):
         self.rev.shapes["c"] = MultiPolygon(
             [Polygon(((20, 20), (20, 30), (30, 30), (30, 20)), [((21, 21), (21, 25), (25, 25), (25, 21))])])
         self.rev.shapes["d"] = MultiPolygon([Polygon(((21, 21), (21, 24), (24, 24), (24, 21)))])
+        self.rev.shapes["e"] = MultiPolygon([Polygon(((1, 0), (2, 0), (2, 1), (1, 1)))])
 
     def tearDown(self):
         del self.rev
@@ -41,8 +42,17 @@ class ReverseGeocoderShapeTest(unittest.TestCase):
     def test_reversegeocodeshape_d(self):
         self.assertEqual("d", self.rev.reversegeocodeshape(Point(22, 22)))
 
+    def test_reversegeocodeshape_e(self):
+        self.assertEqual("e", self.rev.reversegeocodeshape(Point(1.5, 0.5)))
+
     def test_reversegeocodeshape_a_list_nok(self):
         self.assertEqual(None, self.rev.reversegeocodeshape(Point(0.5, 0.5), ["b", "c", "d"]))
 
     def test_reversegeocodeshape_a_list_ok(self):
         self.assertEqual("a", self.rev.reversegeocodeshape(Point(0.5, 0.5), ["b", "a", "d"]))
+
+    def test_reversegeocodeshape_a_on_corner(self):
+        self.assertEqual("a", self.rev.reversegeocodeshape(Point(1, 0)))
+
+    def test_reversegeocodeshape_a_on_edge(self):
+        self.assertEqual("a", self.rev.reversegeocodeshape(Point(1, 0.5)))

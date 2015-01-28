@@ -26,7 +26,8 @@ class ReverseGeocoderShape(object):
         self.indexstep = 5
 
     def load_map_file(self, map_type, map_file):
-        self.load_map_handler(map_type, open(map_file, "r"))
+        self.map_file = map_file
+        self.load_map_handler(map_type, open(self.map_file, "rb"))
 
     def load_map_handler(self, map_type, maphandler):
         """ Load map content and transform it into a collection of Shapely polygons
@@ -94,7 +95,7 @@ class ReverseGeocoderShape(object):
 
     def reversegeocodeindex(self, point):
         for shape in self.index:
-            if shape["polygon"].contains(point):
+            if shape["polygon"].intersects(point):
                 return self.reversegeocodeshape(point, shape["keys"])
 
     def reversegeocode(self, lat, lng):
