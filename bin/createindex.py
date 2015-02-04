@@ -59,11 +59,11 @@ def create_index(data):
 
 if __name__ == "__main__":
     shapes = []
+
     shapes.append({"file": "countries/be.geojson", "step": 2})
     shapes.append({"file": "countries/br.geojson", "step": 2})
     shapes.append({"file": "countries/ca.geojson", "step": 3})
     shapes.append({"file": "countries/cn.geojson", "step": 4})
-
     shapes.append({"file": "countries/de.geojson", "step": 2})
     shapes.append({"file": "countries/es.geojson", "step": 2})
     shapes.append({"file": "countries/fr.geojson", "step": 2})
@@ -90,6 +90,7 @@ if __name__ == "__main__":
     shapes.append({"file": "hexagonmap_display_2.geojson", "step": 4})
 
     # shapes.append({"file": "countries/us_counties.geojson", "step": 1})
+
     processing_count = multiprocessing.cpu_count()
     # processing_count=3
     print("Start creating indexes using %s workers" % processing_count)

@@ -22,8 +22,6 @@ class ConfigApp(admin.MConfigHandler):
                     confInfo[stanza].append(key, val)
 
     def handleEdit(self, confInfo):
-        name = self.callerArgs.id
-        args = self.callerArgs
         self.writeConf('setup', 'heremaps', self.callerArgs.data)
 
 # initialize the handler

@@ -1,7 +1,5 @@
 __author__ = 'pieter'
 
-from shapely.geometry import Polygon
-
 square_size = 2
 
 

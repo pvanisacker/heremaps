@@ -133,7 +133,7 @@ class ReverseGeocodeCommand(StreamingCommand):
             cache_key = "%s,%s" % (lat, lng)
             try:
                 location = self.cache.get(cache_key)
-            except KeyError as e:
+            except KeyError:
                 location = self.reverse_geocode(lat, lng)
 
             self.cache.set(cache_key, location)

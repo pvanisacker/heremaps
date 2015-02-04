@@ -64,7 +64,7 @@ class ReverseGeocodeShapeCommand(StreamingCommand):
             cache_key = "%s,%s" % (lat, lng)
             try:
                 key = self.cache.get(cache_key)
-            except KeyError as e:
+            except KeyError:
                 key = rev.reversegeocode(lat, lng)
 
             self.cache.set(cache_key, key)
