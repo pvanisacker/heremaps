@@ -3,6 +3,6 @@ mock
 nose
 nose-cover3
 nose-timer
-pep8
+flake8
 nosehtmloutput
 splunk-sdk
