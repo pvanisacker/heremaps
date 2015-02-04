@@ -1,7 +1,8 @@
 __author__ = 'pieter.van.isacker'
 
 import unittest
-from .util import *
+from .util import create_connection
+from .util import return_first_result
 
 
 class ReverseGeocodeMacroTest(unittest.TestCase):
