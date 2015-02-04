@@ -3,7 +3,6 @@ __author__ = 'pieter'
 import datetime
 
 import csv
-from shapely.geometry import Point
 from tools.reversegeocodershape import ReverseGeocoderShape
 
 

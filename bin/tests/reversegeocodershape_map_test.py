@@ -3,9 +3,6 @@ __author__ = 'pieter'
 import unittest
 import os
 
-from shapely.geometry import Point
-from shapely.geometry import Polygon
-from shapely.geometry import MultiPolygon
 from tools.reversegeocodershape import ReverseGeocoderShape
 
 
