@@ -54,5 +54,5 @@ class ReverseGeocoderShapeTest(unittest.TestCase):
     def test_reversegeocodeshape_a_on_corner(self):
         self.assertEqual("a", self.rev.reversegeocodeshape(Point(1, 0)))
 
-    def test_reversegeocodeshape_a_on_edge(self):
+    def test_reversegeocodeshape_a_on_edge_second(self):
         self.assertEqual("a", self.rev.reversegeocodeshape(Point(1, 0.5)))
