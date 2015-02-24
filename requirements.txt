@@ -5,5 +5,4 @@ nose-cover3
 nose-timer
 flake8
 nosehtmloutput
-nose-timer
 splunk-sdk
