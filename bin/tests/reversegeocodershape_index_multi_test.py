@@ -5,7 +5,7 @@ import unittest
 from shapely.geometry import Point
 from shapely.geometry import Polygon
 from shapely.geometry import MultiPolygon
-from tools.reversegeocodershape import ReverseGeocoderShape
+from tools.reversegeocodershapemulti import ReverseGeocoderShapeMulti as ReverseGeocoderShape
 
 
 class ReverseGeocoderShapeIndexTest(unittest.TestCase):
@@ -24,14 +24,14 @@ class ReverseGeocoderShapeIndexTest(unittest.TestCase):
 
     def test_create_index(self):
         self.assertEqual(26, len(self.rev.index))
-        self.assertEqual(["a"], self.rev.index[0]["keys"])
+        self.assertEqual(["c"], self.rev.index[0]["keys"])
         self.assertEqual(["a", "e"], self.rev.index[1]["keys"])
-        self.assertEqual(["a"], self.rev.index[2]["keys"])
-        self.assertEqual(["a", "e"], self.rev.index[3]["keys"])
-        self.assertEqual(["b"], self.rev.index[4]["keys"])
-        self.assertEqual(["b"], self.rev.index[6]["keys"])
-        self.assertEqual(["c"], self.rev.index[8]["keys"])
-        self.assertEqual(["c", "d"], self.rev.index[15]["keys"])
+        self.assertEqual(["c"], self.rev.index[2]["keys"])
+        self.assertEqual(["c"], self.rev.index[3]["keys"])
+        self.assertEqual(["c"], self.rev.index[4]["keys"])
+        self.assertEqual(["c"], self.rev.index[6]["keys"])
+        self.assertEqual(["b"], self.rev.index[8]["keys"])
+        self.assertEqual(["c"], self.rev.index[15]["keys"])
 
     def test_reversegeocodeindex_a(self):
         self.assertEqual("a", self.rev.reversegeocodeindex(Point(0.5, 0.5)))

@@ -2,11 +2,13 @@ __author__ = 'pieter'
 import os
 import hashlib
 import json
+import multiprocessing
+from multiprocessing import Pool
 
 from shapely.geometry import asShape
 from shapely.geometry import Point
 from shapely.geometry import Polygon
-
+from shapely.geometry import mapping
 
 try:
     import cPickle as pickle
@@ -14,7 +16,22 @@ except ImportError:
     import pickle
 
 
-class ReverseGeocoderShape(object):
+def check_intersects(data):
+    polygon = Polygon(((data["lng"], data["lat"]),
+                       (data["lng"] + data["step"], data["lat"]),
+                       (data["lng"] + data["step"], data["lat"] + data["step"]),
+                       (data["lng"], data["lat"] + data["step"])))
+    if data["shape"].intersects(polygon):
+        return {"lat": data["lat"], "lng": data["lng"], "key": data["key"], "poly": polygon}
+
+
+def reversegeocodeshape_check_intersects(key, shapegeojson, point):
+    shape = asShape(shapegeojson)
+    if shape.intersects(point):
+        return key
+
+
+class ReverseGeocoderShapeMulti(object):
     def __init__(self):
         self.shapes = {}
         self.map_file_content = None
@@ -78,25 +95,60 @@ class ReverseGeocoderShape(object):
         self.index_loaded = True
 
     def createindex(self):
+        items = []
         for lat in range(-90, 90, self.indexstep):
             for lng in range(-180, 180, self.indexstep):
-                polygon = Polygon(((lng, lat), (lng + self.indexstep, lat), (lng + self.indexstep, lat + self.indexstep), (lng, lat + self.indexstep)))
-                # For every polygon, check which shapes interest with it
-                # if so add the keys of the shapes to the index
-                index_data = {"polygon": polygon, "keys": []}
                 for key, shape in self.shapes.iteritems():
-                    if shape.intersects(polygon):
-                        index_data["keys"].append(key)
-                if 0 < len(index_data["keys"]):
-                    self.index.append(index_data)
+                    items.append({"key": key, "shape": shape, "lat": lat, "lng": lng, "step": self.indexstep})
+
+        processing_count = multiprocessing.cpu_count()
+        pool = Pool(processing_count)
+
+        result = pool.map(check_intersects, items)
+        pool.close()
+        pool.join()
+
+        # remove empty results
+        result = filter(lambda x: x is not None, result)
+
+        # transform results into dict
+        temp = {}
+        for res in result:
+            poly = str(res["lat"])+","+str(res["lng"])
+            if poly in temp:
+                # update value in dict
+                temp[poly]["keys"].append(res["key"])
+            else:
+                # add to dict
+                temp[poly] = {"polygon": res["poly"], "keys": [res["key"]]}
+
+        # tranform results into array
+        for key, value in temp.iteritems():
+            self.index.append(value)
 
     def reversegeocodeshape(self, point, keys=None):
+        processing_count = multiprocessing.cpu_count()
+        pool = Pool(processing_count)
+        key_result = []
+
+        def handleresult(key):
+            if key is not None:
+                key_result.append(key)
+
         for key, shape in self.shapes.iteritems():
             if keys is not None and key not in keys:
                 continue
-            if shape.intersects(point):
-                return key
-        return None
+            else:
+                if len(key_result) == 0:
+                    shapejson = mapping(shape)
+                    pool.apply_async(reversegeocodeshape_check_intersects, args=(key, shapejson, point), callback = handleresult)
+
+        pool.close()
+        pool.join()
+        result = None
+        if len(key_result) > 0:
+            result = key_result[0]
+        return result
 
     def reversegeocodeindex(self, point):
         for shape in self.index:
