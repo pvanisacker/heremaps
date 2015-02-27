@@ -152,17 +152,15 @@ class ReverseGeocoderShapeMulti(object):
             self.processes.append(process)
 
     def emptyqueues(self):
-        print("Request queue empty %s" % self.request_queue.empty())
         while not self.request_queue.empty():
             try:
-                print("req %s" % self.request_queue.get(block=True, timeout=0.1))
+                self.request_queue.get(block=True, timeout=0.1)
                 self.request_queue.task_done()
             except Queue.Empty:
                 continue
-        print("Response queue empty %s" % self.response_queue.empty())
         while not self.response_queue.empty():
             try:
-                print("res %s" % self.response_queue.get(block=True, timeout=0.1))
+                self.response_queue.get(block=True, timeout=0.1)
                 self.response_queue.task_done()
             except Queue.Empty:
                 continue
@@ -171,7 +169,6 @@ class ReverseGeocoderShapeMulti(object):
         if len(self.processes) == 0:
             self.createprocesses()
 
-        print("Filling queues")
         # Fill queue
         for key, shape in self.shapes.iteritems():
             if keys is not None and key not in keys:
@@ -181,7 +178,6 @@ class ReverseGeocoderShapeMulti(object):
                 self.request_queue.put({"key": key, "shape": shapejson, "point": point})
 
         # Check response queue for response
-        print("Checking responses")
         result = None
         stop = False
         while not stop:
@@ -194,7 +190,6 @@ class ReverseGeocoderShapeMulti(object):
                     stop = True
 
         # Empty queues
-        print("Empty queues")
         self.emptyqueues()
         return result
 
@@ -211,6 +206,5 @@ class ReverseGeocoderShapeMulti(object):
             return self.reversegeocodeshape(point)
 
     def stop(self):
-        print("Stopping")
         for process in self.processes:
             process.terminate()
