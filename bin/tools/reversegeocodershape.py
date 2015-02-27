@@ -109,3 +109,6 @@ class ReverseGeocoderShape(object):
             return self.reversegeocodeindex(point)
         else:
             return self.reversegeocodeshape(point)
+
+    def stop(self):
+        pass

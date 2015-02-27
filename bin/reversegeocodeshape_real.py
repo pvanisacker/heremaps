@@ -4,10 +4,11 @@ import sys
 from tools.cache import FileCache
 
 # Use the multiprocessing/multi core version
-# from tools.reversegeocodershapemulti import ReverseGeocoderShapeMulti as ReverseGeocoderShape
+from tools.reversegeocodershapemulti import ReverseGeocoderShapeMulti as ReverseGeocoderShape
 
 # Use the single core version
-from tools.reversegeocodershape import ReverseGeocoderShape
+# from tools.reversegeocodershape import ReverseGeocoderShape
+
 from splunklib.searchcommands import dispatch, StreamingCommand, Configuration, Option, validators
 
 
@@ -80,6 +81,7 @@ class ReverseGeocodeShapeCommand(StreamingCommand):
             self.cache.write_cache_file(cache_file)
         except:
             self.logger.error("Could not write cache file")
+        rev.stop()
 
 
 dispatch(ReverseGeocodeShapeCommand, sys.argv, sys.stdin, sys.stdout, __name__)

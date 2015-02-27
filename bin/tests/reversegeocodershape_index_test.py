@@ -20,6 +20,7 @@ class ReverseGeocoderShapeIndexTest(unittest.TestCase):
         self.rev.createindex()
 
     def tearDown(self):
+        self.rev.stop()
         del self.rev
 
     def test_create_index(self):

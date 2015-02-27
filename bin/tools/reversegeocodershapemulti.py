@@ -2,8 +2,10 @@ __author__ = 'pieter'
 import os
 import hashlib
 import json
-import multiprocessing
 from multiprocessing import Pool
+from multiprocessing import JoinableQueue
+import multiprocessing
+import Queue
 
 from shapely.geometry import asShape
 from shapely.geometry import Point
@@ -25,10 +27,25 @@ def check_intersects(data):
         return {"lat": data["lat"], "lng": data["lng"], "key": data["key"], "poly": polygon}
 
 
-def reversegeocodeshape_check_intersects(key, shapegeojson, point):
-    shape = asShape(shapegeojson)
-    if shape.intersects(point):
-        return key
+class ReverseGeocoderProcess(multiprocessing.Process):
+    def __init__(self, request_queue, response_queue):
+        multiprocessing.Process.__init__(self)
+        self.request_queue = request_queue
+        self.response_queue = response_queue
+        self.daemon = True
+
+    def run(self):
+        while True:
+            try:
+                message = self.request_queue.get()
+                shape = asShape(message["shape"])
+                key = message["key"]
+                point = message["point"]
+                if shape.intersects(point):
+                    self.response_queue.put(key)
+                self.request_queue.task_done()
+            except Queue.Empty:
+                continue
 
 
 class ReverseGeocoderShapeMulti(object):
@@ -41,6 +58,10 @@ class ReverseGeocoderShapeMulti(object):
         self.index_loaded = False
         self.index = []
         self.indexstep = 5
+        self.request_queue = JoinableQueue()
+        self.response_queue = JoinableQueue()
+        self.process_count = multiprocessing.cpu_count()
+        self.processes = []
 
     def load_map_file(self, map_type, map_file):
         self.map_file = map_file
@@ -101,8 +122,7 @@ class ReverseGeocoderShapeMulti(object):
                 for key, shape in self.shapes.iteritems():
                     items.append({"key": key, "shape": shape, "lat": lat, "lng": lng, "step": self.indexstep})
 
-        processing_count = multiprocessing.cpu_count()
-        pool = Pool(processing_count)
+        pool = Pool(self.process_count)
 
         result = pool.map(check_intersects, items)
         pool.close()
@@ -126,28 +146,57 @@ class ReverseGeocoderShapeMulti(object):
         for key, value in temp.iteritems():
             self.index.append(value)
 
+    def createprocesses(self):
+        for x in range(self.process_count):
+            process = ReverseGeocoderProcess(self.request_queue, self.response_queue)
+            process.start()
+            self.processes.append(process)
+
+    def emptyqueues(self):
+        print("Request queue empty %s" % self.request_queue.empty())
+        while not self.request_queue.empty():
+            try:
+                print("req %s" % self.request_queue.get(block=True, timeout=0.1))
+                self.request_queue.task_done()
+            except Queue.Empty:
+                continue
+        print("Response queue empty %s" % self.response_queue.empty())
+        while not self.response_queue.empty():
+            try:
+                print("res %s" % self.response_queue.get(block=True, timeout=0.1))
+                self.response_queue.task_done()
+            except Queue.Empty:
+                continue
+
     def reversegeocodeshape(self, point, keys=None):
-        processing_count = multiprocessing.cpu_count()
-        pool = Pool(processing_count)
-        key_result = []
+        if len(self.processes) == 0:
+            self.createprocesses()
 
-        def handleresult(key):
-            if key is not None:
-                key_result.append(key)
-
+        print("Filling queues")
+        # Fill queue
         for key, shape in self.shapes.iteritems():
             if keys is not None and key not in keys:
                 continue
             else:
-                if len(key_result) == 0:
-                    shapejson = mapping(shape)
-                    pool.apply_async(reversegeocodeshape_check_intersects, args=(key, shapejson, point), callback = handleresult)
+                shapejson = mapping(shape)
+                self.request_queue.put({"key": key, "shape": shapejson, "point": point})
 
-        pool.close()
-        pool.join()
+        # Check response queue for response
+        print("Checking responses")
         result = None
-        if len(key_result) > 0:
-            result = key_result[0]
+        stop = False
+        while not stop:
+            try:
+                result = self.response_queue.get(block=True, timeout=0.1)
+                self.response_queue.task_done()
+                stop = True
+            except Queue.Empty:
+                if self.request_queue.empty():
+                    stop = True
+
+        # Empty queues
+        print("Empty queues")
+        self.emptyqueues()
         return result
 
     def reversegeocodeindex(self, point):
@@ -161,3 +210,8 @@ class ReverseGeocoderShapeMulti(object):
             return self.reversegeocodeindex(point)
         else:
             return self.reversegeocodeshape(point)
+
+    def stop(self):
+        print("Stopping")
+        for process in self.processes:
+            process.terminate()

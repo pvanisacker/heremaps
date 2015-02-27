@@ -19,6 +19,7 @@ class ReverseGeocoderShapeTest(unittest.TestCase):
         self.rev.shapes["e"] = MultiPolygon([Polygon(((1, 0), (2, 0), (2, 1), (1, 1)))])
 
     def tearDown(self):
+        self.rev.stop()
         del self.rev
 
     def test_reversegeocodeshape_a(self):

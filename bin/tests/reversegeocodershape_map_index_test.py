@@ -13,6 +13,7 @@ class ReverseGeocoderShapeMapTest(unittest.TestCase):
         self.filetype = "geojson"
 
     def tearDown(self):
+        self.rev.stop()
         del self.rev
 
     def load_index(self):
