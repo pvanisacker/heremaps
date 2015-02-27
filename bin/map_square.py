@@ -1,5 +1,3 @@
-__author__ = 'pieter'
-
 square_size = 2
 
 

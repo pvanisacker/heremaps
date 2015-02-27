@@ -9,7 +9,7 @@ class ConfigApp(admin.MConfigHandler):
 
     def handleList(self, confInfo):
         confDict = self.readConf("setup")
-        if None != confDict:
+        if confDict is not None:
             for stanza, settings in confDict.items():
                 for key, val in settings.items():
                     if key in ['field_2_boolean']:

@@ -1,4 +1,3 @@
-__author__ = 'pieter'
 import unittest
 
 from tools.reversegeocodershape import ReverseGeocoderShape

@@ -1,4 +1,3 @@
-__author__ = 'pieter'
 import os
 import hashlib
 import json

@@ -1,11 +1,6 @@
-__author__ = 'pieter'
-
-import sys
-sys.path.insert(1, '/home/pieter/git/heremaps/bin/')
-
 import datetime
-from shapely.geometry import Point
 import csv
+from shapely.geometry import Point
 from tools.reversegeocodershape import ReverseGeocoderShape
 
 csv_max_count = 100

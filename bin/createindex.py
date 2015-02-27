@@ -1,6 +1,4 @@
 #!/usr/env/python
-__author__ = 'pieter'
-
 import datetime
 import os
 import sys

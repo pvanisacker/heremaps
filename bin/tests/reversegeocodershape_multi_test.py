@@ -1,5 +1,3 @@
-__author__ = 'pieter'
-
 import unittest
 
 from shapely.geometry import Point
