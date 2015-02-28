@@ -4,7 +4,7 @@ import splunk.admin as admin
 class ConfigApp(admin.MConfigHandler):
     def setup(self):
         if self.requestedAction == admin.ACTION_EDIT:
-            for arg in ['app_id', 'app_code','parallel']:
+            for arg in ['app_id', 'app_code', 'parallel']:
                 self.supportedArgs.addOptArg(arg)
 
     def handleList(self, confInfo):
