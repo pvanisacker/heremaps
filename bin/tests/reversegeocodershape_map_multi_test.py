@@ -195,4 +195,3 @@ class ReverseGeocoderShapeMapTest(unittest.TestCase):
         self.rev.load_map_file(self.filetype, map_file)
         key = self.rev.reversegeocode(33, -84)
         self.assertEqual(key, "GA")
-
