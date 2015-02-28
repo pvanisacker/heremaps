@@ -29,7 +29,7 @@
         <div style="margin:2%">
             <div style="padding-bottom:10px">
             This shows a simple line map, it renders lat/lng points and connects them by lines.<br/>
-            In this case the data was created by measuring the ping latency of several ip's spread around the world.
+            In this case the data was created by measuring the traceroute latency of several ip's.
             </div>
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
@@ -107,7 +107,7 @@ require.config({
                 managerid: "search1",
                 el: $("#search-bar"),
                 value: mvc.tokenSafe("$searchquery$"),
-                default: "|inputlookup line-data1.csv | eval coords=split(coords,\";\") | eval points=split(points,\";\") | eval values=split(values,\";\")"
+                default: "|inputlookup line-data2.csv | tail 5 | head 1 | eval coords=split(coords,\";\") | eval points=split(points,\";\") | eval values=split(values,\";\")"
             }).render();
 
             // Create a search control
@@ -131,7 +131,7 @@ require.config({
                 el: $("#search-map"),
                 height: "400px",
                 linemarker:function(){return undefined;},
-                arrowstyle: function(){return undefined; }
+                arrowstyle:function(){return {fillColor:"#000000",width:3,length:4,frequency:3};}
             }).render();
         });
     </script>

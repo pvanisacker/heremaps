@@ -59,6 +59,20 @@ define(function(require, exports, module) {
                 "0.9"   :"rgb(255,0,0)"
             },
             lineStyle:undefined,
+            arrowStyleDefaultColor:"#444444",
+            arrowStyleColorRange:{
+                "0.0"   :"rgb(0,255,64)",
+                "0.1"   :"rgb(0,255,0)",
+                "0.2"   :"rgb(64,255,0)",
+                "0.3"   :"rgb(128,255,0)",
+                "0.4"   :"rgb(192,255,0)",
+                "0.5"   :"rgb(255,255,0)",
+                "0.6"   :"rgb(255,192,0)",
+                "0.7"   :"rgb(255,128,0)",
+                "0.8"   :"rgb(255,64,0)",
+                "0.9"   :"rgb(255,0,0)"
+            },
+            arrowStyle:undefined,
             lineMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
             lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
             pointMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
@@ -183,12 +197,36 @@ define(function(require, exports, module) {
 
             return {lineWidth:4,strokeColor:color};
         },
+        defaultArrowStyle: function(coor1,coord2,event,index,data){
+            var color=this.options.arrowStyleDefaultColor;
+            try{
+                var percent = (Number(data) - this.minLineValue) / (this.maxLineValue - this.minLineValue);
+                for(var item in this.options.arrowStyleColorRange){
+                    if(percent>=Number(item)){
+                        color=this.options.arrowStyleColorRange[item];
+                    }
+                }
+            }catch(err){
+                console.error(err);
+            }
+
+            return {fillColor:color,width:3,length:4,frequency:3};
+        },
         getLineStyle: function(coord,nextcoord,parsed,index,value){
             var style;
             if(this.options.linestyle!==undefined){
                 style=this.options.linestyle(coord,nextcoord,parsed.event,index,value);
             }else{
                 style=this.defaultLineStyle(coord,nextcoord,parsed.event,index,value);
+            }
+            return style;
+        },
+        getArrowStyle: function(coord,nextcoord,parsed,index,value){
+            var style;
+            if(this.options.arrowstyle!==undefined){
+                style=this.options.arrowstyle(coord,nextcoord,parsed.event,index,value);
+            }else{
+                style=this.defaultArrowStyle(coord,nextcoord,parsed.event,index,value);
             }
             return style;
         },
@@ -199,6 +237,8 @@ define(function(require, exports, module) {
             var line=new H.map.Polyline(strip);
             var style=this.getLineStyle(coord,nextcoord,parsed,index,value);
             line.setStyle(style);
+            var arrows=this.getArrowStyle(coord,nextcoord,parsed,index,value);
+            line.setArrows(arrows);
             line.setData({event:parsed.event,index:index,data:value});
             return line;
         },
