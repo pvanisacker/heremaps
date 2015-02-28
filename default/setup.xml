@@ -10,6 +10,11 @@
         <label>app_code</label>
         <type>text</type>
       </input>
+      <text>Specify if the reversegeocodeshape command can use all cores to speed up processing time</text>
+      <input field="parallel">
+          <label>Parallel?</label>
+          <type>bool</type>
+      </input>
   </block>
 </setup>
 
