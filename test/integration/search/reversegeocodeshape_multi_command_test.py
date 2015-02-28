@@ -6,7 +6,7 @@ from .util import return_first_result
 class ReverseGeocodeShapeCommandTest(unittest.TestCase):
     def setUp(self):
         self.splunkservice = create_connection()
-        self.splunkservice.post("/servicesNS/nobody/heremaps/configs/conf-setup/heremaps", parallel="0")
+        self.splunkservice.post("/servicesNS/nobody/heremaps/configs/conf-setup/heremaps", parallel="1")
 
     def tearDown(self):
         self.splunkservice.post("/servicesNS/nobody/heremaps/configs/conf-setup/heremaps", parallel="0")

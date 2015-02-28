@@ -3,11 +3,13 @@ import sys
 
 from tools.cache import FileCache
 
-# Use the multiprocessing/multi core version
-from tools.reversegeocodershapemulti import ReverseGeocoderShapeMulti as ReverseGeocoderShape
+try:
+    import xml.etree.cElementTree as et
+except ImportError:
+    import xml.etree.ElementTree as et
 
-# Use the single core version
-# from tools.reversegeocodershape import ReverseGeocoderShape
+from tools.reversegeocodershapemulti import ReverseGeocoderShapeMulti
+from tools.reversegeocodershape import ReverseGeocoderShape
 
 from splunklib.searchcommands import dispatch, StreamingCommand, Configuration, Option, validators
 
@@ -44,10 +46,29 @@ class ReverseGeocodeShapeCommand(StreamingCommand):
         **Description:** Name of the field that will contain the result''',
         require=False, default="key")
 
+    parallel = "0"
+
+    def get_settings(self):
+        try:
+            response = self.service.get("/servicesNS/nobody/heremaps/configs/conf-setup/heremaps")
+            xml = response.body.read()
+            root = et.fromstring(xml)
+            self.parallel = root.findall(".//{http://dev.splunk.com/ns/rest}key[@name='parallel']")[0].text.\
+                strip().lower()
+        except Exception:
+            self.logger.info("Could not find setting for parallel execution")
+            pass
+
     def stream(self, records):
         basepath = os.path.join(os.environ['SPLUNK_HOME'], "etc", "apps", "heremaps")
 
-        rev = ReverseGeocoderShape()
+        self.get_settings()
+        self.logger.info("Using parallel execution: %s" % self.parallel)
+        if self.parallel == "1" or self.parallel == "enabled" or self.parallel == "true":
+            rev = ReverseGeocoderShapeMulti()
+        else:
+            rev = ReverseGeocoderShape()
+
         map_file = os.path.join(basepath, "appserver", "static", "data", self.filename)
         rev.load_map_file(self.filetype, map_file)
         self.logger.info("Loaded map file %s" % self.filename)
