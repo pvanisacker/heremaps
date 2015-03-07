@@ -22,20 +22,14 @@ define(function(require, exports, module) {
             if(this.map){
                 this.clearView();
 
-                var noiseSvg = '<svg xmlns="http://www.w3.org/2000/svg" height="20px" width="20px"><circle cx="5px" cy="5px" r="5px" fill="green" /></svg>';
-                var noiseIcon = new H.map.Icon(noiseSvg, {size: { w: 20, h: 20 }, anchor: { x: 10, y: 10}});
-
-                // Create an SVG template for the cluster icon:
-                var clusterSvgTemplate =  '<svg xmlns="http://www.w3.org/2000/svg" height="50px" width="50px"><circle cx="25px" cy="25px" r="{radius}" fill="red" /></svg>';
-
                 var dataPoints = [];
                 for(var i=0;i<data.length;i++){
                     dataPoints.push(new H.clustering.DataPoint(data[i].lat,data[i].lng,1,data[i]));
                 }
 
                 var options={clusteringOptions: {
-                        minWeight: this.min_weight,
-                        eps: this.eps
+                        minWeight: this.options.min_weight,
+                        eps: this.options.eps
                     }};
                 if(this.options.theme){
                     options.theme=this.options.theme;
