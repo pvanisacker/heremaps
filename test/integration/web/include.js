@@ -68,8 +68,6 @@ function waitForMap(casper,test,timeout){
 }
 
 function testMapLoading(page,casper,test){
-
-
   casper.start(page);
   waitForMap(casper,test);
 
