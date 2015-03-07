@@ -42,6 +42,16 @@ define(function(require, exports, module) {
             if (!this.manager) {
                 this._onManagerChange(mvc.Components, null);
             }
+
+            if (!String.prototype.encodeHTML) {
+                String.prototype.encodeHTML = function () {
+                    return this.replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&apos;');
+                };
+            }
         },
 
         createView: function(){

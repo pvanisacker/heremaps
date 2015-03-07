@@ -73,9 +73,9 @@ define(function(require, exports, module) {
                 "0.9"   :"rgb(255,0,0)"
             },
             arrowStyle:undefined,
-            lineMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
-            lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
-            pointMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data+"</div>";},
+            lineMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data.encodeHTML()+"</div>";},
+            lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data.encodeHTML()+"</div>";},
+            pointMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data.encodeHTML()+"</div>";},
             lineStyleProvider: function(coord1,coord2,event,index,data){
                 var color="#555555";
                 var colorRange={
@@ -150,7 +150,7 @@ define(function(require, exports, module) {
             svg=this.options.pointMarkerSvg.replace(/\$\{COLOR\}/g,color);
             svg=svg.replace(/\$\{SIZE\}/g,size);
             svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize);
-            svg=svg.replace(/\$\{TEXT\}/g,data);
+            svg=svg.replace(/\$\{TEXT\}/g,data.encodeHTML());
 
             var markerIcon = new H.map.Icon(svg,{anchor:{x:halfsize,y:halfsize}});
             return new H.map.Marker(coord,{icon: markerIcon});
@@ -175,7 +175,7 @@ define(function(require, exports, module) {
             svg=this.options.lineMarkerSvg.replace(/\$\{COLOR\}/g,color);
             svg=svg.replace(/\$\{SIZE\}/g,size);
             svg=svg.replace(/\$\{HALFSIZE\}/g,halfsize);
-            svg=svg.replace(/\$\{TEXT\}/g,data);
+            svg=svg.replace(/\$\{TEXT\}/g,data.encodeHTML());
 
             var markerIcon = new H.map.Icon(svg,{anchor:{x:halfsize,y:halfsize}});
             centercoord={lat:(coord1.lat+coord2.lat)/2 , lng:(coord1.lng+coord2.lng)/2};

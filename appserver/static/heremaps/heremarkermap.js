@@ -12,7 +12,7 @@ define(function(require, exports, module) {
 
         options: {
             marker:undefined,
-            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.value+"</div>";}
+            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.value.encodeHTML()+"</div>";}
         },
         group:new H.map.Group(),
 

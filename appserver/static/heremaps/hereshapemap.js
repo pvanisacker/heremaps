@@ -36,7 +36,7 @@ define(function(require, exports, module) {
                         lineCap: 'square',
                         lineJoin: 'bevel'
             },
-            bubbleContentProvider: function(shape,data){return "<div style='text-align:center;'>"+shape.name+": "+data.value+"</div>";},
+            bubbleContentProvider: function(shape,data){return "<div style='text-align:center;'>"+shape.name.encodeHTML()+": "+data.value.encodeHTML()+"</div>";},
             customTiles: false,
             getTileURL: function(x,y,z){return "/static/app/heremaps/heremaps/tile.png";}
         },
