@@ -219,7 +219,7 @@ require.config({
                 },
                 getNoisePresentation: function(noisePoint) {
                     // Prepare SVG with correct content
-                    var fill = ( parseFloat(noisePoint.getData()[value]) < 5 ? "orange" : "red");
+                    var fill = ( parseFloat(noisePoint.getData().value) < 5 ? "orange" : "red");
                     var svgString = noiseSvgTemplate2.replace('$TEXT',noisePoint.getData().value);
                     svgString = svgString.replace('$FILL',fill);
                     var noiseIcon = new H.map.Icon(svgString, {size: { w: 20, h: 20 },anchor: { x: 10, y: 10}});
