@@ -23,7 +23,7 @@ define(function(require, exports, module) {
                     data.forEachDataPoint(function(dataPoint){
                         count+=1;
                     });
-                    text=count
+                    text=count;
                 }
                 return "<div style='text-align:center'>"+text+"</div>";
             }
