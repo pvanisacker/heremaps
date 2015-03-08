@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cluster Map HTML dashboard</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="shortcut icon" href="{{SPLUNKWEB_URL_PREFIX}}/static/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/build/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/build/pages/dashboard-simple-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{SPLUNKWEB_URL_PREFIX}}/static/app/search/dashboard.css" />
+    <!--[if IE 7]><link rel="stylesheet" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/sprites-ie7.css" /><![endif]-->
+
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-clustering.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-data.js" type="text/javascript" charset="utf-8"></script>
+    <link href="https://js.api.here.com/v3/3.0/mapsjs-ui.css" rel="stylesheet" type="text/css" />
+    <link href="{{SPLUNKWEB_URL_PREFIX}}/static/app/heremaps/heremaps/heremap.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="header">
+        <div id="myheader"></div>
+    </div>
+
+    <div class="dashboard-body container-fluid main-section-body" data-role="main">
+        <div style="margin:2%">
+            <div style="margin-bottom:10px">
+                <div id="search-bar"></div>
+                <div id="search-control"></div>
+            </div>
+            <div>
+                <div>
+                    <div id="search-map-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myfooter"></div>
+
+<script src="{{SPLUNKWEB_URL_PREFIX}}/config?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/js/i18n.js"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/i18ncatalog?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/js/build/simplexml.min/config.js"></script>
+<script type="text/javascript">
+require.config({
+    baseUrl: "{{SPLUNKWEB_URL_PREFIX}}/static/js",
+    waitSeconds: 0, // Disable require.js load timeout
+    paths:
+    {
+        "app": "../app"
+    }
+});
+
+        var deps = [
+            "splunkjs/ready!",
+            "splunkjs/mvc/headerview",
+            "splunkjs/mvc/footerview",
+            "splunkjs/mvc/searchbarview",
+            "splunkjs/mvc/searchcontrolsview",
+            "splunkjs/mvc/searchmanager",
+            "app/heremaps/heremaps/hereclustermap"
+        ];
+        require(deps, function(mvc) {
+            // Load individual components
+            var HeaderView = require("splunkjs/mvc/headerview");
+            var FooterView = require("splunkjs/mvc/footerview");
+            var SearchBarView = require("splunkjs/mvc/searchbarview");
+            var SearchControlsView = require("splunkjs/mvc/searchcontrolsview");
+            var HereClusterMap = require("app/heremaps/heremaps/hereclustermap");
+            var SearchManager = require("splunkjs/mvc/searchmanager");
+
+            // Create a header
+            new HeaderView({
+                id: "myheader",
+                el: $("#myheader"),
+            }).render();
+
+            // Create a footer
+            new FooterView({
+                id: "myfooter",
+                el: $("#myfooter"),
+            }).render();
+
+            // Create a search manager
+            var mysearch = new SearchManager({
+                id: "search1",
+                preview: true,
+                status_buckets: 300,
+                search: mvc.tokenSafe("$searchquery$"),
+                required_field_list: "*",
+            });
+
+            // Create a search bar
+            var mysearchbar = new SearchBarView ({
+                id: "searchbar1",
+                managerid: "search1",
+                el: $("#search-bar"),
+                value: mvc.tokenSafe("$searchquery$"),
+                default: "|inputlookup SampleData.csv"
+            }).render();
+
+            // Create a search control
+            var mysearchcontrol = new SearchControlsView ({
+                id: "searchcontrol1",
+                managerid: "search1",
+                el: $("#search-control")
+            }).render();
+
+            var noiseSvgTemplate2 = '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="14" cy="15" cx="15" stroke-width="0" fill="$FILL"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="17.5" x="15" stroke-width="0" font-size="8pt" font-family="Roboto" stroke="#000000" fill="#000000">$TEXT</text></svg>';
+            var clusterSvgTemplate2 =
+                '<svg xmlns="http://www.w3.org/2000/svg" height="50px" width="50px">'+
+                '<circle cx="25px" cy="25px" r="$RADIUS" fill="$FILL" stroke-dasharray="5,5" stroke-width="6" stroke="#757575"/>'+
+                '<text xml:space="preserve" text-anchor="middle" id="svg_2" y="30" x="25" font-size="10pt" font-family="Roboto" stroke="#000000" fill="#000000">$TEXT</text>'+
+                '</svg>';
+
+            var theme2={
+                getClusterPresentation: function(cluster) {
+                    // Prepare SVG with correct content
+                    var min=Number.MAX_VALUE;
+                    cluster.forEachDataPoint(function(dataPoint){
+                        value=parseFloat(dataPoint.getData().value);
+                        if(min>value){
+                            min=value;
+                        }
+                    });
+                    var fill = "red";
+                    if( min > 11){
+                        fill="green";
+                    }else if(min>7){
+                        fill="yellow";
+                    }
+                    var svgString = clusterSvgTemplate2.replace('$RADIUS', 12 );
+                    svgString = svgString.replace('$TEXT',min);
+                    svgString = svgString.replace('$FILL',fill);
+                    var clusterIcon = new H.map.Icon(svgString, {
+                        size: { w: 50, h: 50},
+                        anchor: { x: 25, y: 25}
+                    });
+
+                    // Create a marker for clusters:
+                    var clusterMarker = new H.map.Marker(
+                        cluster.getPosition(),
+                        {icon: clusterIcon, min: cluster.getMinZoom(), max: cluster.getMaxZoom()}
+                    );
+
+                    // Bind cluster data to the marker:
+                    clusterMarker.setData(cluster);
+                    return clusterMarker;
+                },
+                getNoisePresentation: function(noisePoint) {
+                    // Prepare SVG with correct content
+                    var value=parseFloat(noisePoint.getData().value);
+                    var fill = "red";
+                    if( value > 11){
+                        fill="green";
+                    }else if(value>7){
+                        fill="yellow";
+                    }
+                    var svgString = noiseSvgTemplate2.replace('$TEXT',noisePoint.getData().value);
+                    svgString = svgString.replace('$FILL',fill);
+                    var noiseIcon = new H.map.Icon(svgString, {size: { w: 30, h: 30 },anchor: { x: 15, y: 15}});
+
+                    // Create a marker for noise points:
+                    var noiseMarker = new H.map.Marker(
+                        noisePoint.getPosition(),
+                        {icon: noiseIcon,min: noisePoint.getMinZoom()}
+                    );
+
+                    // Bind noise point data to the marker:
+                    noiseMarker.setData(noisePoint);
+                    return noiseMarker;
+                }
+            };
+
+            // Create the second cluster map
+            var myclustermap2 = new HereClusterMap({
+                id: "clustermap2",
+                managerid: "search1",
+                el: $("#search-map-2"),
+                height: "400px",
+                zoom: "4",
+                center: "40,-100",
+                theme: theme2,
+                noiseBubbleContentProvider: function(dataPoint){
+                    return "<div style='text-align: left'>"+dataPoint.getData().text.encodeHTML()+":&nbsp;"+dataPoint.getData().value.encodeHTML()+"</div>";
+                },
+                clusterBubbleContentProvider: function(cluster){
+                    var text="";
+                    cluster.forEachDataPoint(function(dataPoint){
+                        text+=dataPoint.getData().text.encodeHTML()+":&nbsp;"+dataPoint.getData().value.encodeHTML()+"<br/>";
+                    });
+                    return "<div style='text-align:left'>"+text+"</div>";
+                }
+            }).render();
+        });
+    </script>
+</body>
+</html>
