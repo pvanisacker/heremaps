@@ -14,18 +14,15 @@ define(function(require, exports, module) {
             min_weight: 1,
             eps: 32,
             theme: undefined,
-            bubbleContentProvider: function(data){
-                var text;
-                if(data instanceof H.clustering.NoisePoint){
-                    text=data.getData().value.encodeHTML();
-                }else if(data instanceof H.clustering.Cluster){
-                    var count=0;
-                    data.forEachDataPoint(function(dataPoint){
-                        count+=1;
-                    });
-                    text=count;
-                }
-                return "<div style='text-align:center'>"+text+"</div>";
+            noiseBubbleContentProvider: function(data){
+                return "<div style='text-align:center'>"+data.getData().value.encodeHTML()+"</div>";
+            },
+            clusterBubbleContentProvider: function(data){
+                var count=0;
+                data.forEachDataPoint(function(dataPoint){
+                    count+=1;
+                });
+                return "<div style='text-align:center'>"+count+"</div>";
             }
         },
 
@@ -57,12 +54,21 @@ define(function(require, exports, module) {
                 this.clusteringLayer = new H.map.layer.ObjectLayer(this.clusteringProvider);
 
                 var that=this;
-                if(this.options.bubbleContentProvider){
+                if(this.options.noiseBubbleContentProvider || this.options.clusterBubbleContentProvider){
                     this.clusteringProvider.addEventListener('tap', function (evt) {
-                        var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
-                            content: that.options.bubbleContentProvider(evt.target.getData())
-                        });
-                        that.ui.addBubble(bubble);
+                        var data=evt.target.getData();
+                        if(data instanceof H.clustering.NoisePoint && that.options.noiseBubbleContentProvider){
+                            var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                                content: that.options.noiseBubbleContentProvider(data)
+                            });
+                            that.ui.addBubble(bubble);
+                        }else if(data instanceof H.clustering.Cluster && that.options.clusterBubbleContentProvider){
+                            var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                                content: that.options.clusterBubbleContentProvider(data)
+                            });
+                            that.ui.addBubble(bubble);
+                        }
+
                     }, false);
                 }
 

@@ -244,7 +244,15 @@ require.config({
                 height: "400px",
                 zoom: "4",
                 center: "60,-160",
-                theme: theme2
+                theme: theme2,
+                noiseBubbleContentProvider: undefined,
+                clusterBubbleContentProvider: function(data){
+                    var count=0;
+                    data.forEachDataPoint(function(dataPoint){
+                        count+=1
+                    });
+                    return "<div style='text-align:center'>"+count+"</div>";
+                }
             }).render();
         });
     </script>
