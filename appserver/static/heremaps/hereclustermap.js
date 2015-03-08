@@ -58,15 +58,15 @@ define(function(require, exports, module) {
                     this.clusteringProvider.addEventListener('tap', function (evt) {
                         var data=evt.target.getData();
                         if(data instanceof H.clustering.NoisePoint && that.options.noiseBubbleContentProvider){
-                            var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                            var bubblenoise =  new H.ui.InfoBubble(evt.target.getPosition(), {
                                 content: that.options.noiseBubbleContentProvider(data)
                             });
-                            that.ui.addBubble(bubble);
+                            that.ui.addBubble(bubblenoise);
                         }else if(data instanceof H.clustering.Cluster && that.options.clusterBubbleContentProvider){
-                            var bubble =  new H.ui.InfoBubble(evt.target.getPosition(), {
+                            var bubblecluster =  new H.ui.InfoBubble(evt.target.getPosition(), {
                                 content: that.options.clusterBubbleContentProvider(data)
                             });
-                            that.ui.addBubble(bubble);
+                            that.ui.addBubble(bubblecluster);
                         }
 
                     }, false);

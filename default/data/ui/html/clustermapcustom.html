@@ -249,7 +249,7 @@ require.config({
                 clusterBubbleContentProvider: function(data){
                     var count=0;
                     data.forEachDataPoint(function(dataPoint){
-                        count+=1
+                        count+=1;
                     });
                     return "<div style='text-align:center'>"+count+"</div>";
                 }
