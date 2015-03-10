@@ -17,6 +17,7 @@
     <collection label="Cluster maps">
         <a href="/app/heremaps/clustermap">Cluster map</a>
         <a href="/app/heremaps/clustermapcustom">Custom cluster map</a>
+        <a href="/app/heremaps/clustermapcustom1">Custom cluster map1</a>
     </collection>
     <collection label="Shape maps">
         <a href="/app/heremaps/shapemap">Shape map</a>
@@ -46,10 +47,9 @@
 
     <collection label="Line maps">
         <a href="/app/heremaps/linemap1">Linemap 1</a>
-        <!--
         <a href="/app/heremaps/linemap2">Linemap 2</a>
         <a href="/app/heremaps/linemap3">Linemap 3</a>
-        -->
+        <a href="/app/heremaps/linemap4">Linemap 4</a>
     </collection>
     <view name="dashboards" />
 </nav>

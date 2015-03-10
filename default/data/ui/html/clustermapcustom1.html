@@ -27,13 +27,17 @@
 
     <div class="dashboard-body container-fluid main-section-body" data-role="main">
         <div style="margin:2%">
+            <div style="padding-bottom:10px">
+            This shows a custom visualization for the cluster maps. The clustered markers show the lowest value for all markers.<br/>
+
+            </div>
             <div style="margin-bottom:10px">
                 <div id="search-bar"></div>
                 <div id="search-control"></div>
             </div>
             <div>
                 <div>
-                    <div id="search-map-2"></div>
+                    <div id="search-map"></div>
                 </div>
             </div>
         </div>
@@ -100,7 +104,7 @@ require.config({
                 managerid: "search1",
                 el: $("#search-bar"),
                 value: mvc.tokenSafe("$searchquery$"),
-                default: "|inputlookup SampleData.csv"
+                default: "|inputlookup us_data.csv"
             }).render();
 
             // Create a search control
@@ -110,14 +114,14 @@ require.config({
                 el: $("#search-control")
             }).render();
 
-            var noiseSvgTemplate2 = '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="14" cy="15" cx="15" stroke-width="0" fill="$FILL"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="17.5" x="15" stroke-width="0" font-size="8pt" font-family="Roboto" stroke="#000000" fill="#000000">$TEXT</text></svg>';
-            var clusterSvgTemplate2 =
+            var noiseSvgTemplate = '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="14" cy="15" cx="15" stroke-width="1" stroke="black" fill="$FILL"/><text xml:space="preserve" text-anchor="middle" id="svg_2" y="17.5" x="15" stroke-width="0" font-size="8pt" font-family="Roboto" stroke="#000000" fill="#000000">$TEXT</text></svg>';
+            var clusterSvgTemplate =
                 '<svg xmlns="http://www.w3.org/2000/svg" height="50px" width="50px">'+
                 '<circle cx="25px" cy="25px" r="$RADIUS" fill="$FILL" stroke-dasharray="5,5" stroke-width="3" stroke="#757575"/>'+
                 '<text xml:space="preserve" text-anchor="middle" id="svg_2" y="30" x="25" font-size="10pt" font-family="Roboto" stroke="#000000" fill="#000000">$TEXT</text>'+
                 '</svg>';
 
-            var theme2={
+            var theme={
                 getClusterPresentation: function(cluster) {
                     // Prepare SVG with correct content
                     var min=Number.MAX_VALUE;
@@ -133,7 +137,7 @@ require.config({
                     }else if(min>7){
                         fill="yellow";
                     }
-                    var svgString = clusterSvgTemplate2.replace('$RADIUS', 12 );
+                    var svgString = clusterSvgTemplate.replace('$RADIUS', 12 );
                     svgString = svgString.replace('$TEXT',min);
                     svgString = svgString.replace('$FILL',fill);
                     var clusterIcon = new H.map.Icon(svgString, {
@@ -154,13 +158,13 @@ require.config({
                 getNoisePresentation: function(noisePoint) {
                     // Prepare SVG with correct content
                     var value=parseFloat(noisePoint.getData().value);
-                    var fill = "red";
+                    var fill = "#FF6363";
                     if( value > 11){
-                        fill="green";
+                        fill="#ADFFB0";
                     }else if(value>7){
-                        fill="yellow";
+                        fill="#FFFFAD";
                     }
-                    var svgString = noiseSvgTemplate2.replace('$TEXT',noisePoint.getData().value);
+                    var svgString = noiseSvgTemplate.replace('$TEXT',noisePoint.getData().value);
                     svgString = svgString.replace('$FILL',fill);
                     var noiseIcon = new H.map.Icon(svgString, {size: { w: 30, h: 30 },anchor: { x: 15, y: 15}});
 
@@ -177,14 +181,14 @@ require.config({
             };
 
             // Create the second cluster map
-            var myclustermap2 = new HereClusterMap({
-                id: "clustermap2",
+            var myclustermap = new HereClusterMap({
+                id: "clustermap",
                 managerid: "search1",
-                el: $("#search-map-2"),
+                el: $("#search-map"),
                 height: "400px",
                 zoom: "4",
                 center: "40,-100",
-                theme: theme2,
+                theme: theme,
                 noiseBubbleContentProvider: function(dataPoint){
                     return "<div style='text-align: left'>"+dataPoint.getData().text.encodeHTML()+":&nbsp;"+dataPoint.getData().value.encodeHTML()+"</div>";
                 },
