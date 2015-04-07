@@ -183,3 +183,5 @@ See [CUSTOM.md](CUSTOM.md)
    * 0.3: Fix loading of shapemaps, add more documentation, add example HTML dashboards.
    * 0.4: Remove django parts as they were too complicated, add more shape maps, add reversegeocodeshape command, add testcases for custom commands
    * 0.5: Add simple line maps
+   * 0.6: Added line map arrows, added more line map examples, added cluster map example
+   
