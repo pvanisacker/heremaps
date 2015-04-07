@@ -1,9 +1,9 @@
-#!/usr/env/python
+#!/usr/bin/env python
 import datetime
 import os
 import sys
 
-from tools.reversegeocodershapemulti import ReverseGeocoderShape
+from tools.reversegeocodershape import ReverseGeocoderShape
 
 
 """
@@ -86,10 +86,6 @@ if __name__ == "__main__":
 
     shapes.append({"file": "countries/us_counties.geojson", "step": 1})
 
-    for shape in shapes:
-        create_index(shape)
-
-    """
     import multiprocessing
     from multiprocessing import Pool
 
@@ -100,4 +96,3 @@ if __name__ == "__main__":
     results = pool.map(create_index, shapes)
     pool.close()
     pool.join()
-    """
