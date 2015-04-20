@@ -10,12 +10,14 @@
     <link rel="stylesheet" type="text/css" media="all" href="{{SPLUNKWEB_URL_PREFIX}}/static/app/search/dashboard.css" />
     <!--[if IE 7]><link rel="stylesheet" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/sprites-ie7.css" /><![endif]-->
 
-    <script src="https://js.api.here.com/se/2.5.4/jsl.js?with=all" type="text/javascript" charset="utf-8"></script>
-    <style>
-        .mapcontainer img{
-            max-width:none;
-        }
-    </style>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-clustering.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.0/mapsjs-data.js" type="text/javascript" charset="utf-8"></script>
+    <link href="https://js.api.here.com/v3/3.0/mapsjs-ui.css" rel="stylesheet" type="text/css" />
+    <link href="{{SPLUNKWEB_URL_PREFIX}}/static/app/heremaps/heremaps/heremap.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -126,16 +128,16 @@ require.config({
                 height: "400px",
                 type:"density",
                 opacity: "0.95",
-                colors: {
-                    stops: {
+                colors: new H.data.heatmap.Colors(
+                    {
                         "0": "rgba(0,0,0,0.2)",
                         "0.25": "rgba(0,0,0,0.4)",
                         "0.5": "rgba(0,0,0,1)",
                         "0.75": "rgba(0,0,0,1)",
                         "1": "rgba(0,0,0,1)"
                     },
-                    interpolate: true
-                }
+                    true
+                )
             }).render();
 
             // Create the marker map
@@ -146,8 +148,8 @@ require.config({
                 height: "400px",
                 type:"value",
                 opacity: "0.8",
-                colors: {
-                    stops: {
+                colors: new H.data.heatmap.Colors(
+                    {
                         "0": "rgba(0,0,0,0.0)",
                         "0.1": "rgba(0,0,0,0.25)",
                         "0.2": "rgba(0,0,0,0.5)",
@@ -160,8 +162,8 @@ require.config({
                         "0.9": "rgba(0,0,0,1)",
                         "1": "rgba(0,0,0,1)"
                     },
-                    interpolate: false
-                }
+                    false
+                )
             }).render();
         });
     </script>
