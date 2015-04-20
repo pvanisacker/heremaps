@@ -128,9 +128,6 @@ The app contains 4 different map visualizations.
    * Heat map: shows density or value heatmaps of your data.
    * Line map: shows coords connected by lines
    
-Except for the heat map, all of the visualization use v3 of the HERE javascript API.  
-The heatmap visualization still uses v2.5.
-
 The app contains examples on how to include the visualizations in HTML dashboards. If you are using the Splunk web framework you should also be able to include the visualizations as well, although I did not test it.
 
 The visualization can render quite some data points/markers. But as these visualizations are rendered on browser side there are limits.  

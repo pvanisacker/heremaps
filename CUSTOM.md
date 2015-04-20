@@ -235,18 +235,10 @@ var myshapemap = new HereShapeMap({
 
 ## Heat map
 
-Creating a heat map is slightly different than the other maps as it still using an older version of the HERE javascript API.  
-Therefore you don't need to include all the javascript that was mentioned above.  
-But only this:
+Creating a heat map is similar to the other maps.
 
-```
-<script src="https://js.api.here.com/se/2.5.4/jsl.js?with=all" type="text/javascript" charset="utf-8"></script>
-<style>
-  .mapcontainer img{
-    max-width:none;
-  }
-</style>
-```
+Make sure to include the necessary javascript in your dashboard.
+And create the heatmap like this:
 
 <pre><code>
 var myheatmap = new HereHeatMap({
@@ -269,16 +261,16 @@ var myheatmap1 = new HereHeatMap({
   height: "400px",
   type:"density",
   opacity: "0.95",
-  colors: {
-      stops: {
+  colors: colors: new H.data.heatmap.Colors(
+      {
           "0": "rgba(0,0,0,0.2)",
           "0.25": "rgba(0,0,0,0.4)",
           "0.5": "rgba(0,0,0,1)",
           "0.75": "rgba(0,0,0,1)",
           "1": "rgba(0,0,0,1)"
       },
-      interpolate: true
-  }
+      true
+      )
 }).render()
 </pre></code>
 
