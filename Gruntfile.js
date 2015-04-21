@@ -40,20 +40,11 @@ module.exports = function (grunt) {
       }
     },
     geojsonhint: {
-    /*
       files: [
-        'appserver/static/data/world2.geojson',
-        'appserver/static/data/world3.geojson'
+        'appserver/static/data/*.geojson',
+        'appserver/static/data/countries/*.geojson',
+        'appserver/static/data/continents/*.geojson'
       ]
-      */
-      good: [
-                'node_modules/geojsonhint/test/data/good/*.geojson'
-            ]
-            /*,
-            bad: [
-                'node_modules/geojsonhint/test/data/bad/*.geojson'
-            ]
-            */
     }
   });
   
