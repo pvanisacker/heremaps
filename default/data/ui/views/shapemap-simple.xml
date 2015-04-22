@@ -1,0 +1,24 @@
+<dashboard script="autodiscover.js">
+    <label>Simple shape map</label>
+    <row>
+        <panel>
+            <search id="heremaps_search">
+                <query><![CDATA[
+                    |inputlookup countries_data.csv | eval key=country_iso3166_2 | eval value=InfantMortality
+                ]]></query>
+                <earliest>$earliest$</earliest>
+                <latest>$latest$</latest>
+            </search>
+            <html>
+                <div id="map"
+                     class="splunk-view"
+                     data-require="app/heremaps/heremaps/hereshapemap"
+                     data-options='{
+                            "managerid": "heremaps_search",
+                            "height": "400px"
+                         }'>
+                </div>
+            </html>
+        </panel>
+    </row>
+</dashboard>

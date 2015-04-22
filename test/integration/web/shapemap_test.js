@@ -74,3 +74,7 @@ casper.test.begin('Square shape map loads', function suite(test){
 casper.test.begin('Hexagon shape map loads', function suite(test){
   testMapLoading(heremapshome+"/shapemapcustom_hexagon",casper,test);
 });
+
+casper.test.begin('Shape map simple loads', function suite(test){
+  testMapLoading(heremapshome+"/shapemap-simple",casper,test);
+});

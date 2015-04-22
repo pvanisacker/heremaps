@@ -1,10 +1,8 @@
-define(function(require, exports, module) {
-    // Load requirements
-    var _ = require('underscore');
-    var mvc = require('splunkjs/mvc');
-    var HereMap = require('app/heremaps/heremaps/heremap');
-    var Messages = require("splunkjs/mvc/messages");
-    var utils = require('splunkjs/mvc/utils');
+define([
+    "app/heremaps/heremaps/heremap",
+    "heremapsjsData"
+    ],
+    function(HereMap) {
     
     // Define the custom view class
     var HereShapeMap = HereMap.extend({
@@ -36,7 +34,9 @@ define(function(require, exports, module) {
                         lineCap: 'square',
                         lineJoin: 'bevel'
             },
-            bubbleContentProvider: function(shape,data){return "<div style='text-align:center;'>"+shape.name.encodeHTML()+": "+data.value.encodeHTML()+"</div>";},
+            bubbleContentProvider: function(shape,data){
+                return "<div style='text-align:center;'>"+String(shape.name).encodeHTML()+": "+String(data.value).encodeHTML()+"</div>";
+            },
             customTiles: false,
             getTileURL: function(x,y,z){return "/static/app/heremaps/heremaps/tile.png";}
         },

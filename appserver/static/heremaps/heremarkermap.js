@@ -1,18 +1,15 @@
-define(function(require, exports, module) {
-    // Load requirements
-    var _ = require('underscore');
-    var mvc = require('splunkjs/mvc');
-    var HereMap = require('app/heremaps/heremaps/heremap');
-    var Messages = require("splunkjs/mvc/messages");
-    var utils = require('splunkjs/mvc/utils');
-    
+define([
+    "app/heremaps/heremaps/heremap",
+    ],
+    function(HereMap) {
+
     // Define the custom view class
     var HereMarkerMap = HereMap.extend({
         className: "heremarkermap",
 
         options: {
             marker:undefined,
-            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.value.encodeHTML()+"</div>";}
+            bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+String(data.value).encodeHTML()+"</div>";}
         },
         group:new H.map.Group(),
 

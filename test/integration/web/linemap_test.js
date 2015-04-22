@@ -13,3 +13,7 @@ casper.test.begin('Custom line map 3 loads', function suite(test){
 casper.test.begin('Custom line map 4 loads', function suite(test){
   testMapLoading(heremapshome+"/linemap4",casper,test);
 });
+
+casper.test.begin('Line map simple loads', function suite(test){
+  testMapLoading(heremapshome+"/linemap-simple",casper,test);
+});

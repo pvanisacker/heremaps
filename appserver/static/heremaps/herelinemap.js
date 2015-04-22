@@ -1,10 +1,7 @@
-define(function(require, exports, module) {
-    // Load requirements
-    var _ = require('underscore');
-    var mvc = require('splunkjs/mvc');
-    var HereMap = require('app/heremaps/heremaps/heremap');
-    var Messages = require("splunkjs/mvc/messages");
-    var utils = require('splunkjs/mvc/utils');
+define([
+    "app/heremaps/heremaps/heremap",
+    ],
+    function(HereMap) {
     
     // Define the custom view class
     var HereLineMap = HereMap.extend({
@@ -73,9 +70,9 @@ define(function(require, exports, module) {
                 "0.9"   :"rgb(255,0,0)"
             },
             arrowStyle:undefined,
-            lineMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data.encodeHTML()+"</div>";},
-            lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data.encodeHTML()+"</div>";},
-            pointMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+data.data.encodeHTML()+"</div>";},
+            lineMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+String(data.data).encodeHTML()+"</div>";},
+            lineBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+String(data.data).encodeHTML()+"</div>";},
+            pointMarkerBubbleContentProvider: function(data){return "<div style='text-align:center;'>"+String(data.data).encodeHTML()+"</div>";},
             lineStyleProvider: function(coord1,coord2,event,index,data){
                 var color="#555555";
                 var colorRange={

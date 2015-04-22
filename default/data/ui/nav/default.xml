@@ -13,11 +13,13 @@
     <collection label="Marker maps">
         <a href="/app/heremaps/markermap">Marker map</a>
         <a href="/app/heremaps/markermapcustom">Custom marker map</a>
+        <view name="markermap-simple"/>
     </collection>
     <collection label="Cluster maps">
         <a href="/app/heremaps/clustermap">Cluster map</a>
         <a href="/app/heremaps/clustermapcustom">Custom cluster map</a>
         <a href="/app/heremaps/clustermapcustom1">Custom cluster map1</a>
+        <view name="clustermap-simple"/>
     </collection>
     <collection label="Shape maps">
         <a href="/app/heremaps/shapemap">Shape map</a>
@@ -37,12 +39,14 @@
             <a href="/app/heremaps/shapemapcustom_de">Custom shape map Germany</a>
             <a href="/app/heremaps/shapemapcustom_uk">Custom shape map UK</a>
         </collection>
+        <view name="shapemap-simple"/>
     </collection>
 
     <collection label="Heat maps">
         <a href="/app/heremaps/heatmap">Heatmap</a>
         <a href="/app/heremaps/heatmapcustom1">Custom heatmap 1</a>
         <a href="/app/heremaps/heatmapcustom2">Custom heatmap 2</a>
+        <view name="heatmap-simple"/>
     </collection>
 
     <collection label="Line maps">
@@ -50,6 +54,7 @@
         <a href="/app/heremaps/linemap2">Linemap 2</a>
         <a href="/app/heremaps/linemap3">Linemap 3</a>
         <a href="/app/heremaps/linemap4">Linemap 4</a>
+        <view name="linemap-simple"/>
     </collection>
     <view name="dashboards" />
 </nav>

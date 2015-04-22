@@ -1,4 +1,4 @@
-# Customization
+# Customization using HTML dashboards
 
 ## Common config
 
@@ -11,22 +11,28 @@ When done your directory structure should look like this:
     - data
       - ui
         - nav
-        - views
         - html
     - app.conf
   - ...
 </code></pre>
 
-When creating an HTML dashboard you also need to make sure to include the needed javascript and CSS resources.
+
+When creating an HTML dashboard try to use one of the dashboards provided in the app as a base dashboard.  
+If that's not possible make sure your html includes the following:
+ * correct HTML header including all the require splunk javascript & css resources
+ * a body that contains the components to be displayed
+ * a piece of JavaScript that initializes all of the components
+ 
+The piece of JavaScript should look like this:
 ```html
-    <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript" charset="UTF-8"></script>
-    <script src="https://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript"  charset="UTF-8"></script>
-    <script src="https://js.api.here.com/v3/3.0/mapsjs-clustering.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://js.api.here.com/v3/3.0/mapsjs-data.js" type="text/javascript" charset="utf-8"></script>
-    <link href="https://js.api.here.com/v3/3.0/mapsjs-ui.css" rel="stylesheet" type="text/css" />
-    <link href="{{SPLUNKWEB_URL_PREFIX}}/static/app/heremaps/heremaps/heremap.css" rel="stylesheet" type="text/css" />
+    <script src="{{SPLUNKWEB_URL_PREFIX}}/static/app/heremaps/heremaps/config.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        require.config({
+            baseUrl: "{{SPLUNKWEB_URL_PREFIX}}/static/js",
+        });
+        
+        // here's the rest of the javascript
+    </script>
 ```
 
 Once that's done you can start configuring the visualization.

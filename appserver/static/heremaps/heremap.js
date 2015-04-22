@@ -1,14 +1,13 @@
-define(function(require, exports, module) {
-    // Load requirements
-    var _ = require('underscore');
-    var mvc = require('splunkjs/mvc');
-    var SimpleSplunkView = require('splunkjs/mvc/simplesplunkview');
-    var Messages = require("splunkjs/mvc/messages");
-    var utils = require('splunkjs/mvc/utils');
-
+define([
+    "underscore",
+    "splunkjs/mvc",
+    "splunkjs/mvc/simplesplunkview",
+    "splunkjs/mvc/messages",
+    "splunkjs/mvc/utils",
+    "heremapsjsService","heremapsjsEvents", "heremapsjsUi"
+  ],function(_, mvc, SimpleSplunkView,Messages,utils,mapsjs) {
     Messages.messages['map-error']={icon: "warning-sign",level: "error",message: _("Map loading failed").t()};
 
-    // Define the custom view class
     var HereMap = SimpleSplunkView.extend({
         className: "heremap",
         outputMode: 'json',
@@ -156,7 +155,7 @@ define(function(require, exports, module) {
             if(!this.options.zoom){
                 this.options.zoom=this.default_options.zoom;
             }
-            if(!this.options.height || this.options.height.trim()===""){
+            if(!this.options.height){
                 this.options.height=this.default_options.height;
             }
         }

@@ -1,10 +1,8 @@
-define(function(require, exports, module) {
-    // Load requirements
-    var _ = require('underscore');
-    var mvc = require('splunkjs/mvc');
-    var HereMap = require('app/heremaps/heremaps/heremap');
-    var Messages = require("splunkjs/mvc/messages");
-    var utils = require('splunkjs/mvc/utils');
+define([
+    "app/heremaps/heremaps/heremap",
+    "heremapsjsData"
+    ],
+    function(HereMap) {
 
     // Define the custom view class
     var HereHeatMap = HereMap.extend({
@@ -50,7 +48,7 @@ define(function(require, exports, module) {
             if(this.options.colors){
                 options.colors=this.options.colors;
             }
-            console.log(options);
+
             var heatmapProvider = new H.data.heatmap.Provider(options);
             return heatmapProvider;
         }

@@ -1,0 +1,24 @@
+<dashboard script="autodiscover.js">
+    <label>Simple line map</label>
+    <row>
+        <panel>
+            <search id="heremaps_search">
+                <query><![CDATA[
+                    |inputlookup line-data1.csv | eval coords=split(coords,";") | eval points=split(points,";") | eval values=split(values,";")
+                ]]></query>
+                <earliest>$earliest$</earliest>
+                <latest>$latest$</latest>
+            </search>
+            <html>
+                <div id="map"
+                     class="splunk-view"
+                     data-require="app/heremaps/heremaps/herelinemap"
+                     data-options='{
+                            "managerid": "heremaps_search",
+                            "height": "400px"
+                         }'>
+                </div>
+            </html>
+        </panel>
+    </row>
+</dashboard>

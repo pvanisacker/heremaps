@@ -1,10 +1,8 @@
-define(function(require, exports, module) {
-    // Load requirements
-    var _ = require('underscore');
-    var mvc = require('splunkjs/mvc');
-    var HereMap = require('app/heremaps/heremaps/heremap');
-    var Messages = require("splunkjs/mvc/messages");
-    var utils = require('splunkjs/mvc/utils');
+define([
+    "app/heremaps/heremaps/heremap",
+    "heremapsjsClustering"
+    ],
+    function(HereMap) {
     
     // Define the custom view class
     var HereClusterMap = HereMap.extend({
@@ -15,7 +13,7 @@ define(function(require, exports, module) {
             eps: 32,
             theme: undefined,
             noiseBubbleContentProvider: function(data){
-                return "<div style='text-align:center'>"+data.getData().value.encodeHTML()+"</div>";
+                return "<div style='text-align:center'>"+String(data.getData().value).encodeHTML()+"</div>";
             },
             clusterBubbleContentProvider: function(data){
                 var count=0;

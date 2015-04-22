@@ -1,0 +1,16 @@
+<dashboard script="autodiscover.js">
+    <label>Simple marker map</label>
+    <row>
+        <panel>
+            <html>
+                <div id="map"
+                     class="splunk-view"
+                     data-require="app/heremaps/heremaps/heremap"
+                     data-options='{
+                            "height": "400px"
+                         }'>
+                </div>
+            </html>
+        </panel>
+    </row>
+</dashboard>
