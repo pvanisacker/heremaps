@@ -29,16 +29,6 @@ module.exports = function (grunt) {
         src: ['test/integration/web/*_test.js']
       }
     },
-    mochaTest: {
-      test: {
-        options: {
-          reporter: 'spec',
-          quiet: false,
-          captureFile: 'results.txt', // Optionally capture the reporter output to a file
-        },
-        src: ['test/integration/search/**/*.js']
-      }
-    },
     geojsonhint: {
       files: [
         'appserver/static/data/*.geojson',
@@ -52,7 +42,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-lint-inline');
   grunt.loadNpmTasks('grunt-geojsonhint');
   grunt.loadNpmTasks('grunt-casper');
-  grunt.loadNpmTasks('grunt-mocha-test');
 
   grunt.registerTask('test', ['jshint','inlinelint','geojsonhint']);
   grunt.registerTask('default', ['test']);
