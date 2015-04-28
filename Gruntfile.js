@@ -35,6 +35,14 @@ module.exports = function (grunt) {
         'appserver/static/data/countries/*.geojson',
         'appserver/static/data/continents/*.geojson'
       ]
+    },
+    jsdoc : {
+        dist : {
+            src: ['appserver/static/heremaps/*.js'],
+            options: {
+                destination: 'doc'
+            }
+        }
     }
   });
   
@@ -42,6 +50,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-lint-inline');
   grunt.loadNpmTasks('grunt-geojsonhint');
   grunt.loadNpmTasks('grunt-casper');
+  grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('test', ['jshint','inlinelint','geojsonhint']);
   grunt.registerTask('default', ['test']);

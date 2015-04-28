@@ -18,3 +18,4 @@ test/integration/search/*.html
 coverage
 python-int.html
 python-unit.html
+doc/*
