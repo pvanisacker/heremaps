@@ -3,15 +3,28 @@ define([
     ],
     function(HereMap) {
 
-    // Define the custom view class
+    /**
+     * A module exposing a marker map
+     * @module heremaps/HereMarkerMap
+     * @extends module:heremaps/HereMap
+    */
     var HereMarkerMap = HereMap.extend({
         className: "heremarkermap",
 
+         /**
+         * Sets the options for the marker map
+         * @property {function} options.marker                - Provides the marker to be displayed. The function should return a valid Marker. See: {@link https://developer.here.com/javascript-apis/documentation/v3/maps/topics_api_nlp/h-map-marker.html}
+         * @property {function} options.bubbleContentProvider - Provides the content to be show when a marker is clicked.
+         */
         options: {
             marker:undefined,
             bubbleContentProvider: function(data){return "<div style='text-align:center;'>"+String(data.value).encodeHTML()+"</div>";}
         },
         group:new H.map.Group(),
+
+        defaultMarker: function(data){
+            return new H.map.Marker({lat:data.lat,lng:data.lng});
+        },
 
         postCreateMap: function(){
             // Add a listener to the group to show the dialog box.
@@ -34,7 +47,7 @@ define([
                     if(this.options.marker){
                         marker=this.options.marker(data[i]);
                     }else{
-                        marker=new H.map.Marker({lat:data[i].lat,lng:data[i].lng});
+                        marker=this.defaultMarker(data[i]);
                     }
                     if(marker){
                         marker.setData(data[i]);

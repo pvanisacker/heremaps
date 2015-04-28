@@ -2,15 +2,29 @@ define([
     "app/heremaps/heremaps/heremap",
     ],
     function(HereMap) {
-    
-    // Define the custom view class
-    var HereLineMap = HereMap.extend({
+
+    /**
+     * A module exposing a line map
+     * @module heremaps/HereLineMap
+     * @extends module:heremaps/HereMap
+    */
+    var HereLineMap = HereMap.extend(
+        /** @lends HereLineMap */
+        {
         className: "herelinemap",
         shapes:[],
         maxLineValue:-Number.MAX_VALUE,
         minLineValue:Number.MAX_VALUE,
         maxPointValue:-Number.MAX_VALUE,
         minPointValue:Number.MAX_VALUE,
+        /**
+         * Sets the options
+         *
+         * @param options.id    (optional) ID of this view.
+         *                      Defaults to an automatically generated ID.
+         * @param options.*     Initial attributes for this view's settings model.
+         *                      See subclass documentation for details.
+         */
         options: {
             pointMarkerSvg:'<svg width="${SIZE}" height="${SIZE}" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><circle opacity="0.9" id="svg_1" r="${HALFSIZE}" cy="${HALFSIZE}" cx="${HALFSIZE}" stroke-width="0" stroke="#000000" fill="${COLOR}"/></svg>',
             pointMarkerDefaultColor:"#333333",
@@ -128,6 +142,7 @@ define([
             And this will all be stored in this.events array.
         */
 
+        /** The defaultPointMarker function */
         defaultPointMarker: function(coord,event,index,data){
             var size=8;
             var halfsize=size/2;

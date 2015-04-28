@@ -4,7 +4,11 @@ define([
     ],
     function(HereMap) {
     
-    // Define the custom view class
+    /**
+     * A module representing a shape map
+     * @module heremaps/HereShapeMap
+     * @extends module:heremaps/HereMap
+    */
     var HereShapeMap = HereMap.extend({
         className: "hereshapemap",
 
@@ -12,6 +16,18 @@ define([
         shapes: {},
         maxValue:-Number.MAX_VALUE,
         minValue:Number.MAX_VALUE,
+
+        /**
+         * Sets the options for the marker map
+         * @property {string} options.shapeType                - String mentioning the type of map to be loaded: "kml" or "geojson".
+         * @property {string} options.kmlFile                  - KML file to be displayed on the map
+         * @property {string} options.geoJSONFile              - GeoJSON file to be displayed on the map
+         * @property {object} options.colorRange               - Range of colors to be used for the shapes
+         * @property {object} options.defaultStyle             - Default style to be used for the polygons. See: {@link https://developer.here.com/javascript-apis/documentation/v3/maps/topics_api_nlp/h-map-spatialstyle.html#h-map-spatialstyle}
+         * @property {function} options.bubbleContentProvider  - Provides the content to be show when a shape is clicked.
+         * @property {boolean} options.customTiles             - If the custom tile provider should be used.
+         * @property {function} options.getTileURL             - Function that returns the tile to be used for the provided xyz coordinates
+         */
         options:{
             shapeType:"kml",
             kmlFile:"world2.kml",
@@ -76,6 +92,9 @@ define([
                 this.colorShape(shape,this.options.defaultStyle);
             }
         },
+        /** Loads the KML or GeoJSON file and display it on the map
+         * @private
+         */
         postCreateMap: function(){
             // load the map shapes
             if(this.options.shapeType==="kml"){
@@ -183,6 +202,9 @@ define([
             var style = this.styleProvider(key);
             this.colorShapeStyle(key,style);
         },
+        /** Color on specific shape in the provided style
+         * @private
+         */
         colorShapeStyle: function(key,style){
             // color a certain shape with a certain style
             var shape_group=this.shapes[key].obj;
@@ -200,6 +222,9 @@ define([
                 });
             }
         },
+        /** Create the style to be used for a certain shape key
+         * @private
+         */
         styleProvider: function(key){
             // clone the style
             var style={

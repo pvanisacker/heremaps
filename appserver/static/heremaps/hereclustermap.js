@@ -3,11 +3,26 @@ define([
     "heremapsjsClustering"
     ],
     function(HereMap) {
-    
-    // Define the custom view class
+
+    /**
+     * A module exposing a cluster map
+     * @module heremaps/HereClusterMap
+     * @extends module:heremaps/HereMap
+    */
     var HereClusterMap = HereMap.extend({
         className: "hereclustermap",
 
+        /**
+         * Sets the options for the cluster map
+         * @property {integer} options.min_weight - The minimum weight for a cluster to form
+                                                      See: {@link https://developer.here.com/javascript-apis/documentation/v3/maps/topics_api_nlp/h-clustering-provider-clusteringoptions.html#h-clustering-provider-clusteringoptions__minweight}
+         * @property {integer} options.eps        - The EPS
+         *                                            See: {@link https://developer.here.com/javascript-apis/documentation/v3/maps/topics_api_nlp/h-clustering-provider-clusteringoptions.html#h-clustering-provider-clusteringoptions__eps}
+         * @property {object} options.theme       - The cluster theme to be used.
+         *                                            See: {@link https://developer.here.com/javascript-apis/documentation/v3/maps/topics_api_nlp/h-clustering-itheme.html}
+         * @property {function} options.noiseBubbleContentProvider      - This function returns the HTML content used to fill the InfoBubble that gets shown when a noise point gets clicked.
+         * @property {function} options.clusterBubbleContentProvider    - This function returns the HTML content used to fill the InfoBubble that gets shown when a cluster point gets clicked.
+         */
         options: {
             min_weight: 1,
             eps: 32,
@@ -24,8 +39,15 @@ define([
             }
         },
 
+        /**
+         * The layer containing the clustering markers
+         * @private
+         */
         clusteringLayer:undefined,
 
+        /** This function will read through the result data and update the map
+         * @private
+         */
         updateView: function(viz, data) {
             if(this.map){
                 this.clearView();
@@ -75,6 +97,11 @@ define([
             }
             this._clearMessage();
         },
+
+        /**
+         * This function will remove the cluster markers from the map
+         * @private
+         */
         clearView: function(){
             if(this.map && this.clusteringLayer){
                 this.map.removeLayer(this.clusteringLayer);

@@ -8,10 +8,18 @@ define([
   ],function(_, mvc, SimpleSplunkView,Messages,utils,mapsjs) {
     Messages.messages['map-error']={icon: "warning-sign",level: "error",message: _("Map loading failed").t()};
 
+    /**
+     * A module that exports a HERE map view
+     * @exports heremaps/HereMap
+     */
     var HereMap = SimpleSplunkView.extend({
         className: "heremap",
         outputMode: 'json',
-
+        /**
+         * @property {string} default_options.center        - The default center of the map in "lat,lon" format
+         * @property {integer} default_options.zoom         - The default zoom of the map
+         * @property {string} default_options.height        - The default height of a map in CSS notation
+         */
         default_options: {
             center: "0,0",
             zoom: 2,
@@ -57,6 +65,9 @@ define([
             return this;
         },
 
+        /** Displays a message if needed
+         * @private
+         */
         displayMessage: function(info){
             if(info=="no-results"){
                 this.clearView();
@@ -67,6 +78,9 @@ define([
             return this;
         },
 
+        /** Creates the HERE map with the specified options
+         * @private
+         */
         createMap: function(){
             try {
                 var platform = new H.service.Platform({
@@ -111,6 +125,9 @@ define([
             }
         },
 
+        /** Get's the app_id & app_code using the Splunk REST API
+         * @private
+         */
         _get_app_id: function(){
             var that=this;
             mvc.createService().get("/servicesNS/nobody/heremaps/configs/conf-setup/heremaps",{},function(err,response) {
@@ -131,6 +148,9 @@ define([
             });
         },
 
+        /** Hides messages
+         * @private
+         */
         _clearMessage: function(){
             if(this.map){
                 this.message.hide();
@@ -139,6 +159,9 @@ define([
             }
         },
 
+        /** Shows error message
+         * @private
+         */
         _errorMessage: function(){
             Messages.render('map-error',this.message);
             this.message.show();
@@ -148,6 +171,9 @@ define([
             throw new Error("Not implemented error.");
         },
 
+        /** Merges options that are set
+         * @private
+         */
         _setOptions: function(){
             if(!this.options.center || this.options.center.trim()===""){
                 this.options.center=this.default_options.center;
